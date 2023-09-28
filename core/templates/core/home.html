@@ -1,0 +1,11 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+<h3>Inicio</h3>
+{% if request.user.is_authenticated %}
+<hr>
+<h4>Bienvenido a Craftify {{ user.first_name | upper}}</h4>
+{% endif %}
+
+{% endblock %}
