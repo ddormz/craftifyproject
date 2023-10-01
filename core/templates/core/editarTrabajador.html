@@ -1,0 +1,31 @@
+{% block content %}
+{% load static %}
+{% load crispy_forms_tags %}
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<!------ Include the above in your HEAD tag ---------->
+
+<div class="wrapper">
+  <form action="" method="post" class="form-signin">
+         {% csrf_token %}
+
+         <div class="card" style="width: 25rem;">
+            <div class="card-body">
+              <h5 class="card-title">Editar Usuario</h5>
+              {{ form.rut | as_crispy_field}} 
+               {{ form.first_name | as_crispy_field }}
+              <p class="card-text"></p>
+              <a href={%url 'listarTrabajadores'%} class="card-link">Volver</a>
+            </div>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Actualizar</button>   
+          </div>
+
+
+
+    </form>
+ </div>
+
+{% endblock %}

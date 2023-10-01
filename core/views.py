@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from .forms import CustomUserCreationForm
+from .models import User
 
 # Create your views here.
 @login_required
@@ -30,3 +31,30 @@ def register(request):
         else:
             data['form'] = user_creation_form
     return render(request, 'registration/register.html', data)
+
+def listarTrabajadores(request):
+    user = User.objects.all()
+    contexto = {'users':user}
+    return render(request, 'core/listarTrabajadores.html', contexto)
+
+
+def editarTrabajadores(request, rut):
+    user = User.objects.get(rut=rut)
+    data = {
+        'form': CustomUserCreationForm(instance=user)
+    }
+
+    if request.method == 'POST':
+        formulario = CustomUserCreationForm(data=request.POST, instance=user)
+        if formulario.is_valid():
+            formulario.save()
+            return redirect('listarTrabajadores')
+        else:
+            data['form'] = formulario
+
+    return render(request, 'core/editarTrabajador.html', data)
+
+def eliminarTrabajadores(request, rut):
+    user = User.objects.get(rut=rut)
+    user.delete()
+    return redirect('listarTrabajadores')

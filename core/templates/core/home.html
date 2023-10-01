@@ -2,10 +2,22 @@
 
 {% block content %}
 
-<h3>Inicio</h3>
 {% if request.user.is_authenticated %}
-<hr>
-<h4>Bienvenido a Craftify {{ user.first_name | upper}}</h4>
+
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="alert alert-success" role="alert">
+            <h4 class="alert-heading">Bienvenido a Craftify</h4>
+            <p>Recuerda que nuestro proyecto está en versión beta, por lo tanto, pueden surgir errores al momento de realizar alguna función, si esto sucede, reportalo de inmediato a los desarrolladores de esta aplicación.</p>
+            <hr>
+            <p class="mb-0">Actualmente, tu usuario es: <strong>{{ user.first_name }} {{user.last_name}}</strong></p>
+          </div>
+        </div>
+      </div>
+  </div>
+
 {% endif %}
 
 {% endblock %}
