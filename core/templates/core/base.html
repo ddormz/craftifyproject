@@ -106,11 +106,21 @@
               </a>
             </li>
             <li>
-              <a href="{% url 'proyectos' %}" class="nav-link link-ligth" id="active">
+            <li class="dropdown">
+              <a href="#" class="nav-link dropdown-toggle  text-truncate" id="active" data-bs-toggle="dropdown" aria-expanded="false">
                 <svg class="bi me-2" width="16" height="16"><use xlink:href="#speedometer2"/></svg>
                 Proyectos
               </a>
-            </li>
+              <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdown">
+                  <li><a class="dropdown-item" href="{% url 'proyectos'%}">Ver Proyectos</a></li>
+                  <li><a class="dropdown-item" href="{% url 'agregarProyecto' %}">Agregar Proyecto</a></li>
+                  <li><a class="dropdown-item" href="{% url 'avances' %}">Ver Avances</a></li>
+                  <li>
+                      <hr class="dropdown-divider">
+                  </li>
+                  <li><a class="dropdown-item" href="#">Ver Status</a></li>
+              </ul>
+          </li>
             <li>
               <a href="#" class="nav-link link-ligth" id="active">
                 <svg class="bi me-2" width="16" height="16"><use xlink:href="#table"/></svg>

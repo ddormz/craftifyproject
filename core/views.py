@@ -41,9 +41,8 @@ def listarTrabajadores(request):
 def editarTrabajadores(request, rut):
     user = User.objects.get(rut=rut)
     data = {
-        'form': UserForm(instance=user)
+        'form': CustomUserCreationForm(instance=user)
     }
-
     if request.method == 'POST':
         formulario = CustomUserCreationForm(data=request.POST, instance=user)
         if formulario.is_valid():
@@ -63,3 +62,42 @@ def proyectos(request):
     proyecto = Proyecto.objects.all()
     contexto = {'proyectos':proyecto}
     return render(request, 'core/proyectos.html', contexto)
+
+def agregarProyecto(request):
+    data = {
+        'AggForm': AgregarProyectoForm()
+    }
+    if request.method == 'POST':
+        formulario = AgregarProyectoForm(data=request.POST)
+        if formulario.is_valid():
+            formulario.save()
+            return redirect('proyectos')
+        else:
+            data['AggForm'] = formulario
+    
+    return render(request, 'core/agregarProyecto.html', data)
+
+def editarProyecto(request, id_proyecto):
+    proyecto = Proyecto.objects.get(id_proyecto=id_proyecto)
+    data = {
+        'form': ProyectoForm(instance=proyecto)
+    }
+    if request.method == 'POST':
+        formulario = ProyectoForm(data=request.POST, instance=proyecto)
+        if formulario.is_valid():
+            formulario.save()
+            return redirect('proyectos')
+        else:
+            data['form'] = formulario
+    
+    return render(request, 'core/editarProyecto.html', data)
+
+def eliminarProyecto(request, id_proyecto):
+    proyecto = Proyecto.objects.get(id_proyecto=id_proyecto)
+    proyecto.delete()
+    return redirect('proyectos')
+
+def avances(request):
+    avance = Avances.objects.all()
+    contexto = {'avances':avance}
+    return render(request, 'core/avances.html', contexto)

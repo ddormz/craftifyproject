@@ -11,10 +11,13 @@
 <div class="wrapper">
     <form action="" method="POST">
          {% csrf_token %}
-                {{ form.rut | as_crispy_field}} 
-               {{ form.first_name | as_crispy_field }}
-               {{ form.last_name | as_crispy_field }}
-               {{ form.email | as_crispy_field }}
+                {{ form.id_proyecto | as_crispy_field}} 
+                {{ form.cliente | as_crispy_field}}
+               {{ form.categoria | as_crispy_field}}
+               {{ form.nombre_proyecto | as_crispy_field}}
+               {{ form.instalacion | as_crispy_field}}
+               {{ form.plazo_entrega | as_crispy_field}}
+               {{ form.status | as_crispy_field}}
               <a href={%url 'listarTrabajadores'%} class="card-link">Volver</a>
             </div>
             <button class="btn btn-lg btn-primary btn-block" type="submit">Actualizar</button>   
