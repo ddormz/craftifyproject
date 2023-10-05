@@ -1,0 +1,54 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+{% if request.user.is_authenticated %}
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <h1 class="text-center">Proyectos</h1>
+      <form action="" method="GET">
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" placeholder="Buscar ID" aria-label="Recipient's username" aria-describedby="button-addon2" name="search">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Buscar</button>
+          </div>
+        </div>
+      
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">ID Proyecto</th>
+            <th scope="col">Categoria</th>
+            <th scope="col">Nombre Proyecto</th>
+            <th scope="col">Instalación</th>
+            <th scope="col">Plazo Entrega</th>
+            <th scope="col">Status</th>
+            
+          </tr>
+        </thead>
+        <tbody>
+       {% for proyecto in proyectos %}
+          <tr>
+            <th scope="row">{{ proyecto.id_proyecto }}</th>
+            <th scope="row">{{ proyecto.categoria }}</th>
+            <th scope="row">{{ proyecto.nombre_proyecto }}</th>
+            <th scope="row">{{ proyecto.instalacion }}</th>
+            <th scope="row">{{ proyecto.plazo_entrega }}</th>
+            <th scope="row">{{ proyecto.status }}</th>
+            <td>
+             <!--<a class="btn btn-warning botonEditar" href="{% url 'editarTrabajadores' user.rut %}" role="button"><i class="fas fa-pen"></i></button>
+              <a class="btn btn-danger botonEliminar" href="{% url 'eliminarTrabajadores' user.rut %}" role="button"><i class="fas fa-trash-alt"></i></button> -->
+            </td>
+          </tr>
+          {% endfor %}
+
+        </tbody>
+
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}

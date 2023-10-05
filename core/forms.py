@@ -6,4 +6,10 @@ class CustomUserCreationForm(UserCreationForm):
     
     class Meta:
         model = User
-        fields = ['rut', 'first_name', 'last_name', 'email', 'password1', 'password2', 'is_staff']
+        fields = ['rut', 'first_name', 'last_name', 'email', 'password1', 'password2', 'is_staff', 'groups']
+
+
+class UserForm(UserCreationForm):
+    class Meta:
+        fields = ['rut', 'first_name', 'last_name']
+        model = User

@@ -14,4 +14,5 @@ urlpatterns = [
     path('listarTrabajadores/', listarTrabajadores, name='listarTrabajadores'),
     path('editarTrabajadores/<rut>/', editarTrabajadores, name='editarTrabajadores'),
     path ('eliminarTrabajadores/<rut>/', eliminarTrabajadores, name='eliminarTrabajadores'),
+    path('proyectos/', proyectos, name='proyectos'),
 ]

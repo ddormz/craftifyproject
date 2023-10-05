@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-from .forms import CustomUserCreationForm
-from .models import User
+from .forms import *
+from .models import *
 
 # Create your views here.
 @login_required
@@ -41,7 +41,7 @@ def listarTrabajadores(request):
 def editarTrabajadores(request, rut):
     user = User.objects.get(rut=rut)
     data = {
-        'form': CustomUserCreationForm(instance=user)
+        'form': UserForm(instance=user)
     }
 
     if request.method == 'POST':
@@ -58,3 +58,8 @@ def eliminarTrabajadores(request, rut):
     user = User.objects.get(rut=rut)
     user.delete()
     return redirect('listarTrabajadores')
+
+def proyectos(request):
+    proyecto = Proyecto.objects.all()
+    contexto = {'proyectos':proyecto}
+    return render(request, 'core/proyectos.html', contexto)
