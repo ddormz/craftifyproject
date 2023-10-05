@@ -94,7 +94,7 @@
       
         <div class="d-flex flex-column flex-shrink-0 p-3 bg-dark" style="width: 280px;">
           <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
-            <img src="core/static/img/logo.png" alt="Logo Craftify" width="64" height="64">
+            <img src={{"core/static/img/logo.png"}} alt="Logo Craftify" width="64" height="64">
             <span class="craftify">Craftify</span>
           </a>
           <hr>
@@ -121,19 +121,41 @@
                   <li><a class="dropdown-item" href="#">Ver Status</a></li>
               </ul>
           </li>
-            <li>
-              <a href="#" class="nav-link link-ligth" id="active">
-                <svg class="bi me-2" width="16" height="16"><use xlink:href="#table"/></svg>
-                Cotizaciones
-              </a>
-            </li>
-            <li>
-              <a href="#" class="nav-link link-ligth" id="active">
-                <svg class="bi me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
+          <li class="dropdown">
+            <a href="#" class="nav-link dropdown-toggle  text-truncate" id="active" data-bs-toggle="dropdown" aria-expanded="false">
+              <svg class="bi me-2" width="16" height="16"><use xlink:href="#calendar3"/></svg>
+              Cotizaciones
+            </a>
+            <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdown">
+                <li><a class="dropdown-item" href="{% url 'proyectos'%}">Ver Cotizaciones</a></li>
+                <li><a class="dropdown-item" href="{% url 'agregarProyecto' %}">Agregar Cotizacion</a></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="#">Ver Clientes</a></li>
+                <li><a class="dropdown-item" href="{% url 'avances' %}">Agregar Clientes</a></li>
+            </ul>
+            <li class="dropdown">
+              <a href="#" class="nav-link dropdown-toggle  text-truncate" id="active" data-bs-toggle="dropdown" aria-expanded="false">
+                <svg class="bi me-2" width="16" height="16"><use xlink:href="#tools"/></svg>
                 Materiales
               </a>
+              <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdown">
+                  <li><a class="dropdown-item" href="{% url 'proyectos'%}">Ver Materiales</a></li>
+                  <li><a class="dropdown-item" href="{% url 'agregarProyecto' %}">Agregar Materiales</a></li>
+                
+              </ul>
+              <li class="dropdown">
+                <a href="#" class="nav-link dropdown-toggle  text-truncate" id="active" data-bs-toggle="dropdown" aria-expanded="false">
+                  <svg class="bi me-2" width="16" height="16"><use xlink:href="#geo-fill"/></svg>
+                  Avances
+                </a>
+                <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdown">
+                    <li><a class="dropdown-item" href="{% url 'listarTrabajadores'%}">Ver Avances</a></li>
+                    <li><a class="dropdown-item" href="{% url 'register' %}">Agregar Avance</a></li>
+                    <li>
+                </ul>
             </li>
-
             {% if user.is_superuser %}
             <li class="dropdown">
               <a href="#" class="nav-link dropdown-toggle  text-truncate" id="active" data-bs-toggle="dropdown" aria-expanded="false">
@@ -150,6 +172,7 @@
               </ul>
           </li>
           {% endif %}
+          
 
 
           <li>

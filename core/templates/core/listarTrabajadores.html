@@ -3,7 +3,7 @@
 {% block content %}
 
 {% if request.user.is_authenticated %}
-
+{% load static %}
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-12">
@@ -37,7 +37,7 @@
             <td>{{ user.email }}</td>
             {% for group in user.groups.all %}
             <td>{{ group }}</td> 
-{% endfor %}
+        {% endfor %}
             <td>
               <a class="btn btn-warning botonEditar" href="{% url 'editarTrabajadores' user.rut %}" role="button"><i class="fas fa-pen"></i></button>
               <a class="btn btn-danger botonEliminar" href="{% url 'eliminarTrabajadores' user.rut %}" role="button"><i class="fas fa-trash-alt"></i></button>

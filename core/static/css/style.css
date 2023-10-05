@@ -45,3 +45,41 @@
 	border-top-left-radius: 0;
 	border-top-right-radius: 0;
 }
+
+
+.loginColor {
+	background-color: #283833;
+	height: 100vh;
+}
+
+#imagenLogin {
+	width: 50%;
+	height: 50%;
+	justify-content: center;
+	align-items: center;
+	display: flex;
+	margin: 0 auto;
+	margin-top: 100px;
+}
+
+#textoLogin {
+	text-align: center;
+	color: white;
+	font-size: 72px;
+	margin-top: 70px;
+
+}
+
+#LoginCard {
+	margin: auto;
+	width: 50%;
+	padding: 10px;
+	margin-top: 250px;
+	box-shadow: 0px 0px 0px 2px gray;
+}
+
+#BotonLogin {
+	background-color: #32CDA1;
+	color: white;
+	font-weight: bold;
+}

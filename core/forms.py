@@ -24,3 +24,4 @@ class AgregarProyectoForm(forms.ModelForm):
     class Meta:
         model = Proyecto
         fields = ['id_proyecto', 'cliente', 'categoria', 'nombre_proyecto', 'instalacion', 'fecha', 'plazo_entrega', 'status']
+
