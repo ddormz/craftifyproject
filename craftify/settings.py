@@ -146,4 +146,4 @@ LOGOUT_REDIRECT_URL = 'login'
 
 AUTH_USER_MODEL = "core.User"
 
-WSGI_APPLICATION = 'core.wsgi.app'
+WSGI_APPLICATION = 'craftify.wsgi.app'
