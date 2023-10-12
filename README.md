@@ -1,5 +1,15 @@
 # Craftify Project
 
+V1.3 - 11 - 10
+
+- CRUD de Productos
+- CRUD de Cotizaciones
+- CRUD de Equipos
+- CRUD de Status Proyectos
+- Edición de Trabajadores Corregido
+- Modal de Editor solo de Status en proceso
+- Modelos de BD Listos y relacionados.
+
 V1.2 - 05 - 10
 - CRUD de Proyectos
 - CRUD de Avances con Imagen
