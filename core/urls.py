@@ -23,8 +23,9 @@ urlpatterns = [
     path('editarProyecto/<id_proyecto>/', editarProyecto, name='editarProyecto'),
     path('eliminarProyecto/<id_proyecto>/', eliminarProyecto, name='eliminarProyecto'),
     path('avances', avances, name='avances'),
-
-    
+    path('statusProyectos', statusProyectos, name='statusProyectos'),
+    path('listarCotizaciones', listarCotizaciones, name='listarCotizaciones'),
+    path('agregarCotizaciones', agregarCotizaciones, name='agregarCotizaciones'),
 ]
 
 if settings.DEBUG:

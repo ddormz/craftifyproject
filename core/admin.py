@@ -1,16 +1,10 @@
 from django.contrib import admin
-from .models import *
-# Register your models here.
+from django.apps import apps
 
-admin.site.register(User)
-admin.site.site_header = 'Administración de Craftify'
-admin.site.index_title = 'Craftify'
-admin.site.site_title = 'Administración de Craftify'
+all_models = apps.get_models()
 
-admin.site.register(Proyecto)
-admin.site.register(CategoriaProyecto)
-admin.site.register(StatusProyecto)
-admin.site.register(Clientes)
-admin.site.register(Equipos)
-admin.site.register(EquipoAsignacion)
-admin.site.register(Avances)
+for model in all_models:
+    try:
+        admin.site.register(model)
+    except admin.sites.AlreadyRegistered:
+        pass

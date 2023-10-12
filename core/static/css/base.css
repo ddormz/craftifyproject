@@ -154,3 +154,7 @@ line-height: normal;
 .btn-warning.botonEditar {
   margin-right: 10px;
 }
+
+.btn-primary.botonVer {
+  margin: 5px;
+}

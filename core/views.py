@@ -41,10 +41,10 @@ def listarTrabajadores(request):
 def editarTrabajadores(request, rut):
     user = User.objects.get(rut=rut)
     data = {
-        'form': CustomUserCreationForm(instance=user)
+        'editTrabajador': editarTrabajadorForm(instance=user)
     }
     if request.method == 'POST':
-        formulario = CustomUserCreationForm(data=request.POST, instance=user)
+        formulario = editarTrabajadorForm(data=request.POST, instance=user)
         if formulario.is_valid():
             formulario.save()
             return redirect('listarTrabajadores')
@@ -97,7 +97,32 @@ def eliminarProyecto(request, id_proyecto):
     proyecto.delete()
     return redirect('proyectos')
 
+def statusProyectos(request):
+    proyecto = Proyecto.objects.all()
+    contexto = {'proyectos':proyecto}
+    return render(request, 'core/statusProyectos.html', contexto)
+
+
 def avances(request):
     avance = Avances.objects.all()
     contexto = {'avances':avance}
     return render(request, 'core/avances.html', contexto)
+
+def listarCotizaciones(request):
+    cotizaciones = Cotizaciones.objects.all()
+    contexto = {'cotizaciones':cotizaciones}
+    return render(request, 'core/listarCotizaciones.html', contexto)
+
+def agregarCotizaciones(request):
+    data = {
+        'form': CotizacionesForm()
+    }
+    if request.method == 'POST':
+        formulario = CotizacionesForm(data=request.POST)
+        if formulario.is_valid():
+            formulario.save()
+            return redirect('listarCotizaciones')
+        else:
+            data['form'] = formulario
+    
+    return render(request, 'core/agregarCotizacion.html', data)

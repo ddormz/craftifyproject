@@ -7,12 +7,13 @@ class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['rut', 'first_name', 'last_name', 'email', 'password1', 'password2', 'is_staff', 'groups']
-    REQUIRED_FIELDS = ['rut', 'first_name', 'last_name']
+    
 
-class UserForm(forms.ModelForm):
+class editarTrabajadorForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['rut', 'first_name', 'last_name']
+        fields = ['rut', 'first_name', 'last_name','email','groups']
+    REQUIRED_FIELDS = ['rut','first_name', 'last_name','email','groups']
    
 
 class ProyectoForm(forms.ModelForm):
@@ -25,3 +26,7 @@ class AgregarProyectoForm(forms.ModelForm):
         model = Proyecto
         fields = ['id_proyecto', 'cliente', 'categoria', 'nombre_proyecto', 'instalacion', 'fecha', 'plazo_entrega', 'status']
 
+class CotizacionesForm(forms.ModelForm):
+    class Meta:
+        model = Cotizaciones
+        fields = ['id_cotizacion','fecha_cotizacion','nombre_cotizacion','total_neto', 'total_impuestos', 'total', 'detalle', 'cliente', 'generado_por']
