@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-=^-_z7r9a@0%zu*)cl_emxtcr4p5(va(3@k^iiytcfq87q&3#l
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+import os
 
 # Application definition
 
@@ -40,12 +40,17 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
-    'avances',
+    'api',
     ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES' : ['rest_framework.authentication.TokenAuthentication',],
+    
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -63,7 +68,7 @@ ROOT_URLCONF = 'craftify.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'core/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

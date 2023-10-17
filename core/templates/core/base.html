@@ -10,7 +10,18 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <script src="https://kit.fontawesome.com/d808a9fd07.js" crossorigin="anonymous"></script>
+      <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+      <!-- Font Awesome -->
+    <link rel="stylesheet" href="../../core/static/lib/plugins/fontawesome-free/css/all.min.css">
+      <!-- DataTables -->
+    <link rel="stylesheet" href="../../core/static/lib/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="../../core/static/lib/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="../../core/static/lib/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
 
+
+
+     <!-- Bootstrap Plugins -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
@@ -95,7 +106,7 @@
       <!-- LOGO Y BARRA DE NAVEGACIÓN -->
         <div class="d-flex flex-column flex-shrink-0 p-3 bg-dark" style="width: 280px;">
           <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
-            <img src={{"core/static/img/logo.png"}} alt="Logo Craftify" width="64" height="64">
+            <img src="../../core/static/img/logo.png" alt="Logo Craftify" width="64" height="64">
             <span class="craftify">Craftify</span>
           </a>
           <hr>
@@ -118,10 +129,11 @@
               <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdown">
                   <li><a class="dropdown-item" href="{% url 'proyectos'%}">Ver Proyectos</a></li>
                   <li><a class="dropdown-item" href="{% url 'agregarProyecto' %}">Agregar Proyecto</a></li>
-                  <li><a class="dropdown-item" href="{% url 'avances' %}">Ver Avances</a></li>
+                
                   <li>
                       <hr class="dropdown-divider">
                   </li>
+                  <li><a class="dropdown-item" href="{% url 'avances' %}">Ver Avances</a></li>
                   <li><a class="dropdown-item" href="{% url 'statusProyectos' %}">Status de Proyectos</a></li>
               </ul>
           </li>
@@ -139,8 +151,8 @@
                 <li>
                     <hr class="dropdown-divider">
                 </li>
-                <li><a class="dropdown-item" href="#">Ver Clientes</a></li>
-                <li><a class="dropdown-item" href="{% url 'avances' %}">Agregar Clientes</a></li>
+                <li><a class="dropdown-item" href="{% url 'listarClientes' %}">Ver Clientes</a></li>
+                <li><a class="dropdown-item" href="{% url 'agregarClientes' %}">Agregar Clientes</a></li>
             </ul>
             <!--FIN PESTAÑA DE COTIZACIONES-->
 
@@ -151,11 +163,12 @@
                 Productos
               </a>
               <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdown">
-                  <li><a class="dropdown-item" href="{% url 'proyectos'%}">Ver Productos</a></li>
-                  <li><a class="dropdown-item" href="{% url 'agregarProyecto' %}">Agregar Materiales</a></li>
+                  <li><a class="dropdown-item" href="{% url 'listarProductos'%}">Ver Productos</a></li>
+                  <li><a class="dropdown-item" href="{% url 'agregarProductos' %}">Agregar Materiales</a></li>
                   <hr class="dropdown-divider">
                 </li>
-                <li><a class="dropdown-item" href="#">Categorias y Subcategorias</a></li>
+                <li><a class="dropdown-item" href="{% url 'listarCatySubcat' %}">Categorias y Subcategorias</a></li>
+                <li><a class="dropdown-item" href="{% url 'agregarCatySubcat' %}">Agregar Categorias y Subcategorias</a></li>
               </ul>
               <!-- FIN PESTAÑA DE PRODUCTOS-->
 
@@ -167,8 +180,8 @@
                   Avances
                 </a>
                 <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdown">
-                    <li><a class="dropdown-item" href="{% url 'listarTrabajadores'%}">Ver Avances</a></li>
-                    <li><a class="dropdown-item" href="{% url 'register' %}">Agregar Avance</a></li>
+                    <li><a class="dropdown-item" href="{% url 'avances'%}">Ver Avances</a></li>
+                    <li><a class="dropdown-item" href="{% url 'agregarAvances' %}">Agregar Avance</a></li>
                     <li>
                 </ul>
             </li>
@@ -181,11 +194,12 @@
                 Equipos
               </a>
               <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdown">
-                  <li><a class="dropdown-item" href="{% url 'listarTrabajadores'%}">Ver Equipos</a></li>
-                  <li><a class="dropdown-item" href="{% url 'register' %}">Agregar Equipos</a></li>
+                  <li><a class="dropdown-item" href="{% url 'listarEquipos'%}">Ver Equipos</a></li>
+                  <li><a class="dropdown-item" href="{% url 'agregarEquipos' %}">Agregar Equipos</a></li>
                   <hr class="dropdown-divider">
                 </li>
-                <li><a class="dropdown-item" href="#">Asignaciones de Equipo</a></li>
+                <li><a class="dropdown-item" href="{% url 'listarAsignaciones' %}">Listar Asignaciones de Equipo</a></li>
+                <li><a class="dropdown-item" href="{% url 'agregarAsignaciones' %}">Agregar Asignacion de Equipo</a></li>
               </ul>
           </li>
 
@@ -233,7 +247,21 @@
   {% block content %} {%endblock%}
   </div>
       </main>
+             <!-- DataTables  & Plugins -->
+    <script src="../../core/static/lib/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="../../core/static/lib/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="../../core/static/lib/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="../../core/static/lib/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="../../core/static/lib/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="../../core/static/lib/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="../../core/static/lib/plugins/jszip/jszip.min.js"></script>
+    <script src="../../core/static/lib/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="../../core/static/lib/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="../../core/static/lib/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="../../core/static/lib/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="../../core/static/lib/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
       <!-- FIN DE SECCIÓN DE USUARIO LOGUEADO-->
   </body>
+   
   {% endblock %}
 </html>

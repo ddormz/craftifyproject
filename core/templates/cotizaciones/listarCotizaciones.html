@@ -1,0 +1,63 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+{% if request.user.is_authenticated %}
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+      <h1 class="text-center">Listado de Cotizaciones</h1>
+      <form action="" method="GET">
+        <div class="input-group mb-3">
+          <input type="text" class="form-control" placeholder="Buscar por RUT" aria-label="Recipient's username" aria-describedby="button-addon2" name="search">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Buscar</button>
+          </div>
+        </div>
+      <div class="card-body table-responsive p-0">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">ID Cotizacion</th>
+            <th scope="col">Fecha Generacion</th>
+            <th scope="col">Nombre Cotizacion</th>
+            <th scope="col">Cliente</th>
+            <th scope="col">Total</th>
+            <th scope="col">Detalle</th>
+            <th scope="col">Generado Por</th>
+            <th scope="col">Acciones</th>
+
+          </tr>
+        </thead>
+        <tbody>
+       {% for cotizacion in cotizaciones %}
+          <tr>
+            <th scope="row">{{ cotizacion.id_cotizacion }}</th>
+            <td>{{ cotizacion.fecha_cotizacion }}</td>
+            <td>{{ cotizacion.nombre_cotizacion }}</td>
+            <td>{{ cotizacion.cliente }}</td>
+            <td>{{ cotizacion.total }}</td>
+            <td>{{ cotizacion.detalle }}</td>
+            <td>{{ cotizacion.generado_por }}</td>
+
+
+            <td>          
+              <a class="btn btn-warning botonEditar" href="{% url 'editarTrabajadores' user.rut %}" role="button"><i class="fas fa-pen"></i></button>
+             <a class="btn btn-danger botonEliminar" href="{% url 'eliminarProyecto' user.rut %}" role="button"><i class="fas fa-trash-alt"></i></button>
+            <a class="btn btn-primary botonVer" href="{% url 'avances' %}" role="button"><i class="fas fa-eye"></i></button>
+            </td>
+          </tr>
+          {% endfor %}
+
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}

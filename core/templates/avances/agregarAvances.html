@@ -1,0 +1,50 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+{% load static %}
+{% load crispy_forms_tags %}
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
+<!------ Include the above in your HEAD tag ---------->
+
+<div class="container-fluid">
+  <div class="row">
+    <!-- left column -->
+    <div class="col-md-12">
+      <!-- general form elements -->
+      <div class="card card-primary">
+        <div class="card-header">
+          <h3 class="card-title">Agregar Avance Nuevo</h3>
+        </div>
+        <!-- /.card-header -->
+        <!-- form start -->
+        <form action="" method="POST"  enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                {{ addavance.avance_id | as_crispy_field}} 
+              </div>
+              <div class="form-group col-md-6">
+                {{ addavance.imagen | as_crispy_field}}
+              </div>
+              <div class="form-group col-md-6">
+                {{ addavance.comentario | as_crispy_field}}
+              </div>
+              <div class="form-group col-md-6">
+                {{ addavance.asignacion_asignacion| as_crispy_field}}
+              </div>
+              <div class="form-group col-md-6">
+                {{ addavance.equipo_id_equipo | as_crispy_field}}
+              </div>
+              <div class="form-group col-md-6">
+                {{ addavance.proyecto_id_proyecto | as_crispy_field}}
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Agregar</button>
+          </form>
+      </div>
+{% endblock %}

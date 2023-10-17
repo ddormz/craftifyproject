@@ -1,0 +1,64 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+{% load static %}
+{% load crispy_forms_tags %}
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
+<!------ Include the above in your HEAD tag ---------->
+
+<div class="container-fluid">
+  <div class="row">
+    <!-- left column -->
+    <div class="col-md-12">
+      <!-- general form elements -->
+      <div class="card card-primary">
+        <div class="card-header">
+          <h3 class="card-title">Agregar Producto Nuevo</h3>
+        </div>
+        <!-- /.card-header -->
+        <!-- form start -->
+        <form action="" method="POST">
+          {% csrf_token %}
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                {{ addpro.id_producto | as_crispy_field}} 
+              </div>
+              <div class="form-group col-md-6">
+                {{ addpro.nombre_producto | as_crispy_field}}
+              </div>
+              <div class="form-group col-md-12">
+                {{ addpro.descripcion | as_crispy_field}}
+              </div>
+              <div class="form-group col-md-4">
+                {{ addpro.categoria| as_crispy_field}}
+              </div>
+              <div class="form-group col-md-4">
+                {{ addpro.subcategoria| as_crispy_field}}
+              </div>
+              <div class="form-group col-md-4">
+                {{ addpro.marca| as_crispy_field}}
+              </div>
+              <div class="form-group col-md-4">
+                {{ addpro.precio_compra| as_crispy_field}}
+              </div>
+              <div class="form-group col-md-4">
+                {{ addpro.precio_venta| as_crispy_field}}
+              </div>
+              <div class="form-group col-md-4">
+                {{ addpro.variante| as_crispy_field}}
+              </div>
+              <div class="form-group col-md-12">
+                <button type="submit" class="btn btn-primary">Agregar</button>
+              </div>
+            </div>
+       
+          </form>
+        </div>
+        <!-- /.card-body -->
+      </div>
+{% endblock %}

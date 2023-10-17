@@ -1,0 +1,80 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+{% if request.user.is_authenticated %}
+
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Listado de Proyectos</h3>
+          <form action="" method="GET">
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" placeholder="Buscar por ID" aria-label="Recipient's username" aria-describedby="button-addon2" name="search">
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Buscar</button>
+              </div>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body table-responsive p-0">
+      
+      <table id="proyectos" class="table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">ID Proyecto</th>
+            <th scope="col">Cliente</th>
+            <th scope="col">Categoria</th>
+            <th scope="col">Nombre Proyecto</th>
+            <th scope="col">Instalación</th>
+            <th scope="col">Fecha Creacion</th>
+            <th scope="col">Plazo Entrega</th>
+            <th scope="col">Status</th>
+            <th scope="col">Acciones</th>
+            
+          </tr>
+        </thead>
+        <tbody>
+       {% for proyecto in proyectos %}
+          <tr>
+            <th scope="row">{{ proyecto.id_proyecto }}</th>
+            <th scope="row">{{ proyecto.cliente }}</th>  
+            <th scope="row">{{ proyecto.categoria }}</th>
+            <th scope="row">{{ proyecto.nombre_proyecto }}</th>
+            <th scope="row">{{ proyecto.instalacion }}</th>
+            <th scope="row">{{ proyecto.fecha }}</th>
+            <th scope="row">{{ proyecto.plazo_entrega }}</th>
+            <th scope="row">{{ proyecto.status }}</th>
+            <td>          
+             <a class="btn btn-warning botonEditar" href="{% url 'editarProyecto' proyecto.id_proyecto %}" role="button"><i class="fas fa-pen"></i></button>
+             <a class="btn btn-danger botonEliminar" href="{% url 'eliminarProyecto' proyecto.id_proyecto %}" role="button"><i class="fas fa-trash-alt"></i></button>
+            <a class="btn btn-primary botonVer" href="{% url 'avances' %}" role="button"><i class="fas fa-eye"></i></button>
+            </td>
+          </tr>
+          {% endfor %}
+
+        </tbody>
+      </table>
+    </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(function () {
+    $("#proyectos").DataTable({
+      "responsive": true, "lengthChange": false, "autoWidth": false,
+      "buttons": ["pdf","colvis"]
+    }).buttons().container().appendTo('#proyectos_wrapper .col-md-6:eq(0)');
+        
+  });
+
+</script>
+{% endif %}
+
+
+
+{% endblock %}

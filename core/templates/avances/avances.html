@@ -1,0 +1,39 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+{% if request.user.is_authenticated %}
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+      <h1 class="text-center">Avance del Proyecto</h1>
+
+      <div class="card-body p-0 table-responsive">
+      <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">Proyecto</th>
+                <th scope="col">Comentario</th>
+                <th scope="col">Avance</th>
+               
+                
+              </tr>
+        </thead>
+        <tbody>
+       {% for avance in avances %}
+       <th scope="row">{{ avance.proyecto_id_proyecto }}</th>
+       <td>{{ avance.comentario}}</td>
+       <td><img src="{{ avance.imagen.url }}"</td>
+       {% endfor %}
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}

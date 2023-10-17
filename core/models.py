@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from datetime import datetime
 
 from .managers import CustomUserManager
 
@@ -32,7 +33,7 @@ class Proyecto(models.Model):
     categoria = models.ForeignKey('CategoriaProyecto', on_delete=models.CASCADE)
     nombre_proyecto = models.CharField(max_length=100)
     instalacion = models.BooleanField(default=False)
-    fecha = models.DateField(blank=True, null=True)
+    fecha = models.DateField()
     plazo_entrega = models.DateField()
     status = models.ForeignKey('StatusProyecto', on_delete=models.CASCADE)
     def __str__(self):
@@ -64,6 +65,7 @@ class EquipoAsignacion(models.Model):
     proyecto_id_proyecto = models.ForeignKey('Proyecto', on_delete=models.CASCADE)
     tiempo_asignado = models.DateField()
     tiempo_final = models.DateField()
+    tarea = models.CharField(max_length=100)
     def __str__(self):
         return str(self.equipo_id_equipo) + str(self.proyecto_id_proyecto)
     
@@ -71,9 +73,9 @@ class Avances(models.Model):
     avance_id = models.IntegerField(primary_key=True)
     imagen = models.ImageField(upload_to='avances')
     comentario = models.CharField(max_length=45)
-    asignacion_asignacion = models.ForeignKey('EquipoAsignacion', on_delete=models.CASCADE)
-    equipo_id_equipo = models.ForeignKey('Equipos', on_delete=models.CASCADE)
-    proyecto_id_proyecto = models.ForeignKey('Proyecto', on_delete=models.CASCADE)
+    asignacion_asignacion = models.ForeignKey('EquipoAsignacion', on_delete=models.CASCADE, null=True, blank=True)
+    equipo_id_equipo = models.ForeignKey('Equipos', on_delete=models.CASCADE, null=True, blank=True)
+    proyecto_id_proyecto = models.ForeignKey('Proyecto', on_delete=models.CASCADE, null=True, blank=True)
     def __str__(self):
         return str(self.avance_id)
     

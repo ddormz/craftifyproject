@@ -1,0 +1,65 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+{% if request.user.is_authenticated %}
+{% load static %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      
+        </div>
+     <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Listado de Asignaciones</h3>
+          <form action="" method="GET">
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" placeholder="Buscar por ID Equipo" aria-label="Recipient's username" aria-describedby="button-addon2" name="search">
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Buscar</button>
+              </div>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body table-responsive p-0">
+            
+            <table class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th scope="col"># Asignacion </th>
+                    <th scope="col"># Equipo</th>
+                    <th scope="col"># Proyecto </th>
+                    <th scope="col">Tarea</th>
+                    <th scope="col">Tiempo Asignado</th>
+                    <th scope="col">Tiempo Restante</th>
+                    
+                </tr>
+                </thead>
+                <tbody>
+            {% for asignacion in asignaciones %}
+                <tr>
+                    <th scope="row">{{ asignacion.asignacion_id }}</th>
+                    <td>{{ asignacion.equipo_id_equipo }}</td>
+                    <td>{{ asignacion.proyecto_id_proyecto }}</td>
+                    <td>{{ asignacion.tarea }}</td>
+                    <td>{{ asignacion.tiempo_asignado }}</td>
+                    <td>{{ asignacion.tiempo_final }}</td>
+                    
+            
+                    <td>
+                    <a class="btn btn-warning botonEditar" href="{% url 'editarTrabajadores' user.rut %}" role="button"><i class="fas fa-pen"></i></button>
+                    <a class="btn btn-danger botonEliminar" href="{% url 'eliminarTrabajadores' user.rut %}" role="button"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+        </table>
+        </div>
+        <!-- /.card-body -->
+
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}
