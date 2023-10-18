@@ -12,17 +12,14 @@
       <div class="card">
         <div class="card-header">
           <h3 class="card-title">Listado de Proyectos</h3>
-          <form action="" method="GET">
             <div class="input-group mb-3">
-              <input type="text" class="form-control" placeholder="Buscar por ID" aria-label="Recipient's username" aria-describedby="button-addon2" name="search">
               <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Buscar</button>
               </div>
         </div>
         <!-- /.card-header -->
-        <div class="card-body table-responsive p-0">
+        <div class="card-body table-responsive p-0" id="tarjetaTablas">
       
-      <table id="proyectos" class="table table-bordered">
+          <table class="table table-bordered table-hover tabla-datos">
         <thead>
           <tr>
             <th scope="col">ID Proyecto</th>
@@ -63,16 +60,8 @@
   </div>
 </div>
 
-<script>
-  $(function () {
-    $("#proyectos").DataTable({
-      "responsive": true, "lengthChange": false, "autoWidth": false,
-      "buttons": ["pdf","colvis"]
-    }).buttons().container().appendTo('#proyectos_wrapper .col-md-6:eq(0)');
-        
-  });
 
-</script>
+
 {% endif %}
 
 

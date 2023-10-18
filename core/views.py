@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
@@ -17,25 +18,26 @@ def exit(request):
     logout(request)
     return redirect('login')
 
-def register(request):
 
-    data = {
-        'form': CustomUserCreationForm()
-    }
 
-    if request.method == 'POST':
-        user_creation_form = CustomUserCreationForm(data=request.POST)
-        if user_creation_form.is_valid():
-            user_creation_form.save()
-            return redirect('listarTrabajadores')
-        else:
-            data['form'] = user_creation_form
-    return render(request, 'registration/register.html', data)
 
 def listarTrabajadores(request):
-    user = User.objects.all()
-    contexto = {'users':user}
+    users = User.objects.all()
+    
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'success': True})  # Respuesta exitosa en formato JSON
+        else:
+            return JsonResponse({'success': False})  # Respuesta de error en formato JSON
+    
+    form = CustomUserCreationForm()
+    
+    contexto = {'users': users, 'form': form}
     return render(request, 'trabajadores/listarTrabajadores.html', contexto)
+
+
 
 
 def editarTrabajadores(request, rut):

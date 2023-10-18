@@ -11,7 +11,7 @@ urlpatterns = [
     
     # MODULO LOGIN Y REGISTRO
     path('logout/', exit, name='exit'),
-    path('register/', register, name='register'),
+    #path('register/', register, name='register'),
 
     # MODULO DE TRABAJADORES (ADMINISTRACIÓN)
     path('listarTrabajadores/', listarTrabajadores, name='listarTrabajadores'),

@@ -157,3 +157,57 @@ line-height: normal;
 .btn-primary.botonVer {
   margin: 5px;
 }
+
+div.dt-buttons {
+  position: initial;
+  float: left;
+  margin-bottom: 20px;
+
+}
+
+
+/* Cambiar el color de fondo a azul y el color del texto a blanco */
+.btn.btn-secondary.buttons-pdf.buttons-html5 {
+  background-color: #32CDA1; /* Color de fondo */
+  color: black; /* Color del texto */
+}
+
+/* Cambiar el color de fondo al pasar el cursor sobre el botón */
+.btn.btn-secondary.buttons-pdf.buttons-html5:hover {
+  background-color: rgb(12, 238, 181) /* Color de fondo al pasar el cursor */
+}
+
+
+/* Cambiar el color de fondo a azul y el color del texto a blanco */
+.dt-button.dropdown-item.buttons-columnVisibility.active {
+  background-color: #32CDA1; /* Color de fondo */
+  color: white; /* Color del texto */
+}
+
+/* Cambiar el color de fondo al pasar el cursor sobre el elemento */
+.dt-button.dropdown-item.buttons-columnVisibility.active:hover {
+  background-color: rgb(12, 238, 181) /* Color de fondo al pasar el cursor */
+}
+
+.btn.btn-secondary.buttons-collection.dropdown-toggle.buttons-colvis {
+  background-color: #464e4c; /* Color de fondo */
+}
+
+.active>.page-link, .page-link.active {
+  z-index: 3;
+  color: var(--bs-pagination-active-color);
+  background-color: #32CDA1;
+  border-color: #32CDA1;
+}
+
+#botonAgregar {
+  background-color: #32CDA1;
+  color: white;
+  border-color: #32CDA1;
+
+}
+
+#botonAgregar:hover {
+  background-color: rgb(12, 238, 181);
+  color: white;
+}
