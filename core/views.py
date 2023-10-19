@@ -20,7 +20,7 @@ def exit(request):
 
 
 
-
+@login_required
 def listarTrabajadores(request):
     users = User.objects.all()
     
@@ -28,9 +28,9 @@ def listarTrabajadores(request):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            return JsonResponse({'success': True})  # Respuesta exitosa en formato JSON
+            return JsonResponse({'message': 'Registro exitoso.'})
         else:
-            return JsonResponse({'success': False})  # Respuesta de error en formato JSON
+            return JsonResponse({'errors': form.errors}, status=400)
     
     form = CustomUserCreationForm()
     
@@ -39,7 +39,7 @@ def listarTrabajadores(request):
 
 
 
-
+@login_required
 def editarTrabajadores(request, rut):
     user = User.objects.get(rut=rut)
     data = {
@@ -54,17 +54,17 @@ def editarTrabajadores(request, rut):
             data['form'] = formulario
 
     return render(request, 'trabajadores/editarTrabajador.html', data)
-
+@login_required
 def eliminarTrabajadores(request, rut):
     user = User.objects.get(rut=rut)
     user.delete()
     return redirect('listarTrabajadores')
-
+@login_required
 def proyectos(request):
     proyecto = Proyecto.objects.all()
     contexto = {'proyectos':proyecto}
     return render(request, 'proyectos/proyectos.html', contexto)
-
+@login_required
 def agregarProyecto(request):
     data = {
         'AggForm': AgregarProyectoForm()

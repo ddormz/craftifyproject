@@ -1,22 +1,3 @@
-function showNotification(message, type) {
-  var alertDiv = $("#notification-alert");
-  var alertMessage = alertDiv.find(".alert-message");
-  alertMessage.text(message);
-
-  if (type === "success") {
-    alertDiv.addClass('alert-success');
-  } else if (type === "error") {
-    alertDiv.addClass('alert-danger');
-  }
-
-  alertDiv.show();
-
-  // Oculta la alerta después de 3 segundos (3000 milisegundos)
-  setTimeout(function() {
-    alertDiv.hide();
-  }, 3000);
-};
-
 function globalDataTables() {
   var table = $(".tabla-datos").DataTable({
     "responsive": true,
@@ -43,35 +24,42 @@ function globalDataTables() {
   buttonsContainer.appendTo($('#tarjetaTablas'));
   buttonsContainer.addClass('float-left');
 
-  $('#formAddTrab').on('submit', function(e) {
-    e.preventDefault();
-    var url = $(this).data("url");
-    var form = $(this); // Obtén el formulario actual
-    $.ajax({
-      url: url,
-      method: 'POST',
-      data: form.serialize(),
-      success: function(data) {
-        if (data.success) {
-          showNotification("Registro exitoso", "success");
-          // Recarga la DataTable
-          //table.ajax.reload(); // Esto recargará los datos de la tabla
-          // Oculta el modal
-          $('#modalAddTrab').modal('hide');
-          // Puedes agregar aquí cualquier otro código que desees ejecutar después del éxito.
-        } else {
-          showNotification("Error al Agregar Trabajador", "error");
-          // Puedes agregar aquí cualquier otro código que desees ejecutar en caso de error.
-        }
-      },
-      error: function(data) {
-        showNotification("Error al Agregar Trabajador", "error");
-      }
-    });
-    
-  });
-  
-}
 
+};
 
 document.addEventListener('DOMContentLoaded', globalDataTables);
+
+// registro.js
+$(document).ready(function() {
+  $("#formAddTrab").on("submit", function(event) {
+    event.preventDefault();
+    var url = $(this).data("url"); // Obtén la URL del atributo data-url
+    $.ajax({
+      url: url,
+      method: "POST",
+      data: $(this).serialize(),
+      success: function(data) {
+        // Muestra una alerta de toast antes de recargar la página
+        toastr.success('Registro exitoso', 'Éxito', {
+          timeOut: 1000,
+          closeButton: false,
+          tapToDismiss: false,
+          onHidden: function() {
+            // La alerta se ocultó, ahora recarga la página
+            location.reload(); // Esto recargará la página actual
+          }
+        });
+      },
+      error: function(data) {
+        toastr.error('Error en el registro', 'Error', {
+          timeOut: 1000,
+          closeButton: false,
+          tapToDismiss: false
+
+        })
+      }
+    });
+  });
+});
+
+
