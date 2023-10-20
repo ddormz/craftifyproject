@@ -18,7 +18,8 @@ class editarTrabajadorForm(forms.ModelForm):
         model = User
         fields = ['rut', 'first_name', 'last_name','email','groups']
     REQUIRED_FIELDS = ['rut','first_name', 'last_name','email','groups']
-   
+
+
 
 class ProyectoForm(forms.ModelForm):
     class Meta:

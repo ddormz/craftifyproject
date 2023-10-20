@@ -24,12 +24,21 @@ function globalDataTables() {
   buttonsContainer.appendTo($('#tarjetaTablas'));
   buttonsContainer.addClass('float-left');
 
+  // Editar Registro de la Tabla
+
+  $('.tabla-datos tbody').on('click', '.botonEditar', function() {
+    var data = table.row($(this).parents('tr')).data();
+    
+    console.log(data)
+    
+});
 
 };
 
 document.addEventListener('DOMContentLoaded', globalDataTables);
 
-// registro.js
+// Agregar Registro Trabajador
+
 $(document).ready(function() {
   $("#formAddTrab").on("submit", function(event) {
     event.preventDefault();
@@ -41,9 +50,11 @@ $(document).ready(function() {
       success: function(data) {
         // Muestra una alerta de toast antes de recargar la página
         toastr.success('Registro exitoso', 'Éxito', {
-          timeOut: 1000,
+          timeOut: 500,
           closeButton: false,
           tapToDismiss: false,
+          positionClass: "toast-top-center",
+          preventDuplicates: true,
           onHidden: function() {
             // La alerta se ocultó, ahora recarga la página
             location.reload(); // Esto recargará la página actual
@@ -51,15 +62,16 @@ $(document).ready(function() {
         });
       },
       error: function(data) {
-        toastr.error('Error en el registro', 'Error', {
-          timeOut: 1000,
+        toastr.error('Error al agregar trabajador ', 'Error', {
+          timeOut: 2000,
           closeButton: false,
-          tapToDismiss: false
-
-        })
+          tapToDismiss: false,
+          positionClass: "toast-top-center",
+          preventDuplicates: true
+        });
       }
     });
   });
 });
 
-
+// editar.js

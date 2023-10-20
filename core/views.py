@@ -30,7 +30,8 @@ def listarTrabajadores(request):
             form.save()
             return JsonResponse({'message': 'Registro exitoso.'})
         else:
-            return JsonResponse({'errors': form.errors}, status=400)
+            error_messages = form.errors.as_json()
+            return JsonResponse({'errors': form.errors.as_json()}, status=400)
     
     form = CustomUserCreationForm()
     

@@ -211,3 +211,10 @@ div.dt-buttons {
   background-color: rgb(12, 238, 181);
   color: white;
 }
+
+.card.tarjetaEditar {
+  display: flex !important;
+  margin: auto !important;
+  justify-content: center;
+  width: 70%;
+}

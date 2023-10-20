@@ -12,11 +12,19 @@
 <div class="wrapper">
     <form action="" method="POST">
          {% csrf_token %}
+         <div class="container-fluid">
+         <div class="card tarjetaEditar">
+          <div class="card-header">
+            <h3 class="card-title">Editar Trabajador</h3>
+            <div class="col-md-12">
                 {{ editTrabajador.rut | as_crispy_field}} 
+            </div>
+            <div class="col-md-12">
                {{ editTrabajador.first_name | as_crispy_field }}
                {{ editTrabajador.last_name | as_crispy_field }}
                {{ editTrabajador.email | as_crispy_field }}
                {{ editTrabajador.groups | as_crispy_field}}
+            </div>
               <a href={%url 'listarTrabajadores'%} class="card-link">Volver</a>
             </div>
             <button class="btn btn-lg btn-primary btn-block" type="submit">Actualizar</button>   
