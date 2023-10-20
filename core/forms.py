@@ -24,12 +24,12 @@ class editarTrabajadorForm(forms.ModelForm):
 class ProyectoForm(forms.ModelForm):
     class Meta:
         model = Proyecto
-        fields = ['id_proyecto', 'cliente', 'categoria', 'nombre_proyecto', 'instalacion', 'fecha', 'plazo_entrega', 'status']
+        fields = "__all__"
 
 class AgregarProyectoForm(forms.ModelForm):
     class Meta:
         model = Proyecto
-        fields = ['id_proyecto', 'cliente', 'categoria', 'nombre_proyecto', 'instalacion', 'fecha', 'plazo_entrega', 'status']
+        fields = "__all__"
         widgets = {
             'fecha': forms.DateInput(attrs={'type': 'date'}),
             'plazo_entrega': forms.DateInput(attrs={'type': 'date'}),
@@ -53,7 +53,7 @@ class AgregarProyectoForm(forms.ModelForm):
 class CotizacionesForm(forms.ModelForm):
     class Meta:
         model = Cotizaciones
-        fields = ['id_cotizacion','fecha_cotizacion','nombre_cotizacion','total_neto', 'total_impuestos', 'total', 'detalle', 'cliente', 'generado_por']
+        fields = "__all__"
         widgets = {
             'fecha_cotizacion': forms.DateTimeInput(attrs={'type': 'date'}),
         }
@@ -62,24 +62,24 @@ class CotizacionesForm(forms.ModelForm):
 class ClientesForm(forms.ModelForm):
     class Meta:
         model = Clientes
-        fields = ['rut_cliente', 'nombre', 'apellido', 'direccion', 'telefono']
+        fields = "__all__"
 
 
 class ProductosForm(forms.ModelForm):
     class Meta:
         model = Productos
-        fields = ['id_producto', 'nombre_producto','descripcion', 'categoria', 'subcategoria', 'marca', 'precio_compra', 'precio_venta', 'variante']
+        fields = "__all__"
 
 
 class CatForm(forms.ModelForm):
     class Meta:
         model = CategoriaProductos
-        fields = ['id_categoria', 'nombre_categoria']
+        fields = "__all__"
 
 class SubCatForm(forms.ModelForm):
     class Meta:
         model = SubcategoriaProductos
-        fields = ['id_subcategoria', 'nombre_subcategoria']
+        fields = "__all__"
 
 class AvanceForm(forms.ModelForm):
     class Meta:

@@ -25,9 +25,7 @@
           {% csrf_token %}
           <div class="card-body">
             <div class="form-row">
-              <div class="form-group col-md-6">
-                {{ addcot.id_cotizacion | as_crispy_field}} 
-              </div>
+          
               <div class="form-group col-md-6">
                 {{ addcot.fecha_cotizacion | as_crispy_field}}
               </div>

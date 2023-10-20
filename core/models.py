@@ -23,117 +23,190 @@ class Clientes(models.Model):
     nombre = models.CharField(max_length=45)
     apellido = models.CharField(max_length=45)
     direccion = models.CharField(max_length=45)
-    telefono = models.CharField(max_length=45)
+    telefono = models.CharField(max_length=11)
     def __str__(self):
-        return str(self.rut_cliente) + str(" ") + str(self.nombre) + str(" ") + str(self.apellido)
+        return str(self.nombre) + str(" ") + str(self.apellido)
+    
+    class Meta:
+        verbose_name = 'Cliente'
+        verbose_name_plural = 'Clientes'
+        ordering = ['nombre']
 
 class Proyecto(models.Model):
-    id_proyecto = models.IntegerField(primary_key=True)
-    cliente = models.ForeignKey('Clientes', on_delete=models.CASCADE, null=True, blank=True)
-    categoria = models.ForeignKey('CategoriaProyecto', on_delete=models.CASCADE)
+    id_proyecto = models.AutoField(primary_key=True)
+    cliente = models.ForeignKey('Clientes', on_delete=models.CASCADE, null=True, blank=True, default=0)
+    categoria = models.ForeignKey('CategoriaProyecto', on_delete=models.CASCADE, default=1)
     nombre_proyecto = models.CharField(max_length=100)
     instalacion = models.BooleanField(default=False)
-    fecha = models.DateField()
+    fecha = models.DateField(default=datetime.now)
     plazo_entrega = models.DateField()
-    status = models.ForeignKey('StatusProyecto', on_delete=models.CASCADE)
+    status = models.ForeignKey('StatusProyecto', on_delete=models.CASCADE, default=1)
     def __str__(self):
-        return str(self.nombre_proyecto)
+        return str(self.nombre_proyecto) + str(" - ") + str(self.cliente)
+    
+    class Meta:
+        verbose_name = 'Proyecto'
+        verbose_name_plural = 'Proyectos'
+        ordering = ['id_proyecto']
 
 class CategoriaProyecto(models.Model):
-    id_categoria = models.IntegerField(primary_key=True)
+    id_categoria = models.AutoField(primary_key=True)
     nombre_categoria = models.CharField(max_length=100)
     def __str__(self):
         return str(self.nombre_categoria)
+    
+    class Meta:
+        verbose_name = 'Categoría de Proyecto'
+        verbose_name_plural = 'Categorias de Proyectos'
+        ordering = ['nombre_categoria']
 
 class StatusProyecto(models.Model):
-    id_status = models.IntegerField(primary_key=True)
+    id_status = models.AutoField(primary_key=True)
     nombre_status = models.CharField(max_length=100)
     def __str__(self):
         return str(self.nombre_status)
     
+    class Meta:
+        verbose_name = 'Status de Proyecto'
+        verbose_name_plural = 'Status de Proyectos'
+        ordering = ['nombre_status']
+    
 class Equipos(models.Model):
     proyecto_id_proyecto = models.ForeignKey('Proyecto', on_delete=models.CASCADE)
-    id_equipo = models.IntegerField(primary_key=True)
+    id_equipo = models.AutoField(primary_key=True)
     nombre_equipo = models.CharField(max_length=100)
     trabajadores = models.ForeignKey('User', on_delete=models.CASCADE)
     def __str__(self):
-        return str(self.id_equipo) + str(self.nombre_equipo)
+        return str(self.nombre_equipo)
     
+    class Meta:
+        verbose_name = 'Equipo'
+        verbose_name_plural = 'Equipos'
+        ordering = ['nombre_equipo']
+    
+
 class EquipoAsignacion(models.Model):
-    asignacion_id = models.IntegerField(primary_key=True)
+    asignacion_id = models.AutoField(primary_key=True)
     equipo_id_equipo = models.ForeignKey('Equipos', on_delete=models.CASCADE)
     proyecto_id_proyecto = models.ForeignKey('Proyecto', on_delete=models.CASCADE)
-    tiempo_asignado = models.DateField()
-    tiempo_final = models.DateField()
+    fecha_asignacion = models.DateField(default=datetime.now)
+    fecha_termino = models.DateField()
     tarea = models.CharField(max_length=100)
     def __str__(self):
-        return str(self.equipo_id_equipo) + str(self.proyecto_id_proyecto)
+        return str('Equipo: ') +  str(self.equipo_id_equipo) + str(" - ") + str(self.tarea)
+    
+    class Meta:
+        verbose_name = 'Tarea de Equipo'
+        verbose_name_plural = 'Tareas de Equipos'
+        ordering = ['fecha_asignacion']
     
 class Avances(models.Model):
-    avance_id = models.IntegerField(primary_key=True)
+    avance_id = models.AutoField(primary_key=True)
     imagen = models.ImageField(upload_to='avances')
-    comentario = models.CharField(max_length=45)
+    comentario = models.CharField(max_length=100)
     asignacion_asignacion = models.ForeignKey('EquipoAsignacion', on_delete=models.CASCADE, null=True, blank=True)
     equipo_id_equipo = models.ForeignKey('Equipos', on_delete=models.CASCADE, null=True, blank=True)
     proyecto_id_proyecto = models.ForeignKey('Proyecto', on_delete=models.CASCADE, null=True, blank=True)
     def __str__(self):
-        return str(self.avance_id)
+        return str(self.avance_id) + str(" - ") + str(self.comentario)
     
+    class Meta:
+        verbose_name = 'Avance'
+        verbose_name_plural = 'Avances'
+        ordering = ['avance_id']
 
 class Productos(models.Model):
     id_producto = models.IntegerField(primary_key=True)
     nombre_producto = models.CharField(max_length=100)
-    descripcion = models.CharField(max_length=100)
-    categoria = models.ForeignKey('CategoriaProductos', on_delete=models.CASCADE)
-    subcategoria = models.ForeignKey('SubcategoriaProductos', on_delete=models.CASCADE)
-    marca = models.ForeignKey('MarcaProductos', on_delete=models.CASCADE)
-    precio_compra = models.IntegerField()
-    precio_venta = models.IntegerField()
+    descripcion = models.CharField(max_length=100, null=True, blank=True)
+    categoria = models.ForeignKey('CategoriaProductos', on_delete=models.CASCADE, default=1)
+    subcategoria = models.ForeignKey('SubcategoriaProductos', on_delete=models.CASCADE, default=1)
+    marca = models.ForeignKey('MarcaProductos', on_delete=models.CASCADE, default=1)
+    precio_compra = models.FloatField(default=0)
+    precio_venta = models.FloatField(default=0)
     variante = models.ForeignKey('VarianteProductos', on_delete=models.CASCADE, null=True, blank=True)
     def __str__(self):
-        return str(self.id_producto) + str(self.nombre_producto)
-
+        return str(self.nombre_producto)
+    
+    class Meta:
+        verbose_name = 'Producto'
+        verbose_name_plural = 'Productos'
+        ordering = ['id_producto']
 
 class CategoriaProductos(models.Model):
-    id_categoria = models.IntegerField(primary_key=True)
+    id_categoria = models.AutoField(primary_key=True)
     nombre_categoria = models.CharField(max_length=100)
     def __str__(self):
         return str(self.nombre_categoria)
     
+    class Meta:
+        verbose_name = 'Categoría de Producto'
+        verbose_name_plural = 'Categorías de Productos'
+        ordering = ['nombre_categoria']
+    
 class SubcategoriaProductos(models.Model):
-    id_subcategoria = models.IntegerField(primary_key=True)
+    id_subcategoria = models.AutoField(primary_key=True)
     nombre_subcategoria = models.CharField(max_length=100)
     def __str__(self):
         return str(self.nombre_subcategoria)
     
+    class Meta:
+        verbose_name = 'Subcategoría de Producto'
+        verbose_name_plural = 'Subcategorías de Productos'
+        ordering = ['nombre_subcategoria']
+    
 class MarcaProductos(models.Model):
-    id_marca = models.IntegerField(primary_key=True)
+    id_marca = models.AutoField(primary_key=True)
     nombre_marca = models.CharField(max_length=100)
     def __str__(self):
         return str(self.nombre_marca)
     
+    class Meta:
+        verbose_name = 'Marca de Producto'
+        verbose_name_plural = 'Marcas de Productos'
+        ordering = ['nombre_marca']
+    
 class VarianteProductos(models.Model):
-    id_variante = models.IntegerField(primary_key=True)
+    id_variante = models.AutoField(primary_key=True)
     nombre_variante = models.CharField(max_length=100)
     def __str__(self):
         return str(self.nombre_variante)
     
+    class Meta:
+        verbose_name = 'Variante de Producto'
+        verbose_name_plural = 'Variantes de Productos'
+        ordering = ['nombre_variante']
+    
 class Cotizaciones(models.Model):
-    id_cotizacion = models.IntegerField(primary_key=True)
-    fecha_cotizacion = models.DateField()
+    id_cotizacion = models.AutoField(primary_key=True)
+    fecha_cotizacion = models.DateField(default=datetime.now)
     nombre_cotizacion = models.CharField(max_length=100)
-    total_neto = models.IntegerField()
-    total_impuestos = models.IntegerField()
-    total = models.IntegerField()
-    detalle = models.ForeignKey('DetalleCotizaciones', on_delete=models.CASCADE, null=True, blank=True)
+    subtotal = models.FloatField(default=0)
+    iva = models.IntegerField(default=19)
+    total = models.FloatField(default=0)
     cliente = models.ForeignKey('Clientes', on_delete=models.CASCADE)
     generado_por = models.ForeignKey('User', on_delete=models.CASCADE)
     def __str__(self):
         return str(self.id_cotizacion) + str(self.nombre_cotizacion)
     
+    class Meta:
+        verbose_name = 'Cotización'
+        verbose_name_plural = 'Cotizaciones'
+        ordering = ['id_cotizacion']
+
+    
 class DetalleCotizaciones(models.Model):
+    id_detalle = models.AutoField(primary_key=True)
     id_cotizacion = models.ForeignKey('Cotizaciones', on_delete=models.CASCADE, null=True, blank=True)
-    id_producto = models.ForeignKey('Productos', on_delete=models.CASCADE)
+    producto = models.ForeignKey('Productos', on_delete=models.CASCADE)
+    precio = models.IntegerField()
     cantidad = models.IntegerField()
+    subtotal = models.FloatField(default=0)
     def __str__(self):
-        return str(self.id_cotizacion) + str(self.id_producto)
+        return str(self.id_cotizacion) + str(self.producto)
+    
+    class Meta:
+        verbose_name = 'Detalle de Cotización'
+        verbose_name_plural = 'Detalles de Cotizaciones'
+        ordering = ['id_cotizacion']
+
