@@ -1,4 +1,5 @@
-function globalDataTables() {
+// Tabla Trabajadores
+function trabajadoresTable() {
   var table = $(".tabla-datos").DataTable({
     "responsive": true,
     "lengthChange": false,
@@ -16,7 +17,7 @@ function globalDataTables() {
         text: 'Visibilidad de Columnas',
         extend: 'colvis'
       }
-    ]
+    ],
   });
 
   // Mover los botones a la esquina superior derecha
@@ -35,7 +36,7 @@ function globalDataTables() {
 
 };
 
-document.addEventListener('DOMContentLoaded', globalDataTables);
+
 
 // Agregar Registro Trabajador
 
@@ -74,4 +75,77 @@ $(document).ready(function() {
   });
 });
 
-// editar.js
+// Tabla Cotizaciones
+function cotizacionesTable() {
+  var table = $(".tabla-cotizaciones").DataTable({
+    "responsive": true,
+    "lengthChange": false,
+    "autoWidth": false,
+    "language": {
+      "url": '../../core/static/js/es-ES.json'
+    },
+    "dom": 'Bfrtip', // Esto habilita los botones en la parte superior
+    "buttons": [
+      {
+        text: 'Exportar a PDF',
+        extend: 'pdfHtml5'
+      },
+      {
+        text: 'Visibilidad de Columnas',
+        extend: 'colvis'
+      }
+    ],
+    columnDefs: [
+      {
+          targets: [-2],
+          class: 'text-center',
+          orderable: false,
+          render: function (data, type, row) {
+              return '$' + parseFloat(data).toLocaleString('es-CL', { minimumFractionDigits: 0, maximumFractionDigits: 0,});
+          },  
+      },
+    ]
+  });
+  
+  $('.botonEliminar').on('click', function(event) {
+    event.preventDefault(); // Evita que el enlace se siga inmediatamente
+
+    var url = $(this).attr('href'); // Obtén la URL desde el atributo href
+
+    $.confirm({
+        theme: 'material',
+        icon: 'fa fa-info',
+        columnClass: 'small',
+        typeAnimated: true,
+        cancelButtonClass: 'btn-primary',
+        draggable: true,
+        dragWindowBorder: false,
+        title: 'Confirmar acción',
+        content: '¿Estás seguro de que deseas eliminar este registro?',
+        buttons: {
+          info: {
+              text: "Si",
+              btnClass: 'btn-primary',
+              action: function () {
+                window.location = url;
+              }
+          },
+          danger: {
+              text: "No",
+              btnClass: 'btn-red',
+              action: function () {
+
+              }
+          },
+      }
+    });
+});
+
+
+
+
+
+
+};
+document.addEventListener('DOMContentLoaded', cotizacionesTable);
+document.addEventListener('DOMContentLoaded', trabajadoresTable);

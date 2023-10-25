@@ -1,60 +1,132 @@
 {% extends 'core/base.html' %}
-
-{% block content %}
 {% load static %}
 {% load crispy_forms_tags %}
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
-<link rel="stylesheet" href="{% static 'css/base.css' %}">
-<!------ Include the above in your HEAD tag ---------->
 
-<div class="container-fluid">
-  <div class="row">
-    <!-- left column -->
-    <div class="col-md-12">
-      <!-- general form elements -->
-      <div class="card card-primary">
-        <div class="card-header">
-          <h3 class="card-title">Agregar Cotizacion Nueva</h3>
-        </div>
-        <!-- /.card-header -->
-        <!-- form start -->
-        <form action="" method="POST">
-          {% csrf_token %}
-          <div class="card-body">
-            <div class="form-row">
-          
-              <div class="form-group col-md-6">
-                {{ addcot.fecha_cotizacion | as_crispy_field}}
-              </div>
-              <div class="form-group col-md-6">
-                {{ addcot.nombre_cotizacion| as_crispy_field}}
-              </div>
-              <div class="form-group col-md-6">
-                {{ addcot.cliente| as_crispy_field}}
-              </div>
-              <div class="form-group col-md-4">
-                {{ addcot.total_neto| as_crispy_field}}
-              </div>
-              <div class="form-group col-md-4">
-                {{ addcot.total_impuestos| as_crispy_field}}
-              </div>
-              <div class="form-group col-md-4">
-                {{ addcot.total| as_crispy_field}}
-              </div>
-              <div class="form-group col-md-6">
-                {{ addcot.detalle| as_crispy_field}}
-              </div>
-              <div class="form-group col-md-6">
-                {{ addcot.generado_por| as_crispy_field}}
-              </div>
-              <div class="form-group col-md-12">
-                <button type="submit" class="btn btn-primary">Agregar</button>
-              </div>
+{% block content %}
+
+
+  <link href="{% static 'lib/plugins/jquery-ui/jquery-ui.min.css' %}" rel="stylesheet"/>
+  <script src="{% static 'lib/plugins/jquery-ui/jquery-ui.min.js' %}"></script>
+
+  <link href="{% static 'lib/plugins/select2/css/select2.min.css' %}" rel="stylesheet"/>
+  <link href="{% static 'lib/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}" rel="stylesheet"/>
+  <script src="{% static 'lib/plugins/select2/js/select2.min.js' %}"></script>
+  <script src="{% static 'lib/plugins/select2/js/i18n/es.js' %}"></script>
+
+  <script src="{% static 'lib/plugins/moment/moment-with-locales.js' %}"></script>
+  <script src="{% static 'lib/plugins/tempusdominus-bootstrap-4/tempusdominus-bootstrap-4.min.js' %}"></script>
+  <link href="{% static 'lib/plugins/tempusdominus-bootstrap-4/tempusdominus-bootstrap-4.min.css' %}" rel="stylesheet"/>
+
+  <link href="{% static 'lib/plugins/bootstrap-touchspin-4.3.0/jquery.bootstrap-touchspin.css' %}" rel="stylesheet"/>
+  <script src="{% static 'lib/plugins/bootstrap-touchspin-4.3.0/jquery.bootstrap-touchspin.js' %}"></script>
+
+  <script src="{% static 'js/cotizaciones.js' %}"></script>
+
+    <form method="post">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-add"></i>Nueva Cotizacion
+                </h3>
             </div>
-       
-          </form>
-      </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-10">
+                        <div class="card card-secondary">
+                            <div class="card-header">
+                                
+                                <h4 class="card-title"><i class="fas fa-boxes"></i> Detalle de Productos</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label>Buscador de Productos:</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="search"
+                                            placeholder="Ingrese el nombre del Producto" autocomplete="off">
+                                        <span class="input-group-append">
+                                            <button type="button" class="btn btn-danger btn-flat"><i
+                                                    class="fas fa-times"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                                <hr>
+                                <table class="table table-bordered" id="tblProducts">
+                                    <thead>
+                                        <button type="button" class="btn btn-danger btn-xs btnRemoveAll" id="btnRemoveAll">
+                                            <i class="fa-solid fa-ban" id="iconRemove"></i>Limpiar Todo
+                                        </button>
+                                    <tr>
+                                        <th>Eliminar</th>
+                                        <th>Producto</th>
+                                        <th>Categoría</th>
+                                        <th>Precio</th>
+                                        <th width="150px">Cantidad</th>
+                                        <th>Subtotal</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                        
+                            </div>
+                            
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary btn-flat">
+                                <i class="fas fa-save"></i> Guardar Cotización
+                            </button>
+                            <a href="{{ list_url }}" class="btn btn-danger btn-flat">
+                                <i class="fas fa-times"></i> Cancelar
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-2">
+                        <div class="card card-secondary">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fas fa-shopping-cart"></i> Datos de la Cotización</h3>
+                            </div>
+                            <div class="card-body">
+                                <input type="hidden" name="action" value="{{ action }}">
+                                <div class="form-group">
+                                    {{ form.fecha_cotizacion | as_crispy_field }}
+                                </div>
+                                <div class="form-group">
+                                    {{ form.nombre_cotizacion| as_crispy_field }}
+                                </div>
+                                <div class="form-group">
+                                    {{ form.cliente | as_crispy_field}}
+                                </div>
+                                <div class="form-group">
+                                    {{ form.subtotal | as_crispy_field }}
+                                </div>
+                                <div class="form-group">
+                                    {{ form.iva | as_crispy_field }}
+                                </div>
+                                <div class="form-group">
+                                    <label>Monto Impuesto:</label>
+                                    <input type="text" class="form-control" readonly name="ivacalc" value="0" disabled=True>
+                                </div>
+                                <div class="form-group">
+                                    {{ form.total |  as_crispy_field }}
+                                </div>
+                                <hr>
+                                <div class="form-group">
+                                    {{ form.comentario | as_crispy_field }}
+                                </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        
+            </div>
+            
+    
+        </div>
+    </form>
+    
+    
 {% endblock %}

@@ -16,16 +16,14 @@
         </div>
         <div class="card-body table-responsive p-0" id="tarjetaTablas">
       
-          <table class="table table-bordered table-hover tabla-datos">
+          <table class="table table-bordered table-hover tabla-cotizaciones">
         <thead>
           <tr>
-            <th scope="col">ID Cotizacion</th>
+            <th scope="col">N° Cotizacion</th>
             <th scope="col">Fecha Generacion</th>
             <th scope="col">Nombre Cotizacion</th>
             <th scope="col">Cliente</th>
             <th scope="col">Total</th>
-            <th scope="col">Detalle</th>
-            <th scope="col">Generado Por</th>
             <th scope="col">Acciones</th>
 
           </tr>
@@ -38,14 +36,16 @@
             <td>{{ cotizacion.nombre_cotizacion }}</td>
             <td>{{ cotizacion.cliente }}</td>
             <td>{{ cotizacion.total }}</td>
-            <td>{{ cotizacion.detalle }}</td>
-            <td>{{ cotizacion.generado_por }}</td>
 
 
             <td>          
               <a class="btn btn-warning botonEditar" href="{% url 'editarTrabajadores' user.rut %}" role="button"><i class="fas fa-pen"></i></button>
-             <a class="btn btn-danger botonEliminar" href="{% url 'eliminarProyecto' user.rut %}" role="button"><i class="fas fa-trash-alt"></i></button>
-            <a class="btn btn-primary botonVer" href="{% url 'avances' %}" role="button"><i class="fas fa-eye"></i></button>
+                <a class="btn btn-danger botonEliminar" href="{% url 'eliminarCotizaciones' cotizacion.id_cotizacion %}" role="button">
+                  <i class="fas fa-trash-alt"></i>
+              </a>
+              
+
+            <a class="btn btn-primary botonVer" role="button"><i class="fas fa-eye"></i></button>
             </td>
           </tr>
           {% endfor %}

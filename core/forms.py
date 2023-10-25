@@ -1,6 +1,10 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import *
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout  
+from crispy_forms.layout import Field
+
 
 class CustomUserCreationForm(UserCreationForm):
     
@@ -38,7 +42,6 @@ class AgregarProyectoForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
             super(AgregarProyectoForm, self).__init__(*args, **kwargs)
-            self.fields['id_proyecto'].label = "ID Proyecto"
             self.fields['cliente'].label = "Cliente Proyecto"
             self.fields['categoria'].label = "Categoria Proyecto"
             self.fields['nombre_proyecto'].label = "Nombre del Proyecto"
@@ -51,12 +54,38 @@ class AgregarProyectoForm(forms.ModelForm):
 
 
 class CotizacionesForm(forms.ModelForm):
+
     class Meta:
         model = Cotizaciones
         fields = "__all__"
         widgets = {
+            'nombre_cotizacion': forms.TextInput(attrs={'placeholder': 'Ej. Cocina'}),
             'fecha_cotizacion': forms.DateTimeInput(attrs={'type': 'date'}),
-        }
+            'iva': forms.NumberInput(attrs={"disabled": True}),
+            'total': forms.NumberInput(attrs={"disabled": True}),
+            'subtotal': forms.NumberInput(attrs={"disabled": True}),
+            'fecha_cotizacion': forms.DateTimeInput(
+                {
+                    'value': datetime.now().strftime('%Y-%m-%d'),
+                    'autocomplete': 'off',
+                    'class': 'form-control datetimepicker-input',
+                    'id': 'fecha_cotizacion',
+                    'data-target': '#fecha_cotizacion',
+                    'data-toggle': 'datetimepicker'
+                }
+            ),
+            'cliente': forms.Select(attrs={
+                'class': 'form-control select2',
+                'style': 'width: 100%'
+            }),};
+    def __init__(self, *args, **kwargs):
+        super(CotizacionesForm, self).__init__(*args, **kwargs)
+        self.fields['fecha_cotizacion'].label = "Fecha de Cotización"
+        self.fields['iva'].label = "IVA (%)"
+        self.fields['total'].label = "Monto Total"
+        self.fields['subtotal'].label = "Monto Neto"
+        self.fields['cliente'].label = "Seleccionar Cliente"
+        self.fields['nombre_cotizacion'].label = "Nombre de Cotización"
 
 
 class ClientesForm(forms.ModelForm):

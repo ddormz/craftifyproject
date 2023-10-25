@@ -218,3 +218,27 @@ div.dt-buttons {
   justify-content: center;
   width: 70%;
 }
+
+#btnRemoveAll {
+  display: flex;
+  justify-content: start;
+  margin-bottom: 10px;
+}
+
+#iconRemove {
+  margin: 3px 5px 5px 5px;
+}
+
+
+
+.btn.btn-secondary.bootstrap-touchspin-down {
+  background-color: #32CDA1;
+  border: 0;
+  color: black;
+}
+
+.btn.btn-secondary.bootstrap-touchspin-up {
+  background-color: #32CDA1;
+  border: 0;
+  color: black;
+}

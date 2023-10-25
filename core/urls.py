@@ -31,7 +31,8 @@ urlpatterns = [
 
     # MODULO DE COTIZACIONES
     path('listarCotizaciones', listarCotizaciones, name='listarCotizaciones'),
-    path('agregarCotizaciones', agregarCotizaciones, name='agregarCotizaciones'),
+    path('agregarCotizaciones', CotView.as_view(), name='agregarCotizaciones'),
+    path('eliminarCotizaciones/<id_cotizacion>/', eliminarCotizaciones, name='eliminarCotizaciones'),
 
     # MODULO DE CLIENTES
     path('listarClientes', listarClientes, name='listarClientes'),

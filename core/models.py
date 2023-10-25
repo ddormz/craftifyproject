@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.forms import model_to_dict
 from django.utils.translation import gettext_lazy as _
 from datetime import datetime
 
@@ -26,6 +27,10 @@ class Clientes(models.Model):
     telefono = models.CharField(max_length=11)
     def __str__(self):
         return str(self.nombre) + str(" ") + str(self.apellido)
+    
+    def toJSON(self):
+        item = model_to_dict(self)
+        return item
     
     class Meta:
         verbose_name = 'Cliente'
@@ -126,8 +131,16 @@ class Productos(models.Model):
     precio_venta = models.FloatField(default=0)
     variante = models.ForeignKey('VarianteProductos', on_delete=models.CASCADE, null=True, blank=True)
     def __str__(self):
-        return str(self.nombre_producto)
+        return str(self.nombre_producto) + str(" - ") + str(self.variante)
     
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['categoria'] = self.categoria.toJSON()
+        item['precio_venta'] = format(self.precio_venta, '.2f')
+        item['variante'] = self.variante.toJSON()
+        return item
+    
+
     class Meta:
         verbose_name = 'Producto'
         verbose_name_plural = 'Productos'
@@ -138,6 +151,10 @@ class CategoriaProductos(models.Model):
     nombre_categoria = models.CharField(max_length=100)
     def __str__(self):
         return str(self.nombre_categoria)
+
+    def toJSON(self):
+        item = model_to_dict(self)
+        return item
     
     class Meta:
         verbose_name = 'Categoría de Producto'
@@ -150,6 +167,10 @@ class SubcategoriaProductos(models.Model):
     def __str__(self):
         return str(self.nombre_subcategoria)
     
+    def toJSON(self):
+        item = model_to_dict(self)
+        return item
+    
     class Meta:
         verbose_name = 'Subcategoría de Producto'
         verbose_name_plural = 'Subcategorías de Productos'
@@ -161,6 +182,10 @@ class MarcaProductos(models.Model):
     def __str__(self):
         return str(self.nombre_marca)
     
+    def toJSON(self):
+        item = model_to_dict(self)
+        return item
+
     class Meta:
         verbose_name = 'Marca de Producto'
         verbose_name_plural = 'Marcas de Productos'
@@ -172,6 +197,10 @@ class VarianteProductos(models.Model):
     def __str__(self):
         return str(self.nombre_variante)
     
+    def toJSON(self):
+        item = model_to_dict(self)
+        return item
+    
     class Meta:
         verbose_name = 'Variante de Producto'
         verbose_name_plural = 'Variantes de Productos'
@@ -180,12 +209,13 @@ class VarianteProductos(models.Model):
 class Cotizaciones(models.Model):
     id_cotizacion = models.AutoField(primary_key=True)
     fecha_cotizacion = models.DateField(default=datetime.now)
-    nombre_cotizacion = models.CharField(max_length=100)
+    nombre_cotizacion = models.CharField(max_length=100, null=True, blank=True)
     subtotal = models.FloatField(default=0)
     iva = models.IntegerField(default=19)
     total = models.FloatField(default=0)
     cliente = models.ForeignKey('Clientes', on_delete=models.CASCADE)
-    generado_por = models.ForeignKey('User', on_delete=models.CASCADE)
+    generado_por = models.ForeignKey('User', on_delete=models.CASCADE, null=True, blank=True)
+    comentario = models.TextField(max_length=1000, null=True, blank=True)
     def __str__(self):
         return str(self.id_cotizacion) + str(self.nombre_cotizacion)
     
@@ -197,7 +227,7 @@ class Cotizaciones(models.Model):
     
 class DetalleCotizaciones(models.Model):
     id_detalle = models.AutoField(primary_key=True)
-    id_cotizacion = models.ForeignKey('Cotizaciones', on_delete=models.CASCADE, null=True, blank=True)
+    id_cotizacion = models.ForeignKey('Cotizaciones', on_delete=models.CASCADE)
     producto = models.ForeignKey('Productos', on_delete=models.CASCADE)
     precio = models.IntegerField()
     cantidad = models.IntegerField()

@@ -1,10 +1,14 @@
+import json
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
+from django.urls import reverse_lazy
 from .forms import *
 from .models import *
-
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import CreateView
+from django.utils.decorators import method_decorator
 # Create your views here.
 @login_required
 def home(request ):
@@ -125,29 +129,90 @@ def agregarAvances(request):
     return render (request, 'avances/agregarAvances.html', data)
         
 
+@method_decorator(csrf_exempt)
 def listarCotizaciones(request):
     cotizaciones = Cotizaciones.objects.all()
     contexto = {'cotizaciones':cotizaciones}
     return render(request, 'cotizaciones/listarCotizaciones.html', contexto)
 
-def agregarCotizaciones(request):
-    data = {
-        'addcot': CotizacionesForm()
-    }
-    if request.method == 'POST':
-        formulario = CotizacionesForm(data=request.POST)
-        if formulario.is_valid():
-            formulario.save()
-            return redirect('listarCotizaciones')
-        else:
-            data['addcot'] = formulario
-    
-    return render(request, 'cotizaciones/agregarCotizacion.html', data)
+## Vista por Clases Cotizaciones (Crear)
+
+class CotView(CreateView):
+    model = Cotizaciones
+    form_class = CotizacionesForm
+    template_name = 'cotizaciones/agregarCotizacion.html'
+    success_url = reverse_lazy('listarCotizaciones')
+    url_redirect = success_url
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST['action']
+            if action == 'search_products':
+                data = []
+                prods = Productos.objects.filter(nombre_producto__icontains=request.POST['term'])[0:10]
+                for i in prods:
+                    item = i.toJSON()
+                    item['value'] = i.nombre_producto
+                    data.append(item)
+            elif action == 'add':
+
+                # Cotizaciones
+                
+                vents = json.loads(request.POST['vents'])
+                cotizacion = Cotizaciones()
+                cotizacion.fecha_cotizacion = vents['fecha_cotizacion']
+                cliente_id = int(vents['cli'])
+                cotizacion.cliente = Clientes.objects.get(rut_cliente=cliente_id)
+                cotizacion.subtotal = vents['subtotal']
+                cotizacion.iva = vents['iva']
+                cotizacion.total = vents['total']
+                cotizacion.nombre_cotizacion = vents['nombre_cotizacion']
+                cotizacion.comentario = vents['comentario']
+                cotizacion.save()
+
+                # Detalle
+                for i in vents['products']:
+                    det = DetalleCotizaciones()
+                    det.id_cotizacion = cotizacion
+                    product_id = i['id_producto']  # ID del producto
+                    product_instance = Productos.objects.get(id_producto=product_id)  # Buscar la instancia de Productos
+                    det.producto = product_instance  # Asignar la instancia
+                    det.cantidad = int(i['cant'])
+                    det.precio = float(i['precio_venta'])
+                    det.subtotal = float(i['subtotal'])
+                    det.save()
+            else:
+                data['error'] = 'No ha ingresado a ninguna opción'
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data, safe=False)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Creación de una Venta'
+        context['entity'] = 'Ventas'
+        context['list_url'] = self.success_url
+        context['action'] = 'add'
+        return context
+
+def eliminarCotizaciones(request, id_cotizacion):
+    cotizacion = Cotizaciones.objects.get(id_cotizacion=id_cotizacion)
+    cotizacion.delete()
+    return redirect('listarCotizaciones')
+
+
 
 def listarClientes(request):
     cliente = Clientes.objects.all()
     contexto = {'clientes':cliente}
     return render(request, 'clientes/listarCliente.html', contexto)
+
+
 
 
 def agregarClientes(request):
