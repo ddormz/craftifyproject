@@ -1,5 +1,13 @@
 # Craftify Project
 
+v1.3 - 27-10 - 70%
+- Modelos Afinados
+- CRUD Listos
+- Logica JS para Cotizaciones, jQuery Confirms.
+- Datatables para todo.
+- API al 90%
+- Añadido los CORS para la API
+
 V1.2 - 05 - 10
 - CRUD de Proyectos
 - CRUD de Avances con Imagen
