@@ -1,5 +1,10 @@
 # Craftify Project
 
+v1.4 - 31-10 
+- Cotizaciones OK (agregar, editar, eliminar mediante ajax, también ver detalle de cotización) # Falta Validaciones de Cotizacion al agregar un producto que ya existe.
+
+
+
 v1.3 - 27-10 - 70%
 - Modelos Afinados
 - CRUD Listos
