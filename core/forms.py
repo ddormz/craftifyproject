@@ -61,7 +61,7 @@ class CotizacionesForm(forms.ModelForm):
         widgets = {
             'nombre_cotizacion': forms.TextInput(attrs={'placeholder': 'Ej. Cocina'}),
             'fecha_cotizacion': forms.DateTimeInput(attrs={'type': 'date'}),
-            'iva': forms.NumberInput(attrs={"disabled": True}),
+            'iva': forms.NumberInput(attrs={"disabled": True, "value": 19}),
             'total': forms.NumberInput(attrs={"disabled": True}),
             'subtotal': forms.NumberInput(attrs={"disabled": True}),
             'fecha_cotizacion': forms.DateTimeInput(
@@ -130,3 +130,9 @@ class AsignacionForm(forms.ModelForm):
             'tiempo_asignado': forms.DateInput(attrs={'type': 'date'}),
             'tiempo_final': forms.DateInput(attrs={'type': 'date'}),
         }
+
+
+class LoginForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['rut', 'password']

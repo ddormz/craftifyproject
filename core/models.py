@@ -139,6 +139,7 @@ class Productos(models.Model):
         item['categoria'] = self.categoria.toJSON()
         item['precio_venta'] = format(self.precio_venta, '.2f')
         item['variante'] = self.variante.toJSON()
+        item['subcategoria'] = self.subcategoria.toJSON()
         return item
     
 
@@ -220,6 +221,18 @@ class Cotizaciones(models.Model):
     def __str__(self):
         return str(self.id_cotizacion) + str(self.nombre_cotizacion)
     
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['cliente'] = self.cliente.toJSON()
+        item['nombre_cotizacion'] = self.nombre_cotizacion
+        item['subtotal'] = format(self.subtotal, '.2f')
+        item['iva'] = format(self.iva, '.2f')
+        item['total'] = format(self.total, '.2f')
+        item['fecha_cotizacion'] = self.fecha_cotizacion.strftime('%Y-%m-%d')
+        item['comentario'] = self.comentario
+        item['det'] = [i.toJSON() for i in self.detallecotizaciones_set.all()]
+        return item
+
     class Meta:
         verbose_name = 'Cotización'
         verbose_name_plural = 'Cotizaciones'
@@ -236,6 +249,13 @@ class DetalleCotizaciones(models.Model):
     def __str__(self):
         return str(self.id_cotizacion) + str(self.producto)
     
+    def toJSON(self):
+        item = model_to_dict(self, exclude=['id_cotizacion'])
+        item['producto'] = self.producto.toJSON()
+        item['precio'] = format(self.precio, '.2f')
+        item['subtotal'] = format(self.subtotal, '.2f')
+        return item
+
     class Meta:
         verbose_name = 'Detalle de Cotización'
         verbose_name_plural = 'Detalles de Cotizaciones'

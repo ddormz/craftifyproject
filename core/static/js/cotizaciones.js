@@ -122,9 +122,10 @@ $(function () {
         //minDate: moment().format("YYYY-MM-DD")
     });
 
-    $("input[name='iva']").change(function () {
+    $("input[name='iva']").on('change', function () {
         vents.calculate_invoice();
     })
+    .val(19);
 
     // buscador de productos
 
@@ -154,6 +155,7 @@ $(function () {
             ui.item.subtotal = 0.00;
             vents.add(ui.item);
             $(this).val('');
+            console.log(vents.items.products);
         }
     });
 
@@ -173,7 +175,7 @@ $(function () {
         var tr = tblProducts.cell($(this).closest('td, li')).index();
         vents.items.products.splice(tr.row, 1);
         tblProducts.row(tr.row).remove().draw(false);
-        vents.calculate_invoice();
+        vents.list();
     });
 
     // alerta antes de eliminar 
@@ -183,7 +185,7 @@ $(function () {
         alert_action('Eliminar todo', '¿Desea eliminar todos los registros?', function () {
             vents.items.products = [];
             tblProducts.clear().draw();
-            vents.calculate_invoice();
+            vents.list();
         })
 
    
@@ -220,11 +222,11 @@ $(function () {
         parameters.append('action', $('input[name="action"]').val());
         parameters.append('vents', JSON.stringify(vents.items));
         submit_with_ajax(window.location.pathname, 'Notificacion', '¿Estas seguro de realizar la siguiente accion?', parameters, function () {
-            location.href = 'listarCotizaciones';
-        })
-});
-
-
+           location.href = '/listarCotizaciones';
+            
+        })   
+    });
+    vents.list();
 });
 
 
@@ -237,3 +239,4 @@ document.addEventListener('DOMContentLoaded', function () {
         textarea.resize = 'none';
     }
 });
+

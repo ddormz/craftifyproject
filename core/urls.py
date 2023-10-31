@@ -19,7 +19,7 @@ urlpatterns = [
     path ('eliminarTrabajadores/<rut>/', eliminarTrabajadores, name='eliminarTrabajadores'),
 
     # MODULO DE PROYECTOS
-    path('proyectos/', proyectos, name='proyectos'),
+    path('verproyectos/', verproyectos, name='verproyectos'),
     path('agregarProyecto/', agregarProyecto, name='agregarProyecto'),
     path('editarProyecto/<id_proyecto>/', editarProyecto, name='editarProyecto'),
     path('eliminarProyecto/<id_proyecto>/', eliminarProyecto, name='eliminarProyecto'),
@@ -30,9 +30,10 @@ urlpatterns = [
     path('agregarAvances', agregarAvances, name='agregarAvances'),
 
     # MODULO DE COTIZACIONES
-    path('listarCotizaciones', listarCotizaciones, name='listarCotizaciones'),
+    path('listarCotizaciones', CotListView.as_view(), name='listarCotizaciones'),
     path('agregarCotizaciones', CotView.as_view(), name='agregarCotizaciones'),
     path('eliminarCotizaciones/<id_cotizacion>/', eliminarCotizaciones, name='eliminarCotizaciones'),
+    path('editarCotizaciones/<int:pk>/', CotUpdateView.as_view(), name='editarCotizaciones'),
 
     # MODULO DE CLIENTES
     path('listarClientes', listarClientes, name='listarClientes'),

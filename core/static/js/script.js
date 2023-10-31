@@ -76,8 +76,9 @@ $(document).ready(function() {
 });
 
 // Tabla Cotizaciones
+
 function cotizacionesTable() {
-  var table = $(".tabla-cotizaciones").DataTable({
+  var tblCot = $(".tabla-cotizaciones").DataTable({
     "responsive": true,
     "lengthChange": false,
     "autoWidth": false,
@@ -95,18 +96,154 @@ function cotizacionesTable() {
         extend: 'colvis'
       }
     ],
+    ajax: {
+      url: window.location.pathname,
+      type: 'POST',
+      data: {
+        'action': 'listarCot'
+      },
+      dataSrc: '',
+    },
+    columns: [
+      {"data": "id_cotizacion"},
+      {"data": "fecha_cotizacion"},
+      {"data": "nombre_cotizacion"},
+      {
+        "data": "cliente.nombre",
+        "render": function(data, type, row) {
+          if (type === 'display') {
+            // Concatenar nombre y apellido si el tipo de render es 'display'
+            return row.cliente.nombre + ' ' + row.cliente.apellido;
+          }
+          // De lo contrario, muestra solo el nombre
+          return data;
+        }
+      },
+      {"data": "total"},
+      {"data": "id_cotizacion"},
+    ],
     columnDefs: [
       {
-          targets: [-2],
+          targets: [4],
           class: 'text-center',
           orderable: false,
           render: function (data, type, row) {
               return '$' + parseFloat(data).toLocaleString('es-CL', { minimumFractionDigits: 0, maximumFractionDigits: 0,});
           },  
       },
-    ]
+      {
+        targets: [-1],
+        class: 'text-center',
+        orderable: false,
+        render: function (data, type, row) {
+            var buttons = '<a rel="remove" href="/eliminarCotizaciones/' + row.id_cotizacion + '/" class="btn btn-danger btn-xs btn-flat" id="botonEliminar"><i class="fas fa-trash-alt"></i></a>';
+            buttons += '<a href="/editarCotizaciones/' + row.id_cotizacion + '/" class="btn btn-warning btn-xs btn-flat"><i class="fas fa-pen"></i></a> ';
+            buttons += '<a rel="details" class="btn btn-success btn-xs btn-flat"><i class="fas fa-search"></i></a> ';
+            
+            return buttons;
+        }
+    },
+    ],
+    initComplete: function (settings, json) {
+      
+    },
+    
+});
+
+// CONFIRMACION DE ELIMINAR EN COTIZACIONES 
+  $(document).on('click', 'a[rel="remove"]', function (event) {
+    event.preventDefault(); // Evita que el enlace se siga inmediatamente
+
+    var url = $(this).attr('href'); // Obtén la URL desde el atributo href
+
+    $.confirm({
+        theme: 'material',
+        icon: 'fa fa-info',
+        columnClass: 'small',
+        typeAnimated: true,
+        cancelButtonClass: 'btn-primary',
+        draggable: true,
+        dragWindowBorder: false,
+        title: 'Confirmar acción',
+        content: '¿Estás seguro de que deseas eliminar este registro?',
+        buttons: {
+          info: {
+              text: "Si",
+              btnClass: 'btn-primary',
+              action: function () {
+                window.location = url;
+              }
+          },
+          danger: {
+              text: "No",
+              btnClass: 'btn-red',
+              action: function () {
+
+              }
+          },
+      }
+    });
+  })
+
+
+
+  $('.tabla-cotizaciones tbody')
+  .on('click', 'a[rel="details"]', function () {
+      var tr = tblCot.cell($(this).closest('td, li')).index();
+      var data = tblCot.row(tr.row).data();
+      console.log(data);
+      
+      $('#tblDetalle').DataTable({
+        responsive: true,
+        autoWidth: false,
+        destroy: true,
+        deferRender: true,
+        lengthChange: false,
+        language: {
+            url: '../../core/static/js/es-ES.json'
+        },
+        ajax: {
+            url: window.location.pathname,
+            type: 'POST',
+            data: {
+                'action': 'detalleCot',
+                'id_cotizacion': data.id_cotizacion
+            },
+            dataSrc: ""
+        },
+        columns: [
+            {"data": "producto.nombre_producto"},
+            {"data": "producto.categoria.nombre_categoria"},
+            {"data": "producto.subcategoria.nombre_subcategoria"},
+            {"data": "precio"},
+            {"data": "cantidad"},
+            {"data": "subtotal"},
+        ],
+        columnDefs: [
+            {
+            targets: [-1, -3],
+            class: 'text-center',
+            orderable: false,
+            render: function (data, type, row) {
+                return '$' + parseFloat(data).toLocaleString('es-CL', { minimumFractionDigits: 0, maximumFractionDigits: 0,});
+            }
+            }
+        ],
+        initComplete: function (settings, json) {
+
+        }
+    });
+
+    $('#ModalDetalle').modal('show');
+
+    $('.close').on('click', function() {
+      $('#ModalDetalle').modal('hide');
   });
-  
+  });
+
+
+// ELIMINAR GLOBAL
+
   $('.botonEliminar').on('click', function(event) {
     event.preventDefault(); // Evita que el enlace se siga inmediatamente
 

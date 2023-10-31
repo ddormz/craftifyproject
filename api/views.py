@@ -23,7 +23,7 @@ from django.contrib.auth.decorators import login_required
 @csrf_exempt # Solicitudes no sean rechazadas por el TOKEN.
 
 @api_view(['GET', 'POST',] ) #put, delete.
-def detalleCotizaciones(request):
+def apidetallecotizaciones(request):
     if request.method == 'GET':
         listado = DetalleCotizaciones.objects.all()
         serializer = DetalleCotizacionSerializer(listado, many=True)
@@ -31,35 +31,35 @@ def detalleCotizaciones(request):
 
 @api_view(['GET', 'POST',] ) #put, delete.
 
-def cotizaciones(request):
+def apicotizaciones(request):
     listado = Cotizaciones.objects.all()
     serializer = CotizacionesSerializer(listado, many=True)
     return Response(serializer.data)
 
 @api_view(['GET', 'POST'])
 
-def listarProyectos(request):
+def apiproyectos(request):
     listado = Proyecto.objects.all()
     serializer = ProyectosSerializer(listado, many=True)
     return Response(serializer.data)
 
 
 @api_view(['GET'])    
-def listarTrabajadores(request):
+def apitrabajadores(request):
     if request.method == 'GET':
         listado = User.objects.all()
         serializer = TrabajadoresSerializer(listado, many=True)
         return Response(serializer.data)
     
 @api_view(['GET'])
-def listarProductos(request):
+def apiproductos(request):
     if request.method == 'GET':
         listado = Productos.objects.all()
         serializer = ProductosSerializer(listado, many=True)
         return Response(serializer.data)
     
 @api_view(['GET'])
-def listarCategorias(request):
+def apicategorias(request):
     if request.method == 'GET':
         listado = CategoriaProductos.objects.all()
         serializer = CategoriaProductosSerializer(listado, many=True)
@@ -67,14 +67,14 @@ def listarCategorias(request):
 
 
 @api_view(['GET'])  
-def listarSubCategorias(request):
+def apisubcategorias(request):
     if request.method == 'GET':
         listado = SubcategoriaProductos.objects.all()
         serializer = SubcategoriaProductosSerializer(listado, many=True)
         return Response(serializer.data)
 
 @api_view(['GET'])    
-def listarMarcas(request):
+def apimarcas(request):
     if request.method == 'GET':
         listado = MarcaProductos.objects.all()
         serializer = MarcaProductosSerializer(listado, many=True)
@@ -82,13 +82,13 @@ def listarMarcas(request):
 
 
 @api_view(['GET'])
-def listarVariantes(request):
+def apivariantes(request):
     if request.method == 'GET':
         listado = VarianteProductos.objects.all()
         serializer = VariantesSerializer(listado, many=True)
         return Response(serializer.data)
 @api_view(['GET'])  
-def listarAvances(request):
+def apiveravances(request):
     if request.method == 'GET':
         listado = Avances.objects.all()
         serializer = AvancesSerializer(listado, many=True)
@@ -96,7 +96,7 @@ def listarAvances(request):
 
 
 @api_view(['GET'])
-def listarEquipos(request):
+def apiequipos(request):
     if request.method == 'GET':
         listado = Equipos.objects.all()
         serializer = EquiposSerializer(listado, many=True)
@@ -104,14 +104,14 @@ def listarEquipos(request):
 
 
 @api_view(['GET'])   
-def listarAsignaciones(request):
+def apiasignaciones(request):
     if request.method == 'GET':
         listado = EquipoAsignacion.objects.all()
         serializer = AsignacionesSerializer(listado, many=True)
         return Response(serializer.data)
     
 @api_view(['GET'])
-def listarStatus(request):
+def apistatus(request):
     if request.method == 'GET':
         listado = StatusProyecto.objects.all()
         serializer = StatusSerializer(listado, many=True)

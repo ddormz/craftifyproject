@@ -25,31 +25,12 @@
             <th scope="col">Cliente</th>
             <th scope="col">Total</th>
             <th scope="col">Acciones</th>
-
           </tr>
         </thead>
         <tbody>
-       {% for cotizacion in cotizaciones %}
-          <tr>
-            <th scope="row">{{ cotizacion.id_cotizacion }}</th>
-            <td>{{ cotizacion.fecha_cotizacion }}</td>
-            <td>{{ cotizacion.nombre_cotizacion }}</td>
-            <td>{{ cotizacion.cliente }}</td>
-            <td>{{ cotizacion.total }}</td>
-
-
-            <td>          
-              <a class="btn btn-warning botonEditar" href="{% url 'editarTrabajadores' user.rut %}" role="button"><i class="fas fa-pen"></i></button>
-                <a class="btn btn-danger botonEliminar" href="{% url 'eliminarCotizaciones' cotizacion.id_cotizacion %}" role="button">
-                  <i class="fas fa-trash-alt"></i>
-              </a>
-              
-
-            <a class="btn btn-primary botonVer" role="button"><i class="fas fa-eye"></i></button>
             </td>
           </tr>
-          {% endfor %}
-
+          
         </tbody>
       </table>
       </div>
@@ -57,5 +38,38 @@
   </div>
 </div>
 {% endif %}
+
+
+<!-- Modal -->
+<div class="modal fade" id="ModalDetalle" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Detalle de Cotización</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-bordered table-hover" id="tblDetalle">
+          <thead>
+            <tr>
+              <th scope="col">Producto</th>
+              <th scope="col">Categoria</th>
+              <th scope="col">Subcategoria</th>
+              <th scope="col">Precio</th>
+              <th scope="col">Cantidad</th>
+              <th scope="col">Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock %}

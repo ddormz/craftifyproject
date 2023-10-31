@@ -6,19 +6,18 @@ from rest_framework.routers import DefaultRouter
 
 urlpatterns = [
 
-    path('listarProyectos/', listarProyectos, name='listarProyectos'),
-    path('cotizaciones/', cotizaciones, name='cotizaciones'),
-    path('listarTrabajadores/', listarTrabajadores, name='listarTrabajadores'),
-    path('listarProductos/', listarProductos, name='listarProductos'),
-    path('listarCategorias/', listarCategorias, name='listarCategorias'),
-    path('listarSubCategorias/', listarSubCategorias, name='listarSubCategorias'),
-    path('listarMarcas/', listarMarcas, name='listarMarcas'),
-    path('listarEquipos/', listarEquipos, name='listarEquipos'),
-    path('listarAvances/', listarAvances, name='listarAvances'),
-    path('listarVariantes/', listarVariantes, name='listarVariantes'),
-    path('listarAsignaciones/', listarAsignaciones, name='listarAsignaciones'),
-    path('listarStatus/', listarStatus, name='listarStatus'),
-    path('detalleCotizaciones/', detalleCotizaciones, name='detalleCotizaciones'),
+    path('apiproyectos/', apiproyectos, name='apiproyectos'),
+    path('apicotizaciones/', apicotizaciones, name='apicotizaciones'),
+    path('apidetallecotizaciones/', apidetallecotizaciones, name='apidetallecotizaciones'),
+    path('apitrabajadores/', apitrabajadores, name='apitrabajadores'),
+    path('apiproductos/', apiproductos, name='apiproductos'),
+    path('apicategorias/', apicategorias, name='apicategorias'),
+    path('apisubcategorias/', apisubcategorias, name='apisubcategorias'),
+    path('apiveravances/', apiveravances, name='apiveravances'),
+    path('apiasignaciones/', apiasignaciones, name='apiasignaciones'),
+    path('apistatus', apistatus, name='apistatus'),
+
+
 ]
 
 
