@@ -1,3 +1,72 @@
+function proyectosTable() {
+  var table = $(".tabla-proyectos").DataTable({
+    "responsive": true,
+    "lengthChange": false,
+    "autoWidth": false,
+    "language": {
+      "url": '../../core/static/js/es-ES.json'
+    },
+    "dom": 'Bfrtip', // Esto habilita los botones en la parte superior
+    "buttons": [
+      {
+        text: 'Exportar a PDF',
+        extend: 'pdfHtml5'
+      },
+      {
+        text: 'Visibilidad de Columnas',
+        extend: 'colvis'
+      }
+    ],
+    "columnDefs": [
+      {
+        "targets": [-3], // El índice de la columna "Status" (0-based)
+        "render": function (data, type, row) {
+          if (data === "Cotizado") {
+            return '<div class="badge rounded-pill bg-primary" style="width:100%">' + data + '</div></div>';
+          } else if (data === "Aceptado") {
+            return '<div class="badge rounded-pill bg-success" style="width:100%">' + data + '</div></div>';
+          } else if (data === "Producción") {
+            return '<div class="badge rounded-pill bg-warning" style="width:100%">' + data + '</div></div>';
+          } else if (data === "Por Instalar") {
+            return '<div class="badge rounded-pill bg-danger" style="width:100%">' + data + '</div></div>';
+          } else if (data === "Terminado") {
+            return '<div class="badge rounded-pill bg-dark" style="width:100%">' + data + '</div></div>';
+          }
+          return data;
+        },
+        "data": "Status" // Nombre de la columna de datos "Status"
+      },
+      {
+        "targets": [-2], // Columna "Tiempo Restante"
+        "render": function (data, type, row) {
+          // Utiliza una expresión regular para extraer solo el número
+          var tiempoRestante = parseInt(data.match(/\d+/));
+          var badgeClass = "";
+
+          if (tiempoRestante > 15) {
+            return '<div class="badge rounded-pill bg-success">' + tiempoRestante + ' días</div>';
+          } else if (tiempoRestante > 7) {
+            return '<div class="badge rounded-pill bg-warning">' + tiempoRestante + ' días</div>';
+          } else if (tiempoRestante >= 0) {
+            return '<div class="badge rounded-pill bg-danger">' + tiempoRestante + ' días</div>';
+          } else {
+            return '<div class="badge rounded-pill bg-danger">Vencido</div>';
+          }
+        },
+        "targets": [-2]
+      }
+    ]
+  });
+
+  // Mover los botones a la esquina superior derecha
+  var buttonsContainer = table.buttons().container();
+  buttonsContainer.appendTo($('#tarjetaTablas'));
+  buttonsContainer.addClass('float-left');
+};
+
+
+
+
 // Tabla Trabajadores
 function trabajadoresTable() {
   var table = $(".tabla-datos").DataTable({
@@ -138,8 +207,8 @@ function cotizacionesTable() {
         render: function (data, type, row) {
             var buttons = '<a rel="remove" href="/eliminarCotizaciones/' + row.id_cotizacion + '/" class="btn btn-danger btn-xs btn-flat" id="botonEliminar"><i class="fas fa-trash-alt"></i></a>';
             buttons += '<a href="/editarCotizaciones/' + row.id_cotizacion + '/" class="btn btn-warning btn-xs btn-flat"><i class="fas fa-pen"></i></a> ';
-            buttons += '<a rel="details" class="btn btn-success btn-xs btn-flat"><i class="fas fa-search"></i></a> ';
-            
+            buttons += '<a rel="details" class="btn btn-success btn-xs btn-flat"><i class="fas fa-search"></i></a> ';  
+            buttons += '<a href="/cotpdf/' + row.id_cotizacion + '/" class="btn btn-dark btn-xs btn-flat"><i class="fa-solid fa-file-pdf" style="color: white;"></i></a>';
             return buttons;
         }
     },
@@ -151,7 +220,7 @@ function cotizacionesTable() {
 });
 
 // CONFIRMACION DE ELIMINAR EN COTIZACIONES 
-  $(document).on('click', 'a[rel="remove"]', function (event) {
+ /* $(document).on('click', 'a[rel="remove"]', function (event) {
     event.preventDefault(); // Evita que el enlace se siga inmediatamente
 
     var url = $(this).attr('href'); // Obtén la URL desde el atributo href
@@ -184,6 +253,7 @@ function cotizacionesTable() {
       }
     });
   })
+  */
 
 
 
@@ -286,3 +356,4 @@ function cotizacionesTable() {
 };
 document.addEventListener('DOMContentLoaded', cotizacionesTable);
 document.addEventListener('DOMContentLoaded', trabajadoresTable);
+document.addEventListener('DOMContentLoaded', proyectosTable);

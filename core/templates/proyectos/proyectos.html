@@ -19,7 +19,7 @@
         <!-- /.card-header -->
         <div class="card-body table-responsive p-0" id="tarjetaTablas">
       
-          <table class="table table-bordered table-hover tabla-datos">
+          <table class="table table-bordered table-hover tabla-proyectos">
         <thead>
           <tr>
             <th scope="col">ID Proyecto</th>
@@ -30,6 +30,7 @@
             <th scope="col">Fecha Creacion</th>
             <th scope="col">Plazo Entrega</th>
             <th scope="col">Status</th>
+            <th class="tiempo-restante-header">Tiempo</th>
             <th scope="col">Acciones</th>
             
           </tr>
@@ -37,14 +38,16 @@
         <tbody>
        {% for proyecto in proyectos %}
           <tr>
-            <th scope="row">{{ proyecto.id_proyecto }}</th>
+            <th scope="">{{ proyecto.id_proyecto }}</th>
             <th scope="row">{{ proyecto.cliente }}</th>  
             <th scope="row">{{ proyecto.categoria }}</th>
             <th scope="row">{{ proyecto.nombre_proyecto }}</th>
             <th scope="row">{{ proyecto.instalacion }}</th>
             <th scope="row">{{ proyecto.fecha }}</th>
             <th scope="row">{{ proyecto.plazo_entrega }}</th>
+
             <th scope="row">{{ proyecto.status }}</th>
+                    <td>{{ proyecto.tiempo_restante }} días</td>
             <td>          
              <a class="btn btn-warning botonEditar" href="{% url 'editarProyecto' proyecto.id_proyecto %}" role="button"><i class="fas fa-pen"></i></button>
              <a class="btn btn-danger botonEliminar" href="{% url 'eliminarProyecto' proyecto.id_proyecto %}" role="button"><i class="fas fa-trash-alt"></i></button>

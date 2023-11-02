@@ -170,13 +170,7 @@ $(function () {
         $('td:eq(5)', tblProducts.row(tr.row).node()).html('$'+vents.items.products[tr.row].subtotal.toLocaleString('es-CL', { minimumFractionDigits: 0, maximumFractionDigits: 0,}));
     });
 
-    // evento eliminar
-    $('#tblProducts tbody').on('click', 'a[rel="remove"]', function () {
-        var tr = tblProducts.cell($(this).closest('td, li')).index();
-        vents.items.products.splice(tr.row, 1);
-        tblProducts.row(tr.row).remove().draw(false);
-        vents.list();
-    });
+
 
     // alerta antes de eliminar 
 
@@ -190,6 +184,14 @@ $(function () {
 
    
     });
+
+        // evento eliminar
+        $('#tblProducts tbody').on('click', 'a[rel="remove"]', function () {
+            var tr = tblProducts.cell($(this).closest('td, li')).index();
+            vents.items.products.splice(tr.row, 1);
+            tblProducts.row(tr.row).remove().draw(false);
+            vents.list();
+        });
     
     // evento validador solo aceptar numeros en cantidad 
     $('#tblProducts tbody').on('keyup', 'input[name="cant"]', function () {

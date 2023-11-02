@@ -7,10 +7,17 @@ from django.urls import reverse_lazy
 from .forms import *
 from .models import *
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import CreateView, ListView, UpdateView
+from django.views.generic import CreateView, ListView, UpdateView, View
 from django.utils.decorators import method_decorator
+from django.http import HttpResponse
+import os
+from django.conf import settings
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from django.contrib.staticfiles import finders
+from datetime import datetime
 # Create your views here.
-
 
 @login_required
 def home(request ):
@@ -68,9 +75,23 @@ def eliminarTrabajadores(request, rut):
     return redirect('listarTrabajadores')
 @login_required
 def verproyectos(request):
-    proyecto = Proyecto.objects.all()
-    contexto = {'proyectos':proyecto}
+    proyectos = Proyecto.objects.all()
+    fecha_actual = datetime.now()  # Obtenemos la fecha actual
+
+    for proyecto in proyectos:
+        fecha_creacion = proyecto.fecha
+        plazo_entrega = proyecto.plazo_entrega
+
+        if fecha_creacion and plazo_entrega:
+            fecha_creacion = datetime.combine(fecha_creacion, datetime.min.time())
+            plazo_entrega = datetime.combine(plazo_entrega, datetime.min.time())
+
+            tiempo_restante = (plazo_entrega - fecha_actual).days
+            proyecto.tiempo_restante = tiempo_restante
+
+    contexto = {'proyectos': proyectos}
     return render(request, 'proyectos/proyectos.html', contexto)
+
 @login_required
 def agregarProyecto(request):
     data = {
@@ -233,6 +254,8 @@ class CotView(CreateView):
         return context
 
 
+# VISTA POR CLASE EDITAR 
+
 class CotUpdateView(UpdateView):
     model = Cotizaciones
     form_class = CotizacionesForm
@@ -309,6 +332,7 @@ class CotUpdateView(UpdateView):
 
 
 
+# ELIMINAR COTIZACION 
 
 def eliminarCotizaciones(request, id_cotizacion):
     cotizacion = Cotizaciones.objects.get(id_cotizacion=id_cotizacion)
@@ -329,8 +353,36 @@ def agregarClientes(request):
             return redirect('listarClientes')
         else:
             data['addcli'] = formulario
-    
+
     return render(request, 'clientes/agregarCliente.html', data)
+
+
+# GENERA PDF COTIZACION 
+
+class CotizacionesPDF(View):
+    def get(self, request, *args, **kwargs):
+        try:
+            template = get_template('cotizaciones/cotizacionpdf.html')
+            context = {
+                'cotizaciones': Cotizaciones.objects.get(id_cotizacion=kwargs['pk']),
+                'comp': {'nombre': 'Gabinet Center', 'rut': '123456789', 'direccion': 'Virgen del Pilar 0389', 'ciudad': 'Santiago'},
+            }
+            html = template.render(context)
+            # Create a Django response object, and specify content_type as pdf
+            response = HttpResponse(content_type='application/pdf')
+            nombre_archivo_cliente = 'Cotizacion' + ' ' + str(Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).cliente.nombre + ' ' 
+            + Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).cliente.apellido + '-' + str(Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).nombre_cotizacion)
+            + '-' + str(Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).fecha_cotizacion)) + '.pdf'
+            response['Content-Disposition'] = 'attachment; filename=%s' % nombre_archivo_cliente
+            pisaStatus = pisa.CreatePDF(
+                html, dest=response)
+            return response
+        except:
+            pass
+        return HttpResponseRedirect(reverse_lazy('listarCotizaciones'))
+
+
+
 def listarProductos(request):
     productos = Productos.objects.all()
     contexto = {'productos':productos}
