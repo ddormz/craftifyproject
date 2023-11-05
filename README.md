@@ -1,5 +1,9 @@
 # Craftify Project
 
+v1.5 - 01/11
+- Cotizaciones Genera PDF
+- Status de Proyecto con badges y cálculo de tiempo restante por proyecto.
+
 v1.4 - 31-10 
 - Cotizaciones OK (agregar, editar, eliminar mediante ajax, también ver detalle de cotización) # Falta Validaciones de Cotizacion al agregar un producto que ya existe.
 
