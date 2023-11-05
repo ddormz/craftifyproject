@@ -8,6 +8,7 @@ var vents = {
         nombre_cotizacion: '',
         comentario: '',
         fecha_cotizacion: '',
+        metodo_pago: '',
         subtotal: 0,
         iva: 0.00,
         total: 0.00,
@@ -219,7 +220,7 @@ $(function () {
         vents.items.fecha_cotizacion = $('input[name="fecha_cotizacion"]').val();
         vents.items.cli = $('select[name="cliente"]').val();
         vents.items.nombre_cotizacion = $('input[name="nombre_cotizacion"]').val();
-        vents.items.comentario = $('textarea[name="comentario"]').val();
+        vents.items.metodo_pago = $('select[name="metodopago"]').val();
         var parameters = new FormData();
         parameters.append('action', $('input[name="action"]').val());
         parameters.append('vents', JSON.stringify(vents.items));

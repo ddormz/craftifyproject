@@ -1,44 +1,120 @@
 {% extends 'core/base.html' %}
-
-{% block content %}
 {% load static %}
 {% load crispy_forms_tags %}
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
-<link rel="stylesheet" href="{% static 'css/base.css' %}">
-<!------ Include the above in your HEAD tag ---------->
 
-<div class="container-fluid">
-  <div class="row">
-    <!-- left column -->
-    <div class="col-md-12">
-      <!-- general form elements -->
-      <div class="card card-primary">
-        <div class="card-header">
-          <h3 class="card-title">Agregar Equipo Nuevo </h3>
-        </div>
-        <!-- /.card-header -->
-        <!-- form start -->
-        <form action="" method="POST">
-          {% csrf_token %}
-          <div class="card-body">
-            <div class="form-row">
-              <div class="form-group col-md-6">
-                {{ addequi.proyecto_id_proyecto| as_crispy_field}} 
-              </div>
-              <div class="form-group col-md-6">
-                {{ addequi.id_equipo | as_crispy_field}}
-              </div>
-              <div class="form-group col-md-6">
-                {{ addequi.nombre_equipo | as_crispy_field}}
-              </div>
-              <div class="form-group col-md-6">
-                {{ addequi.trabajadores | as_crispy_field}}
-              </div>
+{% block content %}
+
+
+  <link href="{% static 'lib/plugins/jquery-ui/jquery-ui.min.css' %}" rel="stylesheet"/>
+  <script src="{% static 'lib/plugins/jquery-ui/jquery-ui.min.js' %}"></script>
+
+  <link href="{% static 'lib/plugins/select2/css/select2.min.css' %}" rel="stylesheet"/>
+  <link href="{% static 'lib/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css' %}" rel="stylesheet"/>
+  <script src="{% static 'lib/plugins/select2/js/select2.min.js' %}"></script>
+  <script src="{% static 'lib/plugins/select2/js/i18n/es.js' %}"></script>
+
+  <script src="{% static 'lib/plugins/moment/moment-with-locales.js' %}"></script>
+  <script src="{% static 'lib/plugins/tempusdominus-bootstrap-4/tempusdominus-bootstrap-4.min.js' %}"></script>
+  <link href="{% static 'lib/plugins/tempusdominus-bootstrap-4/tempusdominus-bootstrap-4.min.css' %}" rel="stylesheet"/>
+
+  <link href="{% static 'lib/plugins/bootstrap-touchspin-4.3.0/jquery.bootstrap-touchspin.css' %}" rel="stylesheet"/>
+  <script src="{% static 'lib/plugins/bootstrap-touchspin-4.3.0/jquery.bootstrap-touchspin.js' %}"></script>
+
+  <script src="{% static 'js/equipos.js' %}"></script>
+
+
+
+    <form method="post">
+        <div class="card card-primary">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-add"></i>Nuevo Equipo
+                </h3>
             </div>
-            <button type="submit" class="btn btn-primary">Agregar</button>
-          </form>
-      </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card card-secondary">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fa-solid fa-address-book"></i> Datos del Equipo</h3>
+                            </div>
+                            <div class="card-body">
+                                <input type="hidden" name="action" value="{{ action }}">
+                                <div class="form-group">
+                                  {{ form.nombre_equipo | as_crispy_field}}
+                                </div>
+                                <div class="form-group">
+                                  {{ form.proyecto_id_proyecto | as_crispy_field}}
+                                </div>
+                                <div class="form-group">
+                                  {{ form.observaciones | as_crispy_field}}
+                                </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                            <button type="submit" class="btn btn-primary btn-flat">
+                                <i class="fas fa-save"></i> Guardar Equipo
+                            </button>
+                            <a href="{{ list_url }}" class="btn btn-danger btn-flat">
+                                <i class="fas fa-times"></i> Cancelar
+                            </a>
+                            </div>
+                        </div>
+                    <div class="col-lg-6">
+                        <div class="card card-secondary">
+                            <div class="card-header">
+                                
+                                <h4 class="card-title"><i class="fa-solid fa-user-plus"></i> Detalle de Trabajadores</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label>Buscador de Trabajadores:</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="search"
+                                            placeholder="Ingrese el Nombre del Trabajador" autocomplete="off">
+                                        <span class="input-group-append">
+                                            <button type="button" class="btn btn-danger btn-flat"><i
+                                                    class="fas fa-times"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                                <hr>
+                                <table class="table table-bordered" id="tblEquipo">
+                                    <thead>
+                                        <button type="button" class="btn btn-danger btn-xs btnRemoveAll" id="btnRemoveAll">
+                                            <i class="fa-solid fa-ban" id="iconRemove"></i>Limpiar Todo
+                                        </button>
+                                    <tr>
+                                        <th>Eliminar</th>
+                                        <th>RUT</th>
+                                        <th>Nombre</th>
+                                        <th>Apellido</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                        
+                            </div>
+                            
+                        </div>
+                        <div class="card-footer">
+                            
+                        </div>
+                    </div>
+                    
+                   </div>
+                </div>
+        
+            </div>
+            <br>
+
+    
+        </div>
+    </form>
+    <script>
+        equipo.items.trabajadores = {{ det|safe }};
+        </script>
+
 {% endblock %}

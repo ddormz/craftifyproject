@@ -48,8 +48,10 @@ urlpatterns = [
 
     # MODULO DE EQUIPOS 
 
-    path('listarEquipos', listarEquipos, name='listarEquipos'),
-    path('agregarEquipos', agregarEquipos, name='agregarEquipos'),
+    path('listarEquipos', EquipoListView.as_view(), name='listarEquipos'),
+    path('agregarEquipos', Equipo.as_view(), name='agregarEquipos'),
+    path('eliminarEquipo/<id_equipo>/', EliminarEquipo, name='eliminarEquipos'),
+    path('editarEquipo/<int:pk>/', EquipoEdit.as_view(), name='editarEquipo'),
 
     # MODULO ASIGNACIONES
 

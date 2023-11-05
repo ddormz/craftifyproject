@@ -120,11 +120,26 @@ class EquiposForm(forms.ModelForm):
     class Meta:
         model = Equipos
         fields = "__all__"
+        widgets = {
+            'proyecto_id_proyecto': forms.Select(attrs={
+                'class': 'form-control select2',
+                'style': 'width: 100%'
+            }),
+            'nombre_equipo': forms.TextInput(attrs={
+                'placeholder': 'Ej. Producción'
+            })
+        }
 
 
-class AsignacionForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(EquiposForm, self).__init__(*args, **kwargs)
+        self.fields['nombre_equipo'].label = "Nombre del Equipo"
+        self.fields['proyecto_id_proyecto'].label = "Nombre Proyecto"
+
+
+class TareasForm(forms.ModelForm):
     class Meta:
-        model = EquipoAsignacion
+        model = Tareas
         fields = "__all__"
         widgets = {
             'tiempo_asignado': forms.DateInput(attrs={'type': 'date'}),

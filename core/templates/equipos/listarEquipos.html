@@ -14,41 +14,26 @@
           <h3 class="card-title">Listado de Equipos</h3>
           <form action="" method="GET">
             <div class="input-group mb-3">
-              <input type="text" class="form-control" placeholder="Buscar por ID Equipo" aria-label="Recipient's username" aria-describedby="button-addon2" name="search">
               <div class="input-group-append">
-                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Buscar</button>
               </div>
         </div>
         <!-- /.card-header -->
         <div class="card-body table-responsive p-0">
             
-            <table class="table table-bordered table-hover tabla-datos">
+            <table class="table table-bordered table-hover tabla-equipos">
                 <thead>
                 <tr>
-                    <th scope="col"># Proyecto</th>
-                    <th scope="col"># Equipo</th>
+                    <th scope="col">N° Equipo</th>
                     <th scope="col">Nombre Equipo</th>
-                    <th scope="col">Trabajadores</th>
+                    <th scope="col">Nombre Proyecto</th>
+                    <th scope="col">Observaciones</th>
                     <th scope="col">Acciones</th>
                     
                 </tr>
                 </thead>
                 <tbody>
-            {% for equipo in equipos %}
                 <tr>
-                    <th scope="row">{{ equipo.proyecto_id_proyecto }}</th>
-                    <td>{{ equipo.id_equipo }}</td>
-                    <td>{{ equipo.nombre_equipo }}</td>
-                    <td>{{ equipo.trabajadores }}</td>
-                    
-            
-                    <td>
-                    <a class="btn btn-warning botonEditar" href="{% url 'editarTrabajadores' user.rut %}" role="button"><i class="fas fa-pen"></i></button>
-                    <a class="btn btn-danger botonEliminar" href="{% url 'eliminarTrabajadores' user.rut %}" role="button"><i class="fas fa-trash-alt"></i></button>
-                    </td>
                 </tr>
-                {% endfor %}
-
             </tbody>
         </table>
         </div>
@@ -58,5 +43,59 @@
   </div>
 </div>
 {% endif %}
+
+<!-- Modal de Detalle de Equipos -->
+<div class="modal fade" id="ModalEquipo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Detalle de Equipo</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-bordered table-hover" id="tblDetalleEquipo">
+          <thead>
+            <tr>
+              <th scope="col">RUT</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Apellido</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Tarea de Equipos -->
+<div class="modal fade" id="ModalTarea" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Detalle de Equipo</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="" method="POST">
+          {% csrf_token %}
+          <div class="form-group">
+          
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock %}

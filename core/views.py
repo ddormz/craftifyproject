@@ -215,12 +215,13 @@ class CotView(CreateView):
             elif action == 'add':
 
                 # Cotizaciones
-                
                 vents = json.loads(request.POST['vents'])
                 cotizacion = Cotizaciones()
                 cotizacion.fecha_cotizacion = vents['fecha_cotizacion']
                 cliente_id = int(vents['cli'])
                 cotizacion.cliente = Clientes.objects.get(rut_cliente=cliente_id)
+                metodo_pago = vents['metodo_pago']
+                cotizacion.metodopago = MetodoPago.objects.get(id_metodopago=metodo_pago)
                 cotizacion.subtotal = vents['subtotal']
                 cotizacion.iva = vents['iva']
                 cotizacion.total = vents['total']
@@ -260,8 +261,8 @@ class CotUpdateView(UpdateView):
     model = Cotizaciones
     form_class = CotizacionesForm
     template_name = 'cotizaciones/agregarCotizacion.html'
-    #success_url = reverse_lazy('listarCotizaciones')
-    #url_redirect = success_url
+    success_url = reverse_lazy('listarCotizaciones')
+    url_redirect = success_url
 
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
@@ -287,6 +288,8 @@ class CotUpdateView(UpdateView):
                 cotizacion.fecha_cotizacion = vents['fecha_cotizacion']
                 cliente_id = int(vents['cli'])
                 cotizacion.cliente = Clientes.objects.get(rut_cliente=cliente_id)
+                metodo_pago = vents['metodo_pago']
+                cotizacion.metodopago = MetodoPago.objects.get(id_metodopago=metodo_pago)
                 cotizacion.subtotal = vents['subtotal']
                 cotizacion.iva = vents['iva']
                 cotizacion.total = vents['total']
@@ -426,40 +429,174 @@ def agregarCatySubcat (request):
 
 # Modulo Equipos
 
-def listarEquipos(request):
-    equipos = Equipos.objects.all()
-    contexto = {'equipos':equipos}
-    return render(request, 'equipos/listarEquipos.html', contexto)
+class Equipo(CreateView):
+    model = Equipos
+    form_class = EquiposForm
+    template_name = 'equipos/agregarEquipos.html'
+    success_url = reverse_lazy('listarEquipos')
+    url_redirect = success_url
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST['action']
+            if action == 'buscar_trabajador':
+                data = []
+                trab = User.objects.filter(first_name__icontains=request.POST['term'])[0:10]
+                for i in trab:
+                    item = i.toJSON()
+                    item['value'] = i.first_name + ' ' + i.last_name
+                    data.append(item)
+            elif action == 'add':
+                equipoj = json.loads(request.POST['equipo'])
+                equipo = Equipos()
+                equipo.proyecto_id_proyecto = Proyecto.objects.get(id_proyecto=equipoj['proyecto_id_proyecto'])
+                equipo.nombre_equipo = equipoj['nombre_equipo']
+                equipo.observaciones = equipoj['observaciones']
+                equipo.save()
+                for i in equipoj['trabajadores']:
+                    det = DetalleEquipo()
+                    det.id_equipo = equipo
+                    trabajador_id = i['rut']
+                    trabajador_instance = User.objects.get(rut=trabajador_id)
+                    det.trabajador = trabajador_instance
+                    det.save()
+            else:
+                data['error'] = 'No ha ingresado a ninguna opción'
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data, safe=False)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Creación de Equipo'
+        context['entity'] = 'Equipos'
+        context['list_url'] = self.success_url
+        context['action'] = 'add'
+        return context
+
+class EquipoEdit(UpdateView):
+    model = Equipos
+    form_class = EquiposForm
+    template_name = 'equipos/agregarEquipos.html'
+    success_url = reverse_lazy('listarEquipos')
+    url_redirect = success_url
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST['action']
+            if action == 'buscar_trabajador':
+                data = []
+                trab = User.objects.filter(first_name__icontains=request.POST['term'])[0:10]
+                for i in trab:
+                    item = i.toJSON()
+                    item['value'] = i.first_name + ' ' + i.last_name
+                    data.append(item)
+            elif action == 'edit':
+                equipoj = json.loads(request.POST['equipo'])
+                equipo = self.get_object()
+                equipo.proyecto_id_proyecto = Proyecto.objects.get(id_proyecto=equipoj['proyecto_id_proyecto'])
+                equipo.nombre_equipo = equipoj['nombre_equipo']
+                equipo.observaciones = equipoj['observaciones']
+                equipo.save()
+                equipo.detalleequipo_set.all().delete()
+                for i in equipoj['trabajadores']:
+                    det = DetalleEquipo()
+                    det.id_equipo = equipo
+                    trabajador_id = i['rut']
+                    trabajador_instance = User.objects.get(rut=trabajador_id)
+                    det.trabajador = trabajador_instance
+                    det.save()
+            else:
+                data['error'] = 'No ha ingresado a ninguna opción'
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data, safe=False)
+
+    def get_detalles_equipo(self):
+        data = []
+        try:
+            for i in DetalleEquipo.objects.filter(id_equipo=self.get_object().id_equipo):
+                item = i.trabajador.toJSON()
+                data.append(item)
+        except:
+            pass
+        return data
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Creación de Equipo'
+        context['entity'] = 'Equipos'
+        context['list_url'] = self.success_url
+        context['action'] = 'edit'
+        context['det'] = json.dumps(self.get_detalles_equipo())
+        return context
 
 
-def agregarEquipos(request):
-    data = {
-        'addequi': EquiposForm()
-    }
-    if request.method == 'POST':
-        formulario = EquiposForm(data=request.POST)
-        if formulario.is_valid():
-            formulario.save()
-            return redirect('listarEquipos')
-        else:
-            data['addequi'] = formulario
-    
-    return render(request, 'equipos/agregarEquipos.html', data)
+class EquipoListView(ListView):
+    model = Equipos
+    template_name = 'equipos/listarEquipos.html'
 
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST['action']
+            if action == 'listarEq':
+                data = []
+                for i in Equipos.objects.all():
+                    data.append(i.toJSON())
+            elif action == 'detalleEquipo':
+                data = []
+                for i in DetalleEquipo.objects.filter(id_equipo=request.POST['id_equipo']):
+                    data.append(i.toJSON())
+            else:
+                data['error'] = 'Ha ocurrido un error'
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data, safe=False)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Listado de Equipos'
+        context['create_url'] = reverse_lazy('agregarEquipos')
+        context['list_url'] = reverse_lazy('listarEquipos')
+        context['entity'] = 'Equipos'
+        return context
+
+
+
+
+def EliminarEquipo(request, id_equipo):
+    equipo = Equipos.objects.get(id_equipo=id_equipo)
+    equipo.delete()
+    return redirect('listarEquipos')
 
 # Modulo Asignaciones 
 
 def listarAsignaciones(request):
-    asignaciones = EquipoAsignacion.objects.all()
+    asignaciones = Tareas.objects.all()
     contexto = {'asignaciones':asignaciones}
     return render(request, 'equipos/listarAsignaciones.html', contexto)
 
 def agregarAsignaciones(request):
     data = {
-        'addasig': AsignacionForm()
+        'addasig': TareasForm()
     }
     if request.method == 'POST':
-        formulario = AsignacionForm(data=request.POST)
+        formulario = TareasForm(data=request.POST)
         if formulario.is_valid():
             formulario.save()
             return redirect('listarAsignaciones')

@@ -1,3 +1,100 @@
+function equiposTable() {
+  var tblEquipo = $(".tabla-equipos").DataTable({
+    "responsive": true,
+    "lengthChange": false,
+    "autoWidth": false,
+    "language": {
+      "url": '../../core/static/js/es-ES.json'
+    },
+    "dom": 'Bfrtip', // Esto habilita los botones en la parte superior
+    "buttons": [
+      {
+        text: 'Exportar a PDF',
+        extend: 'pdfHtml5'
+      },
+      {
+        text: 'Visibilidad de Columnas',
+        extend: 'colvis'
+      }
+    ],
+    ajax: {
+      url: window.location.pathname,
+      type: 'POST',
+      data: {
+        'action': 'listarEq'
+      },
+      dataSrc: '',
+    },
+    columns: [
+      {"data": "id_equipo"},
+      {"data": "nombre_equipo"},
+      {"data": "proyecto_id_proyecto.nombre_proyecto"},
+      {"data": "observaciones"},
+      {"data": "id_equipo"}, 
+    ],
+    columnDefs: [
+      {
+        targets: [-1],
+        class: 'text-center',
+        orderable: false,
+        render: function (data, type, row) {
+          var buttons = '<a rel="remove" href="/eliminarEquipo/' + row.id_equipo + '/" class="btn btn-danger btn-xs btn-flat" id="botonEliminar"><i class="fas fa-trash-alt"></i></a>';
+          buttons += '<a href="/editarEquipo/' + row.id_equipo + '/" class="btn btn-warning btn-xs btn-flat"><i class="fas fa-pen"></i></a> ';
+          buttons += '<a rel="details" class="btn btn-success btn-xs btn-flat"><i class="fas fa-search"></i></a> ';  
+          buttons += '<a href="/" class="btn btn-dark btn-xs btn-flat"><i class="fa-solid fa-list-check" style="color: white;"></i></a>';
+          return buttons;
+      }
+      },  
+    ],
+    initComplete: function (settings, json) {
+      
+    },
+    
+});
+
+  $('.tabla-equipos tbody')
+    .on('click', 'a[rel="details"]', function () {
+        var tr = tblEquipo.cell($(this).closest('td, li')).index();
+        var data = tblEquipo.row(tr.row).data();
+        console.log(data);
+        
+        $('#tblDetalleEquipo').DataTable({
+          responsive: true,
+          autoWidth: false,
+          destroy: true,
+          deferRender: true,
+          lengthChange: false,
+          language: {
+              url: '../../core/static/js/es-ES.json'
+          },
+          ajax: {
+              url: window.location.pathname,
+              type: 'POST',
+              data: {
+                  'action': 'detalleEquipo',
+                  'id_equipo': data.id_equipo
+              },
+              dataSrc: ""
+          },
+          columns: [
+              {"data": "trabajador.rut"},
+              {"data": "trabajador.first_name"},
+              {"data": "trabajador.last_name"},
+          ],
+          initComplete: function (settings, json) {
+
+          }
+      });
+      
+
+      $('#ModalEquipo').modal('show');
+
+      $('.close').on('click', function() {
+        $('#ModalEquipo').modal('hide');
+    });
+    }); 
+  }
+
 function proyectosTable() {
   var table = $(".tabla-proyectos").DataTable({
     "responsive": true,
@@ -189,6 +286,7 @@ function cotizacionesTable() {
         }
       },
       {"data": "total"},
+      {"data": "metodopago.nombre_metodo"},
       {"data": "id_cotizacion"},
     ],
     columnDefs: [
@@ -357,3 +455,4 @@ function cotizacionesTable() {
 document.addEventListener('DOMContentLoaded', cotizacionesTable);
 document.addEventListener('DOMContentLoaded', trabajadoresTable);
 document.addEventListener('DOMContentLoaded', proyectosTable);
+document.addEventListener('DOMContentLoaded', equiposTable);

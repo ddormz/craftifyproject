@@ -26,9 +26,6 @@
           <div class="card-body">
             <div class="form-row">
               <div class="form-group col-md-6">
-                {{ addasig.asignacion_id | as_crispy_field}} 
-              </div>
-              <div class="form-group col-md-6">
                 {{ addasig.equipo_id_equipo | as_crispy_field}}
               </div>
               <div class="form-group col-md-6">
@@ -38,10 +35,10 @@
                 {{ addasig.tarea | as_crispy_field}}
               </div>
               <div class="form-group col-md-6">
-                {{ addasig.tiempo_asignado | as_crispy_field}}
+                {{ addasig.fecha_asignacion | as_crispy_field}}
               </div>
               <div class="form-group col-md-6">
-                {{ addasig.tiempo_final | as_crispy_field}}
+                {{ addasig.fecha_termino | as_crispy_field}}
               </div>
             </div>
             <button type="submit" class="btn btn-primary">Agregar</button>

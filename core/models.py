@@ -18,6 +18,12 @@ class User(AbstractUser):
     def __str__(self):
         return self.rut
 
+    def toJSON(self):
+        item = model_to_dict(self, exclude=['password', 'groups', 'user_permissions', 'last_login', 'is_superuser', 'is_staff', 'is_active', 'date_joined', 'email'])
+        item['rut'] = self.rut
+        item['first_name'] = self.first_name
+        item['last_name'] = self.last_name
+        return item
 
 class Clientes(models.Model):
     rut_cliente = models.IntegerField(primary_key=True)
@@ -50,6 +56,11 @@ class Proyecto(models.Model):
     def __str__(self):
         return str(self.nombre_proyecto) + str(" - ") + str(self.cliente)
     
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['nombre_proyecto'] = self.nombre_proyecto
+        return item
+
     class Meta:
         verbose_name = 'Proyecto'
         verbose_name_plural = 'Proyectos'
@@ -61,6 +72,8 @@ class CategoriaProyecto(models.Model):
     def __str__(self):
         return str(self.nombre_categoria)
     
+
+
     class Meta:
         verbose_name = 'Categoría de Proyecto'
         verbose_name_plural = 'Categorias de Proyectos'
@@ -81,23 +94,67 @@ class Equipos(models.Model):
     proyecto_id_proyecto = models.ForeignKey('Proyecto', on_delete=models.CASCADE)
     id_equipo = models.AutoField(primary_key=True)
     nombre_equipo = models.CharField(max_length=100)
-    trabajadores = models.ForeignKey('User', on_delete=models.CASCADE)
+    observaciones = models.TextField(max_length=100, null=True, blank=True)
     def __str__(self):
         return str(self.nombre_equipo)
     
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['proyecto_id_proyecto'] = self.proyecto_id_proyecto.toJSON()
+        item['nombre_equipo'] = self.nombre_equipo
+        item['id_equipo'] = self.id_equipo
+        item['observaciones'] = self.observaciones
+        item['detalle'] = [i.toJSON() for i in self.detalleequipo_set.all()]
+        return item
+
+
     class Meta:
         verbose_name = 'Equipo'
         verbose_name_plural = 'Equipos'
         ordering = ['nombre_equipo']
-    
 
-class EquipoAsignacion(models.Model):
+
+
+
+class DetalleEquipo(models.Model):
+    id_Detalle = models.AutoField(primary_key=True)
+    id_equipo = models.ForeignKey('Equipos', on_delete=models.CASCADE)
+    trabajador = models.ForeignKey('User', on_delete=models.CASCADE)
+    def __str__(self):
+        return str(self.id_equipo.nombre_equipo) + str(" - ") + str(self.trabajador.first_name) + str("  ") + str(self.trabajador.last_name)
+    
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['trabajador'] = self.trabajador.toJSON()
+        return item
+
+    class Meta:
+        verbose_name = 'Detalle de Equipo'
+        verbose_name_plural = 'Detalle de Equipos'
+        ordering = ['id_equipo']
+
+    
+    
+class StatusTarea(models.Model):
+    id_status = models.AutoField(primary_key=True)
+    nombre_status = models.CharField(max_length=100)
+    def __str__(self):
+        return str(self.nombre_status)
+    
+    class Meta:
+        verbose_name = 'Status de Tarea'
+        verbose_name_plural = 'Status de Tareas'
+        ordering = ['nombre_status']
+
+
+class Tareas(models.Model):
     asignacion_id = models.AutoField(primary_key=True)
     equipo_id_equipo = models.ForeignKey('Equipos', on_delete=models.CASCADE)
-    proyecto_id_proyecto = models.ForeignKey('Proyecto', on_delete=models.CASCADE)
+    trabajador = models.ForeignKey('User', on_delete=models.CASCADE)
     fecha_asignacion = models.DateField(default=datetime.now)
     fecha_termino = models.DateField()
     tarea = models.CharField(max_length=100)
+    status_tarea = models.ForeignKey('StatusTarea', on_delete=models.CASCADE, default=1)
     def __str__(self):
         return str('Equipo: ') +  str(self.equipo_id_equipo) + str(" - ") + str(self.tarea)
     
@@ -110,7 +167,7 @@ class Avances(models.Model):
     avance_id = models.AutoField(primary_key=True)
     imagen = models.ImageField(upload_to='avances')
     comentario = models.CharField(max_length=100)
-    asignacion_asignacion = models.ForeignKey('EquipoAsignacion', on_delete=models.CASCADE, null=True, blank=True)
+    tarea = models.ForeignKey('Tareas', on_delete=models.CASCADE)
     equipo_id_equipo = models.ForeignKey('Equipos', on_delete=models.CASCADE, null=True, blank=True)
     proyecto_id_proyecto = models.ForeignKey('Proyecto', on_delete=models.CASCADE, null=True, blank=True)
     def __str__(self):
@@ -128,7 +185,7 @@ class Productos(models.Model):
     categoria = models.ForeignKey('CategoriaProductos', on_delete=models.CASCADE, default=1)
     subcategoria = models.ForeignKey('SubcategoriaProductos', on_delete=models.CASCADE, default=1)
     marca = models.ForeignKey('MarcaProductos', on_delete=models.CASCADE, default=1)
-    precio_compra = models.FloatField(default=0)
+    precio_compra = models.FloatField(default=0, )
     precio_venta = models.FloatField(default=0)
     variante = models.ForeignKey('VarianteProductos', on_delete=models.CASCADE, null=True, blank=True)
     def __str__(self):
@@ -212,15 +269,17 @@ class Cotizaciones(models.Model):
     id_cotizacion = models.AutoField(primary_key=True)
     fecha_cotizacion = models.DateField(default=datetime.now)
     nombre_cotizacion = models.CharField(max_length=100, null=True, blank=True)
-    subtotal = models.FloatField(default=0)
-    iva = models.IntegerField(default=19)
-    total = models.FloatField(default=0)
+    subtotal = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
+    iva = models.DecimalField(default=19.00, max_digits=9, decimal_places=2)
+    total = models.DecimalField(default=0.00, max_digits=9, decimal_places=2)
     cliente = models.ForeignKey('Clientes', on_delete=models.CASCADE)
     generado_por = models.ForeignKey('User', on_delete=models.CASCADE, null=True, blank=True)
     comentario = models.TextField(max_length=1000, null=True, blank=True)
+    metodopago = models.ForeignKey('MetodoPago', on_delete=models.CASCADE)
     def __str__(self):
         return str(self.id_cotizacion) + str(self.nombre_cotizacion)
     
+
     def toJSON(self):
         item = model_to_dict(self)
         item['cliente'] = self.cliente.toJSON()
@@ -230,6 +289,7 @@ class Cotizaciones(models.Model):
         item['total'] = format(self.total, '.2f')
         item['fecha_cotizacion'] = self.fecha_cotizacion.strftime('%Y-%m-%d')
         item['comentario'] = self.comentario
+        item['metodopago'] = self.metodopago.toJSON()
         item['det'] = [i.toJSON() for i in self.detallecotizaciones_set.all()]
         return item
 
@@ -261,3 +321,14 @@ class DetalleCotizaciones(models.Model):
         verbose_name_plural = 'Detalles de Cotizaciones'
         ordering = ['id_cotizacion']
 
+
+class MetodoPago(models.Model):
+    id_metodopago = models.AutoField(primary_key=True)
+    nombre_metodo = models.CharField(max_length=100)
+    def __str__(self):
+        return str(self.nombre_metodo)
+    
+    def toJSON(self):
+        item = model_to_dict(self)
+        nombre_metodo = self.nombre_metodo
+        return item
