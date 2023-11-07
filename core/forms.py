@@ -98,6 +98,12 @@ class ProductosForm(forms.ModelForm):
     class Meta:
         model = Productos
         fields = "__all__"
+        widgets = {
+            'categoria': forms.Select(attrs={
+                'class': 'form-control select2',
+                'style': 'width: 100%'
+            }),
+        }
 
 
 class CatForm(forms.ModelForm):
@@ -142,10 +148,18 @@ class TareasForm(forms.ModelForm):
         model = Tareas
         fields = "__all__"
         widgets = {
-            'tiempo_asignado': forms.DateInput(attrs={'type': 'date'}),
-            'tiempo_final': forms.DateInput(attrs={'type': 'date'}),
+            'fecha_asignacion': forms.DateInput(attrs={'type': 'date', }),
+            'fecha_termino': forms.DateInput(attrs={'type': 'date', }),
         }
-
+  
+    def __init__(self, *args, **kwargs):
+        super(TareasForm, self).__init__(*args, **kwargs)
+        self.fields['fecha_asignacion'].label = "Fecha de Asignación"
+        self.fields['fecha_termino'].label = "Fecha de Terminación"
+        self.fields['equipo_id_equipo'].label = "Equipo"
+        self.fields['trabajador'].label = "Trabajador"
+        self.fields['tarea'].label = "Tarea"
+        
 
 class LoginForm(forms.ModelForm):
     class Meta:

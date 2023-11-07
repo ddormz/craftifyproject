@@ -16,7 +16,7 @@ class User(AbstractUser):
     objects = CustomUserManager()
 
     def __str__(self):
-        return self.rut
+        return str(self.first_name.capitalize()) + " " + str(self.last_name.capitalize())
 
     def toJSON(self):
         item = model_to_dict(self, exclude=['password', 'groups', 'user_permissions', 'last_login', 'is_superuser', 'is_staff', 'is_active', 'date_joined', 'email'])
@@ -36,6 +36,10 @@ class Clientes(models.Model):
     
     def toJSON(self):
         item = model_to_dict(self)
+        item['nombre'] = self.nombre
+        item['apellido'] = self.apellido
+        item['rut_cliente'] = self.rut_cliente
+        item['direccion'] = self.direccion
         return item
     
     class Meta:
@@ -141,6 +145,11 @@ class StatusTarea(models.Model):
     def __str__(self):
         return str(self.nombre_status)
     
+
+    def toJSON(self):
+        item = model_to_dict(self)
+        return item
+    
     class Meta:
         verbose_name = 'Status de Tarea'
         verbose_name_plural = 'Status de Tareas'
@@ -148,16 +157,23 @@ class StatusTarea(models.Model):
 
 
 class Tareas(models.Model):
-    asignacion_id = models.AutoField(primary_key=True)
+    tarea_id = models.AutoField(primary_key=True)
     equipo_id_equipo = models.ForeignKey('Equipos', on_delete=models.CASCADE)
     trabajador = models.ForeignKey('User', on_delete=models.CASCADE)
     fecha_asignacion = models.DateField(default=datetime.now)
     fecha_termino = models.DateField()
-    tarea = models.CharField(max_length=100)
+    tarea = models.TextField(max_length=100)
     status_tarea = models.ForeignKey('StatusTarea', on_delete=models.CASCADE, default=1)
     def __str__(self):
         return str('Equipo: ') +  str(self.equipo_id_equipo) + str(" - ") + str(self.tarea)
     
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['equipo_id_equipo'] = self.equipo_id_equipo.toJSON()
+        item['trabajador'] = self.trabajador.toJSON()
+        item['status_tarea'] = self.status_tarea.toJSON()
+        return item
+
     class Meta:
         verbose_name = 'Tarea de Equipo'
         verbose_name_plural = 'Tareas de Equipos'
@@ -179,7 +195,7 @@ class Avances(models.Model):
         ordering = ['avance_id']
 
 class Productos(models.Model):
-    id_producto = models.IntegerField(primary_key=True)
+    id_producto = models.AutoField(primary_key=True)
     nombre_producto = models.CharField(max_length=100)
     descripcion = models.CharField(max_length=100, null=True, blank=True)
     categoria = models.ForeignKey('CategoriaProductos', on_delete=models.CASCADE, default=1)
@@ -188,6 +204,7 @@ class Productos(models.Model):
     precio_compra = models.FloatField(default=0, )
     precio_venta = models.FloatField(default=0)
     variante = models.ForeignKey('VarianteProductos', on_delete=models.CASCADE, null=True, blank=True)
+    stock = models.IntegerField(default=0)
     def __str__(self):
         return str(self.nombre_producto) + str(" - ") + str(self.variante)
     
@@ -197,6 +214,7 @@ class Productos(models.Model):
         item['precio_venta'] = format(self.precio_venta, '.2f')
         item['variante'] = self.variante.toJSON()
         item['subcategoria'] = self.subcategoria.toJSON()
+        item['marca'] = self.marca.toJSON()
         return item
     
 

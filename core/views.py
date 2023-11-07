@@ -1,5 +1,5 @@
 import json
-from django.http import JsonResponse
+from django.http import FileResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
@@ -23,17 +23,14 @@ from datetime import datetime
 def home(request ):
     return render(request, 'core/home.html')
 
-@login_required
-def products(request):
-    return render(request, 'core/products.html')
-
 def exit(request):
     logout(request)
     return redirect('login')
 
-
-
 @login_required
+
+# MODULO USUARIOS 
+
 def listarTrabajadores(request):
     users = User.objects.all()
     
@@ -50,9 +47,6 @@ def listarTrabajadores(request):
     
     contexto = {'users': users, 'form': form}
     return render(request, 'trabajadores/listarTrabajadores.html', contexto)
-
-
-
 @login_required
 def editarTrabajadores(request, rut):
     user = User.objects.get(rut=rut)
@@ -73,6 +67,9 @@ def eliminarTrabajadores(request, rut):
     user = User.objects.get(rut=rut)
     user.delete()
     return redirect('listarTrabajadores')
+
+# MODULO PROYECTOS
+
 @login_required
 def verproyectos(request):
     proyectos = Proyecto.objects.all()
@@ -101,7 +98,7 @@ def agregarProyecto(request):
         formulario = AgregarProyectoForm(data=request.POST)
         if formulario.is_valid():
             formulario.save()
-            return redirect('proyectos')
+            return redirect('verproyectos')
         else:
             data['AggForm'] = formulario
     
@@ -152,7 +149,9 @@ def agregarAvances(request):
     return render (request, 'avances/agregarAvances.html', data)
         
 
-## Vista por Clases Cotizaciones (Listar)
+## MODULO COTIZACIONES
+
+#LISTAR COTIZACIONES
 
 class CotListView(ListView):
     model = Cotizaciones
@@ -188,7 +187,7 @@ class CotListView(ListView):
         context['entity'] = 'Cotizaciones'
         return context
 
-## Vista por Clases Cotizaciones (Crear)
+# CREAR COTIZACION
 
 class CotView(CreateView):
     model = Cotizaciones
@@ -240,6 +239,16 @@ class CotView(CreateView):
                     det.precio = float(i['precio_venta'])
                     det.subtotal = float(i['subtotal'])
                     det.save()
+            elif action == 'create_client':
+                data = []
+                cliente = Clientes()
+                cliente.rut_cliente = request.POST['rut_cliente']
+                cliente.nombre = request.POST['nombre']
+                cliente.apellido = request.POST['apellido']
+                cliente.direccion = request.POST['direccion']
+                cliente.telefono = request.POST['telefono']
+                cliente.save()
+                data.append(cliente.toJSON())
             else:
                 data['error'] = 'No ha ingresado a ninguna opción'
         except Exception as e:
@@ -252,10 +261,10 @@ class CotView(CreateView):
         context['entity'] = 'Cotizaciones'
         context['list_url'] = self.success_url
         context['action'] = 'add'
+        context['frmClient'] = ClientesForm()
         return context
 
-
-# VISTA POR CLASE EDITAR 
+# EDITAR COTIZACION
 
 class CotUpdateView(UpdateView):
     model = Cotizaciones
@@ -308,6 +317,16 @@ class CotUpdateView(UpdateView):
                     det.precio = float(i['precio_venta'])
                     det.subtotal = float(i['subtotal'])
                     det.save()
+            elif action == 'create_client':
+                data = []
+                cliente = Clientes()
+                cliente.rut_cliente = request.POST['rut_cliente']
+                cliente.nombre = request.POST['nombre']
+                cliente.apellido = request.POST['apellido']
+                cliente.direccion = request.POST['direccion']
+                cliente.telefono = request.POST['telefono']
+                cliente.save()
+                data.append(cliente.toJSON())
             else:
                 data['error'] = 'No ha ingresado a ninguna opción'
         except Exception as e:
@@ -331,16 +350,49 @@ class CotUpdateView(UpdateView):
         context['list_url'] = self.success_url
         context['action'] = 'edit'
         context['det'] = json.dumps(self.get_details_product())
+        context['frmClient'] = ClientesForm()
         return context
 
-
-
 # ELIMINAR COTIZACION 
-
 def eliminarCotizaciones(request, id_cotizacion):
     cotizacion = Cotizaciones.objects.get(id_cotizacion=id_cotizacion)
     cotizacion.delete()
     return redirect('listarCotizaciones')
+
+# GENERA PDF COTIZACION 
+
+class CotizacionesPDF(View):
+    def get(self, request, *args, **kwargs):
+        try:
+            template = get_template('cotizaciones/cotizacionpdf.html')
+            context = {
+                'cotizaciones': Cotizaciones.objects.get(id_cotizacion=kwargs['pk']),
+                'comp': {'nombre': 'Gabinet Center', 'rut': '123456789', 'direccion': 'Virgen del Pilar 0389', 'ciudad': 'Santiago'},
+            }
+            html = template.render(context)
+            
+            nombre_archivo_cliente = 'Cotizacion' + ' ' + str(Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).cliente.nombre + ' ' 
+            + Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).cliente.apellido + '-' + str(Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).nombre_cotizacion)
+            + '-' + str(Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).fecha_cotizacion)) + '.pdf'
+            
+            # Ruta de destino en la carpeta de medios
+            destino_pdf = os.path.join(settings.MEDIA_ROOT, 'pdfcot', nombre_archivo_cliente)
+
+            pisaStatus = pisa.CreatePDF(html, open(destino_pdf, "wb"))
+            
+            # Asegúrate de que el PDF se haya creado con éxito antes de devolver la respuesta
+            if pisaStatus.err:
+                return HttpResponse("Error al generar el PDF", content_type='text/plain')
+            
+            # Construye la URL de descarga para el PDF en la carpeta de medios
+            response = FileResponse(open(destino_pdf, 'rb'))
+            response['Content-Disposition'] = f'attachment; filename="{nombre_archivo_cliente}"'
+
+            return response
+        except:
+            pass
+        return HttpResponseRedirect(reverse_lazy('listarCotizaciones'))
+# MODULO CLIENTES
 def listarClientes(request):
     cliente = Clientes.objects.all()
     contexto = {'clientes':cliente}
@@ -359,37 +411,38 @@ def agregarClientes(request):
 
     return render(request, 'clientes/agregarCliente.html', data)
 
+# MODULO PRODUCTOS
 
-# GENERA PDF COTIZACION 
+class ProductosListView(ListView):
+    model = Productos
+    template_name = 'productos/listarProductos.html'
 
-class CotizacionesPDF(View):
-    def get(self, request, *args, **kwargs):
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = {}
         try:
-            template = get_template('cotizaciones/cotizacionpdf.html')
-            context = {
-                'cotizaciones': Cotizaciones.objects.get(id_cotizacion=kwargs['pk']),
-                'comp': {'nombre': 'Gabinet Center', 'rut': '123456789', 'direccion': 'Virgen del Pilar 0389', 'ciudad': 'Santiago'},
-            }
-            html = template.render(context)
-            # Create a Django response object, and specify content_type as pdf
-            response = HttpResponse(content_type='application/pdf')
-            nombre_archivo_cliente = 'Cotizacion' + ' ' + str(Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).cliente.nombre + ' ' 
-            + Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).cliente.apellido + '-' + str(Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).nombre_cotizacion)
-            + '-' + str(Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).fecha_cotizacion)) + '.pdf'
-            response['Content-Disposition'] = 'attachment; filename=%s' % nombre_archivo_cliente
-            pisaStatus = pisa.CreatePDF(
-                html, dest=response)
-            return response
-        except:
-            pass
-        return HttpResponseRedirect(reverse_lazy('listarCotizaciones'))
+            action = request.POST['action']
+            if action == 'listarProductos':
+                data = []
+                for i in Productos.objects.all():
+                    data.append(i.toJSON())
+            else:
+                data['error'] = 'Ha ocurrido un error'
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data, safe=False)
 
-
-
-def listarProductos(request):
-    productos = Productos.objects.all()
-    contexto = {'productos':productos}
-    return render(request, 'productos/listarProductos.html', contexto)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Listado de Productos'
+        context['create_url'] = reverse_lazy('agregarProductos')
+        context['list_url'] = reverse_lazy('listarProductos')
+        context['entity'] = 'Productos'
+        return context
+            
 def agregarProductos(request):
     data = {
         'addpro': ProductosForm()
@@ -398,18 +451,39 @@ def agregarProductos(request):
         formulario = ProductosForm(data=request.POST)
         if formulario.is_valid():
             formulario.save()
-            return redirect('listarProductos')
+            return redirect('agregarProductos')
         else:
             data['addpro'] = formulario
     
     return render(request, 'productos/agregarProductos.html', data)
+
+def eliminarProductos(request, id_producto):
+    pro = Productos.objects.get(id_producto=id_producto)
+    pro.delete()
+    return redirect('listarProductos')
+
+
+def editarProductos(request, id_producto):
+    pro = Productos.objects.get(id_producto=id_producto)
+    data = {
+        'editpro': ProductosForm(instance=pro)
+    }
+    if request.method == 'POST':
+        formulario = ProductosForm(data=request.POST, instance=pro)
+        if formulario.is_valid():
+            formulario.save()
+            return redirect('listarProductos')
+        else:
+            data['editpro'] = formulario
+    return render(request, 'productos/editarProductos.html', data)
+
+
 def listarCatySubcat(request):
     categorias = CategoriaProductos.objects.all()
     subcategorias = SubcategoriaProductos.objects.all()
     contexto = {'categorias':categorias, 'subcategorias':subcategorias}
     return render(request, 'productos/listadoCategoriasProd.html', contexto)
             
-
 def agregarCatySubcat (request):
     data = {
         'addcat': CatForm(),
@@ -427,7 +501,7 @@ def agregarCatySubcat (request):
     return render(request, 'productos/agregarCatySubcat.html', data)
 
 
-# Modulo Equipos
+# MODULO EQUIPOS
 
 class Equipo(CreateView):
     model = Equipos
@@ -541,7 +615,6 @@ class EquipoEdit(UpdateView):
         context['det'] = json.dumps(self.get_detalles_equipo())
         return context
 
-
 class EquipoListView(ListView):
     model = Equipos
     template_name = 'equipos/listarEquipos.html'
@@ -577,30 +650,73 @@ class EquipoListView(ListView):
         return context
 
 
-
-
 def EliminarEquipo(request, id_equipo):
     equipo = Equipos.objects.get(id_equipo=id_equipo)
     equipo.delete()
     return redirect('listarEquipos')
 
-# Modulo Asignaciones 
+# Modulo Tareas
 
-def listarAsignaciones(request):
-    asignaciones = Tareas.objects.all()
-    contexto = {'asignaciones':asignaciones}
-    return render(request, 'equipos/listarAsignaciones.html', contexto)
+class TareasListView(ListView):
+    model = Tareas
+    template_name = 'equipos/listarTareas.html'
+    form = TareasForm
 
-def agregarAsignaciones(request):
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST['action']
+            if action == 'listarTareas':
+                data = []
+                for i in Tareas.objects.all():
+                    data.append(i.toJSON())
+            else:
+                data['error'] = 'Ha ocurrido un error'
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data, safe=False)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Listado de Tareas'
+        context['create_url'] = reverse_lazy('agregarTareas')
+        context['list_url'] = reverse_lazy('listarTareas')
+        context['entity'] = 'Tareas'
+        return context
+
+
+
+def agregarTareas(request):
+    if request.method == 'POST':
+        form = TareasForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('listarTareas')
+    else:
+        form = TareasForm()
+    return render(request, 'equipos/agregarTareas.html', {'form': form})
+
+
+def editarTareas(request, tarea_id):
+    tarea = Tareas.objects.get(tarea_id=tarea_id)
     data = {
-        'addasig': TareasForm()
+        'form': TareasForm(instance=tarea)
     }
     if request.method == 'POST':
-        formulario = TareasForm(data=request.POST)
+        formulario = TareasForm(data=request.POST, instance=tarea)
         if formulario.is_valid():
             formulario.save()
-            return redirect('listarAsignaciones')
+            return redirect('listarTareas')
         else:
-            data['addasig'] = formulario
-    
-    return render(request, 'equipos/agregarAsignaciones.html', data)
+            data['form'] = formulario
+    return render(request, 'equipos/editarTareas.html', data)
+
+
+def eliminarTareas(request, tarea_id):
+    tarea = Tareas.objects.get(tarea_id=tarea_id)
+    tarea.delete()
+    return redirect('listarTareas')

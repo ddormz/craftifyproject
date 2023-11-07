@@ -1,3 +1,281 @@
+var tblTareas;
+
+function productosTable() {
+  var tblProductos = $(".tabla-productos").DataTable({
+    "responsive": true,
+    "lengthChange": false,
+    "autoWidth": false,
+    "language": {
+      "url": '../../core/static/js/es-ES.json'
+    },
+    "dom": 'Bfrtip', // Esto habilita los botones en la parte superior
+    "buttons": [
+      {
+        text: 'Exportar a PDF',
+        extend: 'pdfHtml5'
+      },
+      {
+        text: 'Visibilidad de Columnas',
+        extend: 'colvis'
+      }
+    ],
+    ajax: {
+      url: window.location.pathname,
+      type: 'POST',
+      data: {
+        'action': 'listarProductos',
+        'id_producto': 'id_producto'
+      },
+      dataSrc: '',
+    },
+    columns: [
+      {"data": "id_producto"},
+      {"data": "nombre_producto"},
+      {"data": "descripcion"},
+      {"data": "categoria.nombre_categoria"},
+      {"data": "subcategoria.nombre_subcategoria"},
+      {"data": "marca.nombre_marca"},
+      {"data": "precio_compra"},
+      {"data": "precio_venta"},
+      {"data": "stock"},
+      {"data": "variante.nombre_variante"},
+      {"data": "id_producto"},
+    ],
+    columnDefs: [
+      {
+        targets: [-1],
+        class: 'text-center',
+        orderable: false,
+        render: function (data, type, row) {
+          var buttons = '<a rel="remove" href="/eliminarProductos/' + row.id_producto + '/" class="btn btn-danger btn-xs btn-flat" id="botonEliminar"><i class="fas fa-trash-alt"></i></a>';
+          buttons += '<a href="/editarProductos/' + row.id_producto + '/" class="btn btn-warning btn-xs btn-flat"><i class="fas fa-pen"></i></a> ';  
+          return buttons;
+      },
+    },
+      {
+        targets: [-4,-5],
+        class: 'text-center',
+        render: function (data, type, row) {
+          return '$' + parseFloat(data).toLocaleString('es-CL', { minimumFractionDigits: 0, maximumFractionDigits: 0, });
+        }
+
+      },
+      {
+        targets: [-3],
+        class: 'text-center',
+        render: function (data, type, row) {
+          if (data >= 1) {
+            if (data > 7) {
+              return '<div class="badge bg-success" style="width:100%">' + 'Existencia: ' + data + '</div>';
+            } else {
+              return '<div class="badge bg-warning" style="width:100%">' + 'Existencia: ' + data + '</div>';
+            }
+          } else {
+            return '<span class="badge bg-danger">Agotado</span>';
+          }
+        }
+        
+
+      },
+    ],
+    initComplete: function (settings, json) {
+      
+    }
+  })
+}
+
+$(document).ready(function () {
+  $('#formProd').on('submit', function (event) {
+    event.preventDefault(); // Prevenir el envío automático del formulario
+    $.ajax({
+      type: 'POST',
+      url: $(this).attr('action'),
+      data: $(this).serialize(),
+      success: function (response) {
+        // Mostrar notificación de éxito
+        $('#toast').text('Registro exitoso del producto').removeClass('alert-danger').addClass('alert-success').show();
+        setTimeout(function () {
+          $('#toast').hide();
+        }, 3000); // Ocultar la notificación después de 3 segundos
+        
+        // Restablecer el formulario
+        $('#formProd')[0].reset();
+      },
+      error: function (xhr, errmsg, err) {
+        // Mostrar notificación de error
+        $('#toast').text('Registro fallido').removeClass('alert-success').addClass('alert-danger').show();
+        setTimeout(function () {
+          $('#toast').hide();
+        }, 2000); // Ocultar la notificación después de 3 segundos
+      }
+    });
+  });
+});
+
+
+$(document).ready(function () {
+  $('#formEditProd').on('submit', function (event) {
+    event.preventDefault(); // Prevenir el envío automático del formulario
+    $.ajax({
+      type: 'POST',
+      url: $(this).attr('action'),
+      data: $(this).serialize(),
+      success: function (response) {
+        // Mostrar notificación de éxito
+        $('#toast').text('Actualizacion exitoso del producto').removeClass('alert-danger').addClass('alert-success').show();
+        setTimeout(function () {
+          $('#toast').hide();
+          window.location.href = '/listarProductos'; // Reemplaza con la URL correcta
+  }, 1500); // Ocultar la notificación después de 2 segundos        
+      },
+      error: function (xhr, errmsg, err) {
+        // Mostrar notificación de error
+        $('#toast').text('Registro fallido').removeClass('alert-success').addClass('alert-danger').show();
+        setTimeout(function () {
+          $('#toast').hide();
+        }, 2000); // Ocultar la notificación después de 3 segundos
+      }
+    });
+  });
+});
+
+$(document).ready(function () {
+  $('#formProyecto').on('submit', function (event) {
+    event.preventDefault(); // Prevenir el envío automático del formulario
+    $.ajax({
+      type: 'POST',
+      url: $(this).attr('action'),
+      data: $(this).serialize(),
+      success: function (response) {
+        // Mostrar notificación de éxito
+        $('#toast').text('Proyecto Agregado Exitosamente').removeClass('alert-danger').addClass('alert-success').show();
+        setTimeout(function () {
+          $('#toast').hide();
+          window.location.href = '/verproyectos'; // Reemplaza con la URL correcta
+  }, 1500); // Ocultar la notificación después de 2 segundos        
+      },
+      error: function (xhr, errmsg, err) {
+        // Mostrar notificación de error
+        $('#toast').text('Proyecto no puede ser agregado, verifique los campos').removeClass('alert-success').addClass('alert-danger').show();
+        setTimeout(function () {
+          $('#toast').hide();
+        }, 2000); // Ocultar la notificación después de 3 segundos
+      }
+    });
+  });
+});
+
+
+$(document).ready(function () {
+  $('#formEditProyecto').on('submit', function (event) {
+    event.preventDefault(); // Prevenir el envío automático del formulario
+    $.ajax({
+      type: 'POST',
+      url: $(this).attr('action'),
+      data: $(this).serialize(),
+      success: function (response) {
+        // Mostrar notificación de éxito
+        $('#toast').text('Proyecto Actualizado Exitosamente').removeClass('alert-danger').addClass('alert-success').show();
+        setTimeout(function () {
+          $('#toast').hide();
+          window.location.href = '/verproyectos'; // Reemplaza con la URL correcta
+  }, 1500); // Ocultar la notificación después de 2 segundos        
+      },
+      error: function (xhr, errmsg, err) {
+        // Mostrar notificación de error
+        $('#toast').text('Proyecto no puede ser actualizado, verifique los campos').removeClass('alert-success').addClass('alert-danger').show();
+        setTimeout(function () {
+          $('#toast').hide();
+        }, 2000); // Ocultar la notificación después de 3 segundos
+      }
+    });
+  });
+});
+
+
+function tareasTable() {
+   tblTareas = $(".tabla-tareas").DataTable({
+    "responsive": true,
+    "lengthChange": false,
+    "autoWidth": false,
+    "language": {
+      "url": '../../core/static/js/es-ES.json'
+    },
+    "dom": 'Bfrtip', // Esto habilita los botones en la parte superior
+    "buttons": [
+      {
+        text: 'Exportar a PDF',
+        extend: 'pdfHtml5'
+      },
+      {
+        text: 'Visibilidad de Columnas',
+        extend: 'colvis'
+      }
+    ],
+    ajax: {
+      url: window.location.pathname,
+      type: 'POST',
+      data: {
+        'action': 'listarTareas'
+      },
+      dataSrc: '',
+    },
+    columns: [
+      {"data": "tarea_id"},
+      {"data": "equipo_id_equipo.nombre_equipo"},
+      {"data": "equipo_id_equipo.proyecto_id_proyecto.nombre_proyecto"},
+      {"data": "tarea"},
+      {"data": "trabajador.first_name"},
+      {"data": "fecha_asignacion"},
+      {"data": "fecha_termino"},
+      {"data": "status_tarea.nombre_status"},
+      {"data": "tarea_id"},
+
+    ],
+    columnDefs: [
+      {
+        targets: [-1],
+        class: 'text-center',
+        orderable: false,
+        render: function (data, type, row) {
+          var buttons = '<a rel="remove" href="/eliminarTareas/' + row.tarea_id + '/" class="btn btn-danger btn-xs btn-flat" id="botonizar"><i class="fas fa-trash-alt"></i></a>';
+          buttons += '<a href="/editarTareas/' + row.tarea_id + '/" class="btn btn-warning btn-xs btn-flat"><i class="fas fa-pen"></i></a> ';
+          return buttons;
+        }
+      }
+      
+
+    ],
+    initComplete: function (settings, json) {
+      var selectEquipo = $('#filtroEquipo');
+      var selectProyecto = $('#filtroProyecto');
+    
+      // Obtener una lista única de nombres de equipos y proyectos
+      var equipos = tblTareas.column(1).data().unique().toArray();
+      var proyectos = tblTareas.column(2).data().unique().toArray();
+    
+      // Llenar los elementos <select> con las opciones
+      equipos.forEach(function (equipo) {
+        selectEquipo.append('<option value="' + equipo + '">' + equipo + '</option>');
+      });
+    
+      proyectos.forEach(function (proyecto) {
+        selectProyecto.append('<option value="' + proyecto + '">' + proyecto + '</option>');
+      });
+    
+      // Agregar eventos de cambio a los filtros
+      selectEquipo.on('change', function () {
+        var equipoSeleccionado = $(this).val();
+        tblTareas.column(1).search(equipoSeleccionado).draw();
+      });
+    
+      selectProyecto.on('change', function () {
+        var proyectoSeleccionado = $(this).val();
+        tblTareas.column(2).search(proyectoSeleccionado).draw();
+      });
+    },
+  });
+}
 function equiposTable() {
   var tblEquipo = $(".tabla-equipos").DataTable({
     "responsive": true,
@@ -41,7 +319,7 @@ function equiposTable() {
           var buttons = '<a rel="remove" href="/eliminarEquipo/' + row.id_equipo + '/" class="btn btn-danger btn-xs btn-flat" id="botonEliminar"><i class="fas fa-trash-alt"></i></a>';
           buttons += '<a href="/editarEquipo/' + row.id_equipo + '/" class="btn btn-warning btn-xs btn-flat"><i class="fas fa-pen"></i></a> ';
           buttons += '<a rel="details" class="btn btn-success btn-xs btn-flat"><i class="fas fa-search"></i></a> ';  
-          buttons += '<a href="/" class="btn btn-dark btn-xs btn-flat"><i class="fa-solid fa-list-check" style="color: white;"></i></a>';
+          buttons += '<a href="/listarTareas" class="btn btn-dark btn-xs btn-flat tareaID"><i class="fa-solid fa-list-check" style="color: white;"></i></a>';
           return buttons;
       }
       },  
@@ -51,6 +329,7 @@ function equiposTable() {
     },
     
 });
+
 
   $('.tabla-equipos tbody')
     .on('click', 'a[rel="details"]', function () {
@@ -92,9 +371,13 @@ function equiposTable() {
       $('.close').on('click', function() {
         $('#ModalEquipo').modal('hide');
     });
-    }); 
-  }
+    });
+    
 
+
+
+    
+  };
 function proyectosTable() {
   var table = $(".tabla-proyectos").DataTable({
     "responsive": true,
@@ -150,8 +433,17 @@ function proyectosTable() {
             return '<div class="badge rounded-pill bg-danger">Vencido</div>';
           }
         },
-        "targets": [-2]
-      }
+      },
+      {
+        "targets": [-6],
+        "render": function (data, type, row) {
+          if (data == "True") {
+            return '<div class="badge rounded-pill bg-success">Si</div>';
+          } else {
+            return '<div class="badge rounded-pill bg-danger">No</div>';
+          }
+          }
+        }
     ]
   });
 
@@ -160,10 +452,6 @@ function proyectosTable() {
   buttonsContainer.appendTo($('#tarjetaTablas'));
   buttonsContainer.addClass('float-left');
 };
-
-
-
-
 // Tabla Trabajadores
 function trabajadoresTable() {
   var table = $(".tabla-datos").DataTable({
@@ -201,11 +489,7 @@ function trabajadoresTable() {
 });
 
 };
-
-
-
 // Agregar Registro Trabajador
-
 $(document).ready(function() {
   $("#formAddTrab").on("submit", function(event) {
     event.preventDefault();
@@ -240,9 +524,7 @@ $(document).ready(function() {
     });
   });
 });
-
 // Tabla Cotizaciones
-
 function cotizacionesTable() {
   var tblCot = $(".tabla-cotizaciones").DataTable({
     "responsive": true,
@@ -445,14 +727,10 @@ function cotizacionesTable() {
       }
     });
 });
-
-
-
-
-
-
 };
 document.addEventListener('DOMContentLoaded', cotizacionesTable);
 document.addEventListener('DOMContentLoaded', trabajadoresTable);
 document.addEventListener('DOMContentLoaded', proyectosTable);
 document.addEventListener('DOMContentLoaded', equiposTable);
+document.addEventListener('DOMContentLoaded', tareasTable);
+document.addEventListener('DOMContentLoaded', productosTable);

@@ -41,10 +41,12 @@ urlpatterns = [
     path('agregarClientes', agregarClientes, name='agregarClientes'),
 
     # MODULO DE PRODUCTOS
-    path('listarProductos', listarProductos, name='listarProductos'),
+    path('listarProductos', ProductosListView.as_view(), name='listarProductos'),
     path('agregarProductos', agregarProductos, name='agregarProductos'),
     path('listarCatySubcat', listarCatySubcat, name='listarCatySubcat'),
     path('agregarCatySubcat', agregarCatySubcat, name='agregarCatySubcat'),
+    path('eliminarProductos/<id_producto>/', eliminarProductos, name='eliminarProductos'),
+    path('editarProductos/<id_producto>/', editarProductos, name='editarProductos'),
 
     # MODULO DE EQUIPOS 
 
@@ -55,8 +57,10 @@ urlpatterns = [
 
     # MODULO ASIGNACIONES
 
-    path('listarAsignaciones', listarAsignaciones, name='listarAsignaciones'),
-    path('agregarAsignaciones', agregarAsignaciones, name='agregarAsignaciones')
+    path('listarTareas', TareasListView.as_view(), name='listarTareas'),
+    path('agregarTareas', agregarTareas, name='agregarTareas'),
+    path('eliminarTareas/<tarea_id>/', eliminarTareas, name='eliminarTareas'),
+    path('editarTareas/<tarea_id>/', editarTareas, name='editarTareas'),
     
 ]
 

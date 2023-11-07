@@ -38,15 +38,15 @@
         <tbody>
        {% for proyecto in proyectos %}
           <tr>
-            <th scope="">{{ proyecto.id_proyecto }}</th>
-            <th scope="row">{{ proyecto.cliente }}</th>  
-            <th scope="row">{{ proyecto.categoria }}</th>
-            <th scope="row">{{ proyecto.nombre_proyecto }}</th>
-            <th scope="row">{{ proyecto.instalacion }}</th>
-            <th scope="row">{{ proyecto.fecha }}</th>
-            <th scope="row">{{ proyecto.plazo_entrega }}</th>
+            <th scope="row">{{ proyecto.id_proyecto }}</th>
+            <td scope="row">{{ proyecto.cliente }}</td>  
+            <td scope="row">{{ proyecto.categoria }}</td>
+            <td scope="row">{{ proyecto.nombre_proyecto }}</td>
+            <td scope="row">{{ proyecto.instalacion }}</td>
+            <td scope="row">{{ proyecto.fecha }}</td>
+            <td scope="row">{{ proyecto.plazo_entrega }}</td>
 
-            <th scope="row">{{ proyecto.status }}</th>
+            <td scope="row">{{ proyecto.status }}</td>
                     <td>{{ proyecto.tiempo_restante }} días</td>
             <td>          
              <a class="btn btn-warning botonEditar" href="{% url 'editarProyecto' proyecto.id_proyecto %}" role="button"><i class="fas fa-pen"></i></button>

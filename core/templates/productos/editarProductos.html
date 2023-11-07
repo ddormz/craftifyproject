@@ -17,15 +17,15 @@
       <!-- general form elements -->
       <div class="card card-primary">
         <div class="card-header">
-          <h3 class="card-title">Agregar Producto Nuevo</h3>
+          <h3 class="card-title">Editar Producto</h3>
         </div>
         <!-- /.card-header -->
         <!-- form start -->
-        <form action="" method="POST" id="formProyecto">
+        <form action="" method="POST" id="formEditProd">
           {% csrf_token %}
           <div class="card-body">
             <div class="row">
-              <div class="col-lg-6">
+              <div class="col-lg-8">
                 <div class="card card-secondary">
                   <div class="card-header">
                   <h3 class="card-title"><i class="fa-solid fa-address-book"></i>Datos del Producto</h3>
@@ -34,27 +34,33 @@
                     <div class="form-group">
                       <div class="row">
                         <div class="col-lg-6">
-                          {{ AggForm.cliente | as_crispy_field }}
+                          {{ editpro.nombre_producto | as_crispy_field }}
                         </div>
                         <div class="col-lg-6">
-                          {{ AggForm.categoria | as_crispy_field }}
+                          {{ editpro.descripcion | as_crispy_field }}
                        </div>
                       </div>
                     </div>
                     <div class="form-group">
                       <div class="row">
-                       <div class="col-lg-12">
-                          {{ AggForm.nombre_proyecto | as_crispy_field }}
+                       <div class="col-lg-6">
+                          {{ editpro.categoria | as_crispy_field }}
                         </div>
-                        <div class="col-lg-12">
-                          {{ AggForm.instalacion | as_crispy_field }}
+                        <div class="col-lg-6">
+                          {{ editpro.subcategoria | as_crispy_field }}
+                        </div>
+                        <div class="col-lg-6">
+                          {{ editpro.marca | as_crispy_field }}
+                        </div>
+                        <div class="col-lg-6">
+                          {{ editpro.variante | as_crispy_field }}
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="col-lg-6">
+              <div class="col-sm-4">
                 <div class="card card-secondary">
                   <div class="card-header">
                   <h3 class="card-title"><i class="fa-solid fa-address-book"></i>Detalles</h3>
@@ -62,21 +68,22 @@
                   <div class="card-body">
                     <div class="form-group">
                       <div class="row">
-                        <div class="col-lg-6">
-                          {{ AggForm.fecha | as_crispy_field }}
+                        <div class="col-lg-12">
+                          {{ editpro.precio_compra | as_crispy_field }}
                         </div>
-                        <div class="col-lg-6">
-                          {{ AggForm.plazo_entrega | as_crispy_field }}
-                        </div>
-                      </div>
                       </div>
                       <div class="row">
                         <div class="col-lg-12">
-                          {{ AggForm.status | as_crispy_field }}
+                          {{ editpro.precio_venta | as_crispy_field }}
                         </div>
                       </div>
-                        <button type="submit" class="btn btn-primary agregarProyecto">Agregar</button>
-                        <a href="{% url 'verproyectos' %}" class="btn btn-danger btn-flat">Listar Proyectos</a>
+                      <div class="row">
+                        <div class="col-lg-12">
+                          {{ editpro.stock | as_crispy_field }}
+                        </div>
+                      </div>
+                        <button type="submit" class="btn btn-primary actualizarBoton">Actualizar</button>
+                        <a href="{% url 'listarProductos' %}" class="btn btn-danger btn-flat">Listar Productos</a>
                       </div>
                     </div>
                   </div>

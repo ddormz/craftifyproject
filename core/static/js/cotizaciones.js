@@ -116,6 +116,31 @@ $(function () {
         language: 'es'
     });
 
+    $('#btnClient').on('click', function () {
+        $('#myModalClient').modal('show');
+    });
+
+    $('#myModalClient').on('hidden.bs.modal', function (e) {
+        $('#frmClient').trigger('reset');
+    })
+
+    $('#frmClient').on('submit', function (e) {
+        e.preventDefault();
+        var parameters = new FormData(this);
+        parameters.append('action', 'create_client');
+        submit_with_ajax(window.location.pathname, 'Notificación',
+            '¿Estas seguro de crear al siguiente cliente?', parameters, function (response) {
+                $('#myModalClient').modal('hide');
+                window.location.reload();
+                
+            });
+    });
+
+    $('.close').on('click', function() {
+        $('#myModalClient').modal('hide');
+    });
+    
+
     $('#fecha_cotizacion').datetimepicker({
         format: 'YYYY-MM-DD',
         date: moment().format("YYYY-MM-DD"),
@@ -159,6 +184,10 @@ $(function () {
             console.log(vents.items.products);
         }
     });
+    
+
+
+
 
 // evento cantidad
 
