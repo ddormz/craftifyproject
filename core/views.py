@@ -7,7 +7,7 @@ from django.urls import reverse_lazy
 from .forms import *
 from .models import *
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import CreateView, ListView, UpdateView, View
+from django.views.generic import CreateView, ListView, UpdateView, View, TemplateView
 from django.utils.decorators import method_decorator
 from django.http import HttpResponse
 import os
@@ -17,11 +17,49 @@ from django.template.loader import get_template
 from xhtml2pdf import pisa
 from django.contrib.staticfiles import finders
 from datetime import datetime
+from django.db.models.functions import Coalesce
+from django.db.models import Sum
+
 # Create your views here.
 
-@login_required
-def home(request ):
-    return render(request, 'core/home.html')
+class HomeDashboard(TemplateView):
+    template_name = 'core/home.html'
+
+    def get_graph_data(self):
+        try:
+            data = []
+            year = datetime.now().year
+            for m in range(1, 13):
+                cotizaciones = Cotizaciones.objects.filter(fecha_cotizacion__year=year, fecha_cotizacion__month=m).count()
+                data.append(cotizaciones)
+        except:
+            pass    
+        return data
+    
+    def get_graph_data_proyectos(self):
+        try:
+            data = []
+            year = datetime.now().year
+            for m in range(1, 13):
+                proyectos = Proyecto.objects.filter(fecha__year=year, fecha__month=m).count()
+                data.append(proyectos)
+
+        except:
+            data = [0,0,0,0,0,0,0,0,0,0,0,0]
+        return data
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Dashboard'
+        context['entity'] = 'Dashboard'
+        context['get_graph_data'] = json.dumps(self.get_graph_data())
+        context['get_graph_data_proyectos'] = json.dumps(self.get_graph_data_proyectos())
+        return context
+
+
+
+
 
 def exit(request):
     logout(request)
@@ -717,6 +755,9 @@ def editarTareas(request, tarea_id):
 
 
 def eliminarTareas(request, tarea_id):
+    
     tarea = Tareas.objects.get(tarea_id=tarea_id)
     tarea.delete()
     return redirect('listarTareas')
+
+

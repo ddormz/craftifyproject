@@ -7,7 +7,8 @@ from django.conf.urls.static import static
 from .views import * 
 
 urlpatterns = [
-    path('', home, name='home'),
+    
+    path('', HomeDashboard.as_view(), name='home'),
     
     # MODULO LOGIN Y REGISTRO
     path('logout/', exit, name='exit'),
