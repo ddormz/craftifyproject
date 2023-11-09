@@ -118,3 +118,11 @@ def apistatus(request):
         return Response(serializer.data)
     
 
+
+@api_view(['GET'])
+def apiproductos(request):
+    if request.method == 'GET':
+        listado = Productos.objects.all()
+        serializer = ProductosSerializer(listado, many=True)
+        return Response(serializer.data)
+

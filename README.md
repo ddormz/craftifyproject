@@ -1,5 +1,18 @@
 # Craftify Project
 
+v1.6 - 09/11
+- Modulo de Equipos OK
+- Modulo de Productos 90% (falta modales categorias, subcategorias, marcas)
+- Modulo de Proyectos 90% (falta modales categorias)
+- Modulo Cotizaciones 95% (falta validacion al ingresar producto)
+- Dashboard OK (falta agregar mas graficos)
+- Modulo Clientes 90% (falta estilizar)
+- Modulo Avances 50% (URGENTE TERMINAR)
+- Modulo Tareas 80% (falta modales)
+- Falta responsive de NAVBAR y Roles de Usuario
+- API 90% (faltaria el auth y pdf)
+
+
 v1.5 - 01/11
 - Cotizaciones Genera PDF
 - Status de Proyecto con badges y cálculo de tiempo restante por proyecto.

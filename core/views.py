@@ -22,6 +22,7 @@ from django.db.models import Sum
 
 # Create your views here.
 
+
 class HomeDashboard(TemplateView):
     template_name = 'core/home.html'
 
