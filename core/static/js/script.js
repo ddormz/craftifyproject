@@ -38,7 +38,7 @@ function productosTable() {
       {"data": "precio_compra"},
       {"data": "precio_venta"},
       {"data": "stock"},
-      {"data": "variante.nombre_variante"},
+      {"data": "variante",},
       {"data": "id_producto"},
     ],
     columnDefs: [

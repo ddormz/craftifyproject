@@ -121,6 +121,10 @@ class AvanceForm(forms.ModelForm):
         model = Avances
         fields = "__all__"
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['imagen'].widget.attrs.update({'accept': 'image/*'})  # Esto permite seleccionar solo archivos de imagen
+
 
 class EquiposForm(forms.ModelForm):
     class Meta:
@@ -165,3 +169,9 @@ class LoginForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['rut', 'password']
+
+
+class CategoriaProyectoForm(forms.ModelForm):
+    class Meta:
+        model = CategoriaProyecto
+        fields = "__all__"

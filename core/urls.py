@@ -24,11 +24,14 @@ urlpatterns = [
     path('agregarProyecto/', agregarProyecto, name='agregarProyecto'),
     path('editarProyecto/<id_proyecto>/', editarProyecto, name='editarProyecto'),
     path('eliminarProyecto/<id_proyecto>/', eliminarProyecto, name='eliminarProyecto'),
+    path('agregarCategoriaProyecto/', agregarCategoriaProyecto, name='agregarCategoriaProyecto'),
 
     # MODULO DE AVANCES
-    path('avances', avances, name='avances'),
+    path('avances', ListarAvances.as_view(), name='avances'),
     path('statusProyectos', statusProyectos, name='statusProyectos'),
     path('agregarAvances', agregarAvances, name='agregarAvances'),
+    path('editarAvance/<avance_id>/', editarAvances, name='editarAvances'),
+    path('eliminarAvance/<avance_id>/', eliminarAvances, name='eliminarAvance'),
 
     # MODULO DE COTIZACIONES
     path('listarCotizaciones', CotListView.as_view(), name='listarCotizaciones'),

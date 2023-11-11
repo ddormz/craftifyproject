@@ -6,8 +6,9 @@
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
+<script src="{% static 'js/proyectos.js' %}"></script>
 <link rel="stylesheet" href="{% static 'css/base.css' %}">
+
 <!------ Include the above in your HEAD tag ---------->
 
 <div class="container-fluid">
@@ -23,6 +24,7 @@
         <!-- form start -->
         <form action="" method="POST" id="formProyecto">
           {% csrf_token %}
+          
           <div class="card-body">
             <div class="row">
               <div class="col-lg-6">
@@ -38,6 +40,11 @@
                         </div>
                         <div class="col-lg-6">
                           {{ AggForm.categoria | as_crispy_field }}
+                              <div class="input-group-append" id="divCategoria">
+                              <a href="{% url 'agregarCategoriaProyecto' %}" class="btn btn-success btn-flat btnCategoria" id="btnCategoria" type="button">
+                                <i class="fas fa-plus"></i>Nueva Categoria
+                              </a>
+                            </div>
                        </div>
                       </div>
                     </div>
@@ -82,6 +89,7 @@
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
           
@@ -96,6 +104,32 @@
       </div>
 
       <!-- Agrega este script en tu plantilla HTML, después de incluir jQuery -->
-
+    <!-- Modal -->
+    <div class="modal fade" id="modalCategoria" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <form id="formCategoria" method="post">
+          <input type="hidden" name="action" value="{{ action }}">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">
+                            <b><i class="fas fa-user-plus"></i> Nuevo registro de Categoria</b>
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+           {% csrf_token %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary btn-block btn-flat">
+                            <i class="fas fa-save"></i> Guardar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
 
 {% endblock %}

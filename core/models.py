@@ -182,12 +182,17 @@ class Tareas(models.Model):
 class Avances(models.Model):
     avance_id = models.AutoField(primary_key=True)
     imagen = models.ImageField(upload_to='avances')
-    comentario = models.CharField(max_length=100)
+    fecha = models.DateTimeField(default=datetime.now)
+    comentario = models.TextField(max_length=100)
     tarea = models.ForeignKey('Tareas', on_delete=models.CASCADE)
-    equipo_id_equipo = models.ForeignKey('Equipos', on_delete=models.CASCADE, null=True, blank=True)
-    proyecto_id_proyecto = models.ForeignKey('Proyecto', on_delete=models.CASCADE, null=True, blank=True)
     def __str__(self):
         return str(self.avance_id) + str(" - ") + str(self.comentario)
+    
+    def toJSON(self):
+        item = model_to_dict(self)
+        item['tarea'] = self.tarea.toJSON()
+        item['imagen'] = self.imagen.url
+        return item
     
     class Meta:
         verbose_name = 'Avance'
@@ -203,7 +208,7 @@ class Productos(models.Model):
     marca = models.ForeignKey('MarcaProductos', on_delete=models.CASCADE, default=1)
     precio_compra = models.FloatField(default=0, )
     precio_venta = models.FloatField(default=0)
-    variante = models.ForeignKey('VarianteProductos', on_delete=models.CASCADE, null=True, blank=True)
+    variante = models.CharField(max_length=100, null=True, blank=True)
     stock = models.IntegerField(default=0)
     def __str__(self):
         return str(self.nombre_producto) + str(" - ") + str(self.variante)
@@ -212,7 +217,6 @@ class Productos(models.Model):
         item = model_to_dict(self)
         item['categoria'] = self.categoria.toJSON()
         item['precio_venta'] = format(self.precio_venta, '.2f')
-        item['variante'] = self.variante.toJSON()
         item['subcategoria'] = self.subcategoria.toJSON()
         item['marca'] = self.marca.toJSON()
         return item
@@ -268,20 +272,6 @@ class MarcaProductos(models.Model):
         verbose_name_plural = 'Marcas de Productos'
         ordering = ['nombre_marca']
     
-class VarianteProductos(models.Model):
-    id_variante = models.AutoField(primary_key=True)
-    nombre_variante = models.CharField(max_length=100)
-    def __str__(self):
-        return str(self.nombre_variante)
-    
-    def toJSON(self):
-        item = model_to_dict(self)
-        return item
-    
-    class Meta:
-        verbose_name = 'Variante de Producto'
-        verbose_name_plural = 'Variantes de Productos'
-        ordering = ['nombre_variante']
     
 class Cotizaciones(models.Model):
     id_cotizacion = models.AutoField(primary_key=True)

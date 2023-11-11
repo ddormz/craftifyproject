@@ -25,7 +25,10 @@ from django.db.models import Sum
 
 class HomeDashboard(TemplateView):
     template_name = 'core/home.html'
-
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+    
     def get_graph_data(self):
         try:
             data = []
@@ -57,10 +60,6 @@ class HomeDashboard(TemplateView):
         context['get_graph_data'] = json.dumps(self.get_graph_data())
         context['get_graph_data_proyectos'] = json.dumps(self.get_graph_data_proyectos())
         return context
-
-
-
-
 
 def exit(request):
     logout(request)
@@ -169,24 +168,91 @@ def statusProyectos(request):
     return render(request, 'proyectos/statusProyectos.html', contexto)
 
 
-def avances(request):
-    avance = Avances.objects.all()
-    contexto = {'avances':avance}
-    return render(request, 'avances/avances.html', contexto)
+def categoriaProyectos(request):
+    categorias = CategoriaProyecto.objects.all()
+    contexto = {'categorias': categorias}
+    return render(request, 'proyectos/categoriaProyectos.html', contexto)
+
+def agregarCategoriaProyecto(request):
+    data = {
+        'catForm': CategoriaProyectoForm()
+    }
+    if request.method == 'POST':
+        formulario = CategoriaProyectoForm(data=request.POST)
+        if formulario.is_valid():
+            formulario.save()
+            return redirect('agregarProyecto')
+        else:
+            data['catForm'] = formulario
+    
+    return render(request, 'proyectos/categoriaProyectos.html', data)
+
+
+class ListarAvances(ListView):
+    model = Avances
+    template_name = 'avances/avances.html'
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST['action']
+            if action == 'listarAv':
+                data = []
+                for i in Avances.objects.all():
+                    data.append(i.toJSON())
+            else:
+                data['error'] = 'Ha ocurrido un error'
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data, safe=False)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Listado de Avances'
+        context['create_url'] = reverse_lazy('agregarAvances')
+        context['list_url'] = reverse_lazy('listarAvances')
+        context['entity'] = 'Avances'
+        return context
+    
 
 def agregarAvances(request):
     data = {
-        'addavance': AvanceForm(request.FILES)
+        'addavance': AvanceForm()  # No es necesario pasar request.FILES aquí
     }
+
     if request.method == 'POST':
-        formulario = AvanceForm(data=request.POST)
+        formulario = AvanceForm(request.POST, request.FILES)  # Aquí pasa ambos request.POST y request.FILES
         if formulario.is_valid():
             formulario.save()
             return redirect('avances')
         else:
             data['addavance'] = formulario
-    return render (request, 'avances/agregarAvances.html', data)
-        
+
+    return render(request, 'avances/agregarAvances.html', data)
+
+def editarAvances(request, avance_id):
+    avance = Avances.objects.get(avance_id=avance_id)
+    data = {
+        'form': AvanceForm(instance=avance)
+    }
+    if request.method == 'POST':
+        formulario = AvanceForm(request.POST, request.FILES, instance=avance)
+        if formulario.is_valid():
+            formulario.save()
+            return redirect('avances')
+        else:
+            data['form'] = formulario
+    
+    return render(request, 'avances/editarAvance.html', data)
+
+def eliminarAvances(request, avance_id):
+    avance = Avances.objects.get(avance_id=avance_id)
+    avance.delete()
+    return redirect('avances')
 
 ## MODULO COTIZACIONES
 

@@ -247,3 +247,7 @@ div.dt-buttons {
   margin: 5px 5px 5px 5px;
 }
 
+#divCategoria {
+  display: flex;
+  justify-content: flex-end;
+}

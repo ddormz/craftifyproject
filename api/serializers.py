@@ -69,11 +69,6 @@ class EquiposSerializer(serializers.ModelSerializer):
 
 
 
-class VariantesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = VarianteProductos
-        fields = '__all__'
-
 class AsignacionesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tareas
