@@ -10,8 +10,8 @@ var vents = {
         fecha_cotizacion: '',
         metodo_pago: '',
         subtotal: 0,
-        iva: 0.00,
-        total: 0.00,
+        iva: 0,
+        total: 0,
         products: []
     },
 
@@ -27,9 +27,9 @@ var vents = {
         this.items.iva = this.items.subtotal * iva / 100;
         this.items.total = this.items.subtotal + this.items.iva;
 
-        $('input[name="subtotal"]').val(this.items.subtotal.toLocaleString('es-CL', { minimumFractionDigits: 0, maximumFractionDigits: 0,}));
+        $('input[name="subtotal"]').val(this.items.subtotal.toFixed(0));
         $('input[name="ivacalc"]').val(this.items.iva.toLocaleString('es-CL', { minimumFractionDigits: 0, maximumFractionDigits: 0,  }));
-        $('input[name="total"]').val(this.items.total.toLocaleString('es-CL', { minimumFractionDigits: 0, maximumFractionDigits: 0,}));
+        $('input[name="total"]').val(this.items.total.toFixed(0));
     },
 
     // agregar productos a la lista
@@ -98,7 +98,7 @@ var vents = {
             rowCallback(row) {
                 $(row).find('input[name="cant"]').TouchSpin({
                     min: 1,
-                    max: 100000000,
+                    max: 100000,
                     step: 1,
                 })
             },
@@ -227,12 +227,9 @@ $(function () {
     $('#tblProducts tbody').on('keyup', 'input[name="cant"]', function () {
         
         var cant = parseInt($(this).val());
-        if (cant == '0') {
+        if (cant < '0') {
             $(this).val(1);
         } else {
-        if (isNaN(cant)) {
-            $(this).val(1);
-        }
         }
     });
 

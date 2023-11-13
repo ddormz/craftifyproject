@@ -80,13 +80,6 @@ def apimarcas(request):
         serializer = MarcaProductosSerializer(listado, many=True)
         return Response(serializer.data)
 
-
-@api_view(['GET'])
-def apivariantes(request):
-    if request.method == 'GET':
-        listado = VarianteProductos.objects.all()
-        serializer = VariantesSerializer(listado, many=True)
-        return Response(serializer.data)
 @api_view(['GET'])  
 def apiveravances(request):
     if request.method == 'GET':
@@ -103,12 +96,6 @@ def apiequipos(request):
         return Response(serializer.data)
 
 
-@api_view(['GET'])   
-def apiasignaciones(request):
-    if request.method == 'GET':
-        listado = EquipoAsignacion.objects.all()
-        serializer = AsignacionesSerializer(listado, many=True)
-        return Response(serializer.data)
     
 @api_view(['GET'])
 def apistatus(request):

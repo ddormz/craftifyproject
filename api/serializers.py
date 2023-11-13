@@ -28,7 +28,7 @@ class ProyectosSerializer(serializers.ModelSerializer):
     apellido = serializers.CharField(source='cliente.apellido')
     class Meta:
         model = Proyecto
-        fields = ['nombre_proyecto','cliente','categoria','fecha','plazo_entrega','status','instalacion', 'nombre', 'apellido']
+        fields = ['nombre_proyecto','cliente','categoria','fecha','plazo_entrega','status','instalacion','nombre','apellido']
 
 
 class TrabajadoresSerializer(serializers.ModelSerializer):
@@ -40,7 +40,6 @@ class ProductosSerializer(serializers.ModelSerializer):
     categoria = serializers.CharField(source='categoria.nombre_categoria')
     subcategoria = serializers.CharField(source='subcategoria.nombre_subcategoria')
     marca = serializers.CharField(source='marca.nombre_marca')
-    variante = serializers.CharField(source='variante.nombre_variante')
 
     class Meta:
         model = Productos

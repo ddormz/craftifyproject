@@ -14,7 +14,6 @@ urlpatterns = [
     path('apicategorias/', apicategorias, name='apicategorias'),
     path('apisubcategorias/', apisubcategorias, name='apisubcategorias'),
     path('apiveravances/', apiveravances, name='apiveravances'),
-    path('apiasignaciones/', apiasignaciones, name='apiasignaciones'),
     path('apistatus', apistatus, name='apistatus'),
 
 

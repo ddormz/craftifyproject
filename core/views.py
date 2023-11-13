@@ -111,7 +111,6 @@ def eliminarTrabajadores(request, rut):
 @login_required
 def verproyectos(request):
     proyectos = Proyecto.objects.all()
-    fecha_actual = datetime.now()  # Obtenemos la fecha actual
 
     for proyecto in proyectos:
         fecha_creacion = proyecto.fecha
@@ -121,12 +120,15 @@ def verproyectos(request):
             fecha_creacion = datetime.combine(fecha_creacion, datetime.min.time())
             plazo_entrega = datetime.combine(plazo_entrega, datetime.min.time())
 
-            tiempo_restante = (plazo_entrega - fecha_actual).days
+            tiempo_restante = (plazo_entrega - fecha_creacion).days
+
+            # Asegurarse de que el tiempo restante no sea negativo
+            tiempo_restante = max(tiempo_restante, 0)
+
             proyecto.tiempo_restante = tiempo_restante
 
     contexto = {'proyectos': proyectos}
     return render(request, 'proyectos/proyectos.html', contexto)
-
 @login_required
 def agregarProyecto(request):
     data = {
