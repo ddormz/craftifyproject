@@ -1,7 +1,5 @@
-from typing import Any
-from django import http
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404, render
+
+from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from .serializers import *
 from core.models import *
@@ -10,25 +8,35 @@ from rest_framework.response import Response
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 from django.contrib.auth.models import User
-from django.contrib.auth.hashers import check_password
-from rest_framework.authtoken.models import Token
-from rest_framework.decorators import permission_classes
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
 User = get_user_model()
-from rest_framework import viewsets
 from core.forms import *
-from django.contrib.auth.decorators import login_required
 from django.http import FileResponse
 from django.conf import settings
 from xhtml2pdf import pisa
 from django.http import HttpResponse
 import os
 from django.template.loader import get_template
-from django.utils.decorators import method_decorator
+from django.contrib.auth import authenticate, login
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 # Create your views here.
 # Solicitudes no sean rechazadas por el TOKEN.
+
+class LoginView(APIView):
+    def post(self, request):
+        rut = request.data.get('rut', '')
+        password = request.data.get('password', '')
+
+        user = authenticate(request, rut=rut, password=password)
+
+        if user is not None:
+            login(request, user)
+            return Response({'message': 'Login successful'})
+        else:
+            return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
 
 @csrf_exempt
 @api_view(['GET'])
@@ -57,12 +65,6 @@ def cotizaciones_pdf_api(request, id_cotizacion):
     return response
 
 
-@api_view(['GET', 'POST',] ) #put, delete.
-def apidetallecotizaciones(request):
-    if request.method == 'GET':
-        listado = DetalleCotizaciones.objects.all()
-        serializer = DetalleCotizacionSerializer(listado, many=True)
-        return Response(serializer.data)
 
 @api_view(['GET', 'POST',] ) #put, delete.
 
@@ -93,27 +95,6 @@ def apiproductos(request):
         serializer = ProductosSerializer(listado, many=True)
         return Response(serializer.data)
     
-@api_view(['GET'])
-def apicategorias(request):
-    if request.method == 'GET':
-        listado = CategoriaProductos.objects.all()
-        serializer = CategoriaProductosSerializer(listado, many=True)
-        return Response(serializer.data)
-
-
-@api_view(['GET'])  
-def apisubcategorias(request):
-    if request.method == 'GET':
-        listado = SubcategoriaProductos.objects.all()
-        serializer = SubcategoriaProductosSerializer(listado, many=True)
-        return Response(serializer.data)
-
-@api_view(['GET'])    
-def apimarcas(request):
-    if request.method == 'GET':
-        listado = MarcaProductos.objects.all()
-        serializer = MarcaProductosSerializer(listado, many=True)
-        return Response(serializer.data)
 
 @api_view(['GET'])  
 def apiveravances(request):
@@ -124,42 +105,36 @@ def apiveravances(request):
 
 
 @api_view(['GET'])
-def apiequipos(request):
+def apitareas(request):
     if request.method == 'GET':
-        listado = Equipos.objects.all()
-        serializer = EquiposSerializer(listado, many=True)
+        listado = Tareas.objects.all()
+        serializer = TareasSerializer(listado, many=True)
         return Response(serializer.data)
 
 
-    
-@api_view(['GET'])
-def apistatus(request):
-    if request.method == 'GET':
-        listado = StatusProyecto.objects.all()
-        serializer = StatusSerializer(listado, many=True)
-        return Response(serializer.data)
-    
-
-
-@api_view(['GET'])
-def apiproductos(request):
-    if request.method == 'GET':
-        listado = Productos.objects.all()
-        serializer = ProductosSerializer(listado, many=True)
-        return Response(serializer.data)
-
-
-@api_view(['GET', 'POST'])
-def apiclientes(request):
-    if request.method == 'GET':
-        listado = Clientes.objects.all()
-        serializer = ClienteSerializer(listado, many=True)
-        return Response(serializer.data)
-    elif request.method == 'POST':
-        serializer = ClienteSerializer(data=request.data)
+@api_view(['POST'])
+def apiagregaravances(request):
+    if request.method == 'POST':
+        serializer = AvancesSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
 
+@api_view(['PUT', 'DELETE'])   
+def apieditaravances(request, pk):
+    try:
+        avance = Avances.objects.get(pk=pk)
+    except Avances.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
+        serializer = AvancesSerializer(avance, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        avance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

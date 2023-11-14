@@ -1,27 +1,24 @@
 from rest_framework import serializers
 from core.models import *
-
-class ClienteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Clientes
-        fields = '__all__'
-        
+  
 
 class CotizacionesSerializer(serializers.ModelSerializer):
+    nombre_cliente = serializers.CharField(source='cliente.nombre')
+    apellido_cliente = serializers.CharField(source='cliente.apellido')
+    metodopago = serializers.CharField(source='metodopago.nombre_metodo')
     class Meta:
         model = Cotizaciones
-        fields = '__all__'
-
-class DetalleCotizacionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = DetalleCotizaciones
-        fields = '__all__'
+        fields = ['id_cotizacion', 'fecha_cotizacion', 'nombre_cotizacion', 'subtotal', 'iva', 'total', 'cliente', 'metodopago', 'nombre_cliente', 'apellido_cliente', 'comentario']
 
 
 class AvancesSerializer(serializers.ModelSerializer):
+    tarea = serializers.CharField(source='tarea.tarea')
+    equipo = serializers.CharField(source='tarea.equipo_id_equipo')
+    proyecto = serializers.CharField(source='tarea.equipo_id_equipo.proyecto_id_proyecto')
+    status_tarea = serializers.CharField(source='tarea.status_tarea.nombre_status')
     class Meta:
         model = Avances
-        fields = '__all__'
+        fields = ['avance_id','tarea','fecha','comentario','imagen', 'equipo', 'proyecto', 'status_tarea']
 
 class ProyectosSerializer(serializers.ModelSerializer):
     categoria = serializers.CharField(source='categoria.nombre_categoria')
@@ -34,9 +31,12 @@ class ProyectosSerializer(serializers.ModelSerializer):
 
 
 class TrabajadoresSerializer(serializers.ModelSerializer):
+    nombre = serializers.CharField(source='first_name')
+    apellido = serializers.CharField(source='last_name')
+    fecha_agregado = serializers.CharField(source='date_joined')
     class Meta:
         model = User
-        fields = ['rut','first_name','last_name','email','date_joined']
+        fields = ['rut','nombre','apellido','email','fecha_agregado']
 
 class ProductosSerializer(serializers.ModelSerializer):
     categoria = serializers.CharField(source='categoria.nombre_categoria')
@@ -47,35 +47,13 @@ class ProductosSerializer(serializers.ModelSerializer):
         model = Productos
         fields = '__all__'
 
-class CategoriaProductosSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CategoriaProductos
-        fields = '__all__'
 
-class SubcategoriaProductosSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = SubcategoriaProductos
-        fields = '__all__'
-
-class MarcaProductosSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = MarcaProductos
-        fields = '__all__'
-
-class EquiposSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Equipos
-        fields = '__all__'
-
-class AsignacionesSerializer(serializers.ModelSerializer):
+class TareasSerializer(serializers.ModelSerializer):
+    status_tarea = serializers.CharField(source='status_tarea.nombre_status')
+    equipo_id_equipo = serializers.CharField(source='equipo_id_equipo.nombre_equipo')
+    trabajador = serializers.CharField(source='trabajador.first_name')
+    apellido_trabajador = serializers.CharField(source='trabajador.last_name')
     class Meta:
         model = Tareas
-        fields = '__all__'
-
-
-class StatusSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = StatusProyecto
-        fields = '__all__'
-
+        fields = ['tarea', 'equipo_id_equipo', 'status_tarea', 'trabajador','apellido_trabajador', 'fecha_asignacion', 'fecha_termino']
 
