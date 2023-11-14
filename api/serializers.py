@@ -1,6 +1,11 @@
 from rest_framework import serializers
 from core.models import *
 
+class ClienteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Clientes
+        fields = '__all__'
+        
 
 class CotizacionesSerializer(serializers.ModelSerializer):
     class Meta:
@@ -8,12 +13,9 @@ class CotizacionesSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class DetalleCotizacionSerializer(serializers.ModelSerializer):
-    nombre_producto = serializers.CharField(source='producto.nombre_producto')
     class Meta:
         model = DetalleCotizaciones
-        fields = ['nombre_producto','precio','cantidad','subtotal','id_cotizacion']
-
-
+        fields = '__all__'
 
 
 class AvancesSerializer(serializers.ModelSerializer):
@@ -64,9 +66,6 @@ class EquiposSerializer(serializers.ModelSerializer):
     class Meta:
         model = Equipos
         fields = '__all__'
-
-
-
 
 class AsignacionesSerializer(serializers.ModelSerializer):
     class Meta:

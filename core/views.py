@@ -334,7 +334,6 @@ class CotView(CreateView):
                 cotizacion.nombre_cotizacion = vents['nombre_cotizacion']
                 cotizacion.comentario = vents['comentario']
                 cotizacion.save()
-
                 # Detalle
                 for i in vents['products']:
                     det = DetalleCotizaciones()

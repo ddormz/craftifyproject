@@ -425,10 +425,8 @@ function proyectosTable() {
 
           if (tiempoRestante > 15) {
             return '<div class="badge rounded-pill bg-success">' + tiempoRestante + ' días</div>';
-          } else if (tiempoRestante > 7) {
+          } else if (tiempoRestante > 0) {
             return '<div class="badge rounded-pill bg-warning">' + tiempoRestante + ' días</div>';
-          } else if (tiempoRestante >= 0) {
-            return '<div class="badge rounded-pill bg-danger">' + tiempoRestante + ' días</div>';
           } else {
             return '<div class="badge rounded-pill bg-danger">Vencido</div>';
           }

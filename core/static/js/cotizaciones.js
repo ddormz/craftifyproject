@@ -227,7 +227,7 @@ $(function () {
     $('#tblProducts tbody').on('keyup', 'input[name="cant"]', function () {
         
         var cant = parseInt($(this).val());
-        if (cant < '0') {
+        if (cant == '' || isNaN(cant)) {
             $(this).val(1);
         } else {
         }
@@ -239,7 +239,7 @@ $(function () {
         e.preventDefault();
 
         if(vents.items.products.length === 0) {
-            message_error('No hay productos en la lista');
+            alert('No hay productos en la lista');
             return false;
         }
 

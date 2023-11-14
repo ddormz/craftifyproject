@@ -4,7 +4,7 @@ from .models import *
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout  
 from crispy_forms.layout import Field
-
+from django.core.validators import RegexValidator
 
 class CustomUserCreationForm(UserCreationForm):
     
@@ -89,9 +89,34 @@ class CotizacionesForm(forms.ModelForm):
 
 
 class ClientesForm(forms.ModelForm):
+    telefono = forms.IntegerField()
+    nombre = forms.CharField(max_length=100, validators=[
+        RegexValidator(
+            regex='^[a-zA-Z ]+$',  # Modificado para permitir espacios
+            message='Este campo solo puede contener letras.',
+            code='invalid_name'
+        )
+    ])
+    apellido = forms.CharField(max_length=100, validators=[
+        RegexValidator(
+            regex='^[a-zA-Z ]+$',  # Modificado para permitir espacios
+            message='Este campo solo puede contener letras.',
+            code='invalid_name'
+        )
+    ])
+    rut_cliente = forms.CharField(max_length=10, validators=[
+        RegexValidator(
+            regex='^[0-9kK]+$',
+            message='Este campo solo puede contener digitos.',
+            code='invalid_name'
+
+        )
+    ])
+    
+
     class Meta:
         model = Clientes
-        fields = "__all__"
+        fields = ['rut_cliente', 'nombre', 'apellido', 'direccion', 'telefono']
 
 
 class ProductosForm(forms.ModelForm):

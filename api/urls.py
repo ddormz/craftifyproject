@@ -15,6 +15,9 @@ urlpatterns = [
     path('apisubcategorias/', apisubcategorias, name='apisubcategorias'),
     path('apiveravances/', apiveravances, name='apiveravances'),
     path('apistatus', apistatus, name='apistatus'),
+    path('apiclientes', apiclientes, name='apiclientes'),
+    path('cotizaciones/pdf/<id_cotizacion>/', cotizaciones_pdf_api, name='cotizaciones-pdf-api'),
+
 
 
 ]
