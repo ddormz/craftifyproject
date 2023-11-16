@@ -14,16 +14,16 @@
       <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
       <!-- Font Awesome -->
-    <link rel="stylesheet" href="../../core/static/lib/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'lib/plugins/fontawesome-free/css/all.min.css' %}">
       <!-- DataTables -->
-    <link rel="stylesheet" href="../../core/static/lib/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
-    <link rel="stylesheet" href="../../core/static/lib/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
-    <link rel="stylesheet" href="../../core/static/lib/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    <link rel="stylesheet" href="{% static 'lib/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/plugins/datatables-buttons/css/buttons.bootstrap4.min.css' %}">
     <script src="{% static 'js/functions.js' %}"></script>
 
 
      <!-- Bootstrap Plugins -->
-    <script src="../../core/static/lib/plugins/jquery/jquery.min.js"></script>
+    <script src="{% static 'lib/plugins/jquery/jquery.min.js'%}"></script>
             <!-- Sweetalert2 -->
             <script src="{% static 'lib/plugins/sweetalert2/sweetalert2.all.min.js' %}"></script>
             <!-- Jquery Confirm -->
@@ -116,7 +116,7 @@
       <!-- LOGO Y BARRA DE NAVEGACIÓN -->
         <div class="d-flex flex-column flex-shrink-0 p-3 bg-dark" id="sidebar" style="width: 280px;">
           <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
-            <img src="../../core/static/img/logo.png" alt="Logo Craftify" width="64" height="64">
+            <img src="{% static 'img/logo.png'%}" alt="Logo Craftify" width="64" height="64">
             <span class="craftify">Craftify</span>
           </a>
           <hr>
@@ -257,18 +257,17 @@
   </div>
       </main>
              <!-- DataTables  & Plugins -->
-    <script src="../../core/static/lib/plugins/datatables/jquery.dataTables.min.js"></script>
-    <script src="../../core/static/lib/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-    <script src="../../core/static/lib/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-    <script src="../../core/static/lib/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-    <script src="../../core/static/lib/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
-    <script src="../../core/static/lib/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-    <script src="../../core/static/lib/plugins/jszip/jszip.min.js"></script>
-    <script src="../../core/static/lib/plugins/pdfmake/pdfmake.min.js"></script>
-    <script src="../../core/static/lib/plugins/pdfmake/vfs_fonts.js"></script>
-    <script src="../../core/static/lib/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
-    <script src="../../core/static/lib/plugins/datatables-buttons/js/buttons.print.min.js"></script>
-    <script src="../../core/static/lib/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+    <script src="{% static 'lib/plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'lib/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'lib/plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
+    <script src="{% static 'lib/plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'lib/plugins/datatables-buttons/js/dataTables.buttons.min.js' %}"></script>
+    <script src="{% static 'lib/plugins/datatables-buttons/js/buttons.bootstrap4.min.js' %}"></script>
+    <script src="{% static 'lib/plugins/pdfmake/pdfmake.min.js' %}"></script>
+    <script src="{% static 'lib/plugins/pdfmake/vfs_fonts.js' %}"></script>
+    <script src="{% static 'lib/plugins/datatables-buttons/js/buttons.html5.min.js' %}"></script>
+    <script src="{% static 'lib/plugins/datatables-buttons/js/buttons.print.min.js' %}"></script>
+    <script src="{% static 'lib/plugins/datatables-buttons/js/buttons.colVis.min.js' %}"></script>
     <script src="{% static 'js/script.js' %}"></script> 
    
      <!-- FIN DE SECCIÓN DE USUARIO LOGUEADO-->
