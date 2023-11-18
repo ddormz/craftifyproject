@@ -130,6 +130,10 @@ class ProductosForm(forms.ModelForm):
             }),
         }
 
+class MarcaForm(forms.ModelForm):
+    class Meta:
+        model = MarcaProductos
+        fields = "__all__"
 
 class CatForm(forms.ModelForm):
     class Meta:
@@ -199,4 +203,21 @@ class LoginForm(forms.ModelForm):
 class CategoriaProyectoForm(forms.ModelForm):
     class Meta:
         model = CategoriaProyecto
-        fields = "__all__"
+        fields = ['nombre_categoria']
+
+
+class StatusProyectoForm(forms.ModelForm):
+    class Meta:
+        model = StatusProyecto
+        fields = ['nombre_status']
+
+class MetodoPagoForm(forms.ModelForm):
+    class Meta:
+        model = MetodoPago
+        fields = ['nombre_metodo']
+
+
+class StatusTareaForm(forms.ModelForm):
+    class Meta:
+        model = StatusTarea
+        fields = ['nombre_status']

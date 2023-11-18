@@ -4,59 +4,101 @@
 
 {% if request.user.is_authenticated %}
 {% load static %}
+{% load crispy_forms_tags%}
+<script src="{% static 'js/clientes.js' %}"></script>
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-12">
-      
+      <div class="card">
+      <div class="card-header">
+      <h3 class="text-center">Listado de Clientes</h3>
+      <div class="input-group mb-3">
+        <div class="input-group-append">
         </div>
-     <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">Listado de Clientes</h3>
-          <div class="input-group mb-3">
-            <div class="input-group-append">
-        
-            </div>
-      </div>
-      <!-- /.card-header -->
-      <div class="card-body table-responsive p-0" id="tarjetaTablas">
-    
-        <table class="table table-bordered table-hover tabla-datos">
-                <thead>
-                <tr>
-                    <th scope="col">RUT</th>
-                    <th scope="col">Nombre</th>
-                    <th scope="col">Apellido</th>
-                    <th scope="col">Dirección</th>
-                    <th scope="col">Telefono</th>
-                    <th scope="col">Acciones</th>
-                    
-                </tr>
-                </thead>
-                <tbody>
-            {% for cliente in clientes %}
-                <tr>
-                    <th scope="row">{{ cliente.rut_cliente }}</th>
-                    <td>{{ cliente.nombre }}</td>
-                    <td>{{ cliente.apellido }}</td>
-                    <td>{{ cliente.direccion }}</td>
-                    <td>{{ cliente.telefono }}</td>
-                    
-            
-                    <td>
-                    <a class="btn btn-warning botonEditar" href="{% url 'editarTrabajadores' user.rut %}" role="button"><i class="fas fa-pen"></i></button>
-                    <a class="btn btn-danger botonEliminar" href="{% url 'eliminarTrabajadores' user.rut %}" role="button"><i class="fas fa-trash-alt"></i></button>
-                    </td>
-                </tr>
-                {% endfor %}
+  </div>
+  <!-- /.card-header -->
+  <div class="card-body table-responsive p-0" id="tarjetaTablas">
 
-            </tbody>
-        </table>
-        </div>
-        <!-- /.card-body -->
+    <table class="table table-bordered table-hover tabla-clientes">
+        <thead>
+          <tr>
+            <th scope="col">RUT</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Apellido</th>
+            <th scope="col">Dirección</th>
+            <th scope="col">Teléfono</th>
+            <th scope="col">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+       {% for cli in clientes %}
+          <tr>
+            <th scope="row">{{ cli.rut_cliente }}</th>
+            <td>{{ cli.nombre }}</td>
+            <td>{{ cli.apellido }}</td>
+            <td>{{ cli.direccion }}</td>
+            <td>{{ cli.telefono }}</td>
+            <td>
+              <a class="btn btn-warning botonEditar" href="{% url 'editarClientes' cli.rut_cliente %}" role="button"><i class="fas fa-pen"></i></a>
+              <a class="btn btn-danger botonEliminar" href="{% url 'eliminarClientes' cli.rut_cliente %}" role="button"><i class="fas fa-trash-alt"></i></a>
+            </td>
+          </tr>
+          {% endfor %}
 
+        </tbody>
+    </table>
+  </div>
+    <div class="float-md-start">
+      <button class="btn btn-primary btnAgg" id="botonAgregar" data-toggle="modal" data-target="#modalAddCli">
+        <i class="fas fa-plus"></i>Agregar Cliente
     </div>
   </div>
+  <!-- Button trigger modal -->
+
+<!-- Modal -->
+<div class="modal fade" id="modalAddCli" tabindex="-1" role="dialog" aria-labelledby="modalAddCliT" aria-hidden="true">
+  <form action="" method="POST" id="formCliAjax" data-url="{% url 'listarClientes' %}">
+    {% csrf_token %}
+  <div class="modal-dialog modal-dialog-centered" role="document">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalAddCliT">Nuevo Cliente</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+          <input name="action" type="hidden" value="add">
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-group col-md-12">
+                {{ form | crispy }}
+              </div>
+            </div>
+          </div>
+        </div>
+       
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="submit"  class="btn btn-primary">Guardar</button>
+      </div>
+    </div>
+  </div>
+  </form>
+
 </div>
+
+
+</div>
+<div id="notification-alert" class="alert" style="display: none;">
+  <p class="alert-message"></p>
+</div>
+
+</div>
+
 {% endif %}
 
 {% endblock %}

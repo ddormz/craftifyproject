@@ -24,11 +24,19 @@ urlpatterns = [
     path('agregarProyecto/', agregarProyecto, name='agregarProyecto'),
     path('editarProyecto/<id_proyecto>/', editarProyecto, name='editarProyecto'),
     path('eliminarProyecto/<id_proyecto>/', eliminarProyecto, name='eliminarProyecto'),
-    path('agregarCategoriaProyecto/', agregarCategoriaProyecto, name='agregarCategoriaProyecto'),
+    path('categoriaproyecto/', categoriaProyectos, name='categoriaproyecto'),
+    path('eliminarcategoria/<id_categoria>/', eliminarCategoria, name='eliminarCategoria'),
+    path('editarCategoria/<id_categoria>/', editarCategoria, name='editarcategoria'),
+    path('statusp', StatusProyectos, name='statusProyectos'),
+    path('eliminarStatus/<id_status>/', eliminarStatus, name='eliminarStatus'),
+    path('editaStatus/<id_status>/', editarStatus, name='editarStatus'),
+    path('metodopago/', metodopagos, name='metodopago'),
+    path('eliminarmetodo/<id_metodopago>/', eliminarMetodo, name='eliminarMetodo'),
+    path('editarmetodo/<id_metodopago>/', editarMetodo, name='editarmetodo'),
 
     # MODULO DE AVANCES
     path('avances', ListarAvances.as_view(), name='avances'),
-    path('statusProyectos', statusProyectos, name='statusProyectos'),
+
     path('agregarAvances', agregarAvances, name='agregarAvances'),
     path('editarAvance/<avance_id>/', editarAvances, name='editarAvances'),
     path('eliminarAvance/<avance_id>/', eliminarAvances, name='eliminarAvance'),
@@ -43,15 +51,37 @@ urlpatterns = [
     # MODULO DE CLIENTES
     path('listarClientes', listarClientes, name='listarClientes'),
     path('agregarClientes', agregarClientes, name='agregarClientes'),
+    path('eliminarClientes/<rut_cliente>/', eliminarClientes, name='eliminarClientes'),
+    path('editarClientes/<rut_cliente>/', editarClientes, name='editarClientes'),
 
     # MODULO DE PRODUCTOS
     path('listarProductos', ProductosListView.as_view(), name='listarProductos'),
     path('agregarProductos', agregarProductos, name='agregarProductos'),
-    path('listarCatySubcat', listarCatySubcat, name='listarCatySubcat'),
     path('agregarCatySubcat', agregarCatySubcat, name='agregarCatySubcat'),
     path('eliminarProductos/<id_producto>/', eliminarProductos, name='eliminarProductos'),
     path('editarProductos/<id_producto>/', editarProductos, name='editarProductos'),
 
+    # CATEGORIAS PRODUCTOS
+    path('catproductos', categoriaProd, name='catproductos'),
+    path('eliminarCat/<id_categoria>/', eliCat, name='eliminarCat'),
+    path('editarCat/<id_categoria>/', editarCat, name='editarCat'),
+
+    #SUBCATEGORIA PRODUCTOS
+
+    path('subcatproductos', subCat, name='subcatproductos'),
+    path('eliSubcat/<id_subcategoria>/', eliSubCat, name='eliSubcat'),
+    path('editaSubcat/<id_subcategoria>/', editarSubCat, name='editaSubcat'),
+
+    # MARCA PRODUCTOS
+    path('marcaproductos', marcaProd, name='marcaproductos'),
+    path('eliMarca/<id_marca>/', eliMarca, name='eliMarca'),
+    path('editaMarca/<id_marca>/', editarMarca, name='editaMarca'),
+
+    # MODULO TODAS (LISTAR CAT, SUB, MARCAS)
+
+    path('todas', catSubMar, name='todas'),
+
+    
     # MODULO DE EQUIPOS 
 
     path('listarEquipos', EquipoListView.as_view(), name='listarEquipos'),
@@ -59,13 +89,17 @@ urlpatterns = [
     path('eliminarEquipo/<id_equipo>/', EliminarEquipo, name='eliminarEquipos'),
     path('editarEquipo/<int:pk>/', EquipoEdit.as_view(), name='editarEquipo'),
 
-    # MODULO ASIGNACIONES
-
+    # MODULO TAREAS
+    path('statusTareas', statusTarea, name='statusTareas'),
+    path('eliStatusTarea/<id_status_tarea>/', eliStatus, name='eliminarStatusTarea'),
+    path('ediStatusTarea/<id_status_tarea>/', editarStatus, name='editaStatusTarea'),
+    ##
     path('listarTareas', TareasListView.as_view(), name='listarTareas'),
     path('agregarTareas', agregarTareas, name='agregarTareas'),
     path('eliminarTareas/<tarea_id>/', eliminarTareas, name='eliminarTareas'),
     path('editarTareas/<tarea_id>/', editarTareas, name='editarTareas'),
     
+
 ]
 
 if settings.DEBUG:

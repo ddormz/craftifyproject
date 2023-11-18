@@ -140,7 +140,7 @@ class DetalleEquipo(models.Model):
     
     
 class StatusTarea(models.Model):
-    id_status = models.AutoField(primary_key=True)
+    id_status_tarea = models.AutoField(primary_key=True)
     nombre_status = models.CharField(max_length=100)
     def __str__(self):
         return str(self.nombre_status)

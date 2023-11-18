@@ -18,7 +18,7 @@
       <!-- general form elements -->
       <div class="card card-primary">
         <div class="card-header">
-          <h3 class="card-title">Agregar Producto Nuevo</h3>
+          <h3 class="card-title">Agregar Proyecto Nuevo</h3>
         </div>
         <!-- /.card-header -->
         <!-- form start -->
@@ -30,7 +30,7 @@
               <div class="col-lg-6">
                 <div class="card card-secondary">
                   <div class="card-header">
-                  <h3 class="card-title"><i class="fa-solid fa-address-book"></i>Datos del Producto</h3>
+                  <h3 class="card-title"><i class="fa-solid fa-address-book"></i>Datos del Proyecto</h3>
                   </div>
                   <div class="card-body">
                     <div class="form-group">
@@ -41,7 +41,7 @@
                         <div class="col-lg-6">
                           {{ AggForm.categoria | as_crispy_field }}
                               <div class="input-group-append" id="divCategoria">
-                              <a href="{% url 'agregarCategoriaProyecto' %}" class="btn btn-success btn-flat btnCategoria" id="btnCategoria" type="button">
+                              <a href="{% url 'categoriaproyecto' %}" class="btn btn-success btn-flat btnCategoria" id="btnCategoria" type="button">
                                 <i class="fas fa-plus"></i>Nueva Categoria
                               </a>
                             </div>

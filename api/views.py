@@ -33,7 +33,21 @@ class LoginView(APIView):
 
         if user is not None:
             login(request, user)
-            return Response({'message': 'Login successful'})
+
+            # Obtener información adicional del usuario
+            user_info = {
+                'rut': user.rut,
+                'nombre': user.first_name,
+                'apellido': user.last_name,
+                'is_superuser': user.is_superuser,
+                'is_staff': user.is_staff,
+                'groups': list(user.groups.values_list('name', flat=True)),
+                'permissions': list(user.user_permissions.values_list('codename', flat=True)),
+                'is_active': user.is_active,
+                'date_joined': user.date_joined
+            }
+
+            return Response({'message': 'Login successful', 'user_info': user_info})
         else:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 

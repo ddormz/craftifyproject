@@ -1,5 +1,5 @@
-function metodoPTable() {
-    var table = $(".tabla-status-tarea").DataTable({
+function clientesTable() {
+    var table = $(".tabla-clientes").DataTable({
       "responsive": true,
       "lengthChange": false,
       "autoWidth": false,
@@ -40,7 +40,7 @@ function metodoPTable() {
 
   // Agregar Registro Trabajador
 $(document).ready(function() {
-    $("#formularioStatus").on("submit", function(event) {
+    $("#formCliMasivo").on("submit", function(event) {
       event.preventDefault();
       var url = $(this).data("url"); // Obtén la URL del atributo data-url
       $.ajax({
@@ -57,7 +57,8 @@ $(document).ready(function() {
             preventDuplicates: true,
             onHidden: function() {
               // La alerta se ocultó, ahora recarga la página
-              location.reload(); // Esto recargará la página actual
+              $('#formCliMasivo')[0].reset();
+              // Esto recargará la página actual
             }
           });
         },
@@ -74,6 +75,41 @@ $(document).ready(function() {
     });
   });
 
+  $(document).ready(function() {
+    $("#formCliAjax").on("submit", function(event) {
+      event.preventDefault();
+      var url = $(this).data("url"); // Obtén la URL del atributo data-url
+      $.ajax({
+        url: url,
+        method: "POST",
+        data: $(this).serialize(),
+        success: function(data) {
+          // Muestra una alerta de toast antes de recargar la página
+          toastr.success('Registro exitoso', 'Éxito', {
+            timeOut: 500,
+            closeButton: false,
+            tapToDismiss: false,
+            positionClass: "toast-top-center",
+            preventDuplicates: true,
+            onHidden: function() {
+              // La alerta se ocultó, ahora recarga la página
+              location.reload();
+              // Esto recargará la página actual
+            }
+          });
+        },
+        error: function(data) {
+          toastr.error('Error al agregar  ', 'Error', {
+            timeOut: 2000,
+            closeButton: false,
+            tapToDismiss: false,
+            positionClass: "toast-top-center",
+            preventDuplicates: true
+          });
+        }
+      });
+    });
+  });
 }   
-  document.addEventListener('DOMContentLoaded', metodoPTable);
+  document.addEventListener('DOMContentLoaded', clientesTable);
   

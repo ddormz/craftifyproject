@@ -5,13 +5,13 @@
 {% if request.user.is_authenticated %}
 {% load static %}
 {% load crispy_forms_tags%}
-<script src="{% static 'js/statusproyectos.js' %}"></script>
+<script src="{% static 'js/subcat.js' %}"></script>
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-12">
       <div class="card">
       <div class="card-header">
-      <h3 class="text-center">Listado de Status de Proyecto</h3>
+      <h3 class="text-center">Listado de SubCategorias de Productos</h3>
       <div class="input-group mb-3">
         <div class="input-group-append">
         </div>
@@ -19,23 +19,23 @@
   <!-- /.card-header -->
   <div class="card-body table-responsive p-0" id="tarjetaTablas">
 
-    <table class="table table-bordered table-hover tabla-st">
+    <table class="table table-bordered table-hover tabla-subprod">
         <thead>
           <tr>
-            <th scope="col">ID Status</th>
-            <th scope="col">Nombre Status (Del Proyecto)</th>
+            <th scope="col">ID SubCategoria</th>
+            <th scope="col">Nombre SubCategoria</th>
             <th scope="col">Acciones</th>
             
           </tr>
         </thead>
         <tbody>
-       {% for stat in status %}
+       {% for sub in subcat %}
           <tr>
-            <th scope="row">{{ stat.id_status }}</th>
-            <td>{{ stat.nombre_status }}</td>
+            <th scope="row">{{ sub.id_subcategoria }}</th>
+            <td>{{ sub.nombre_subcategoria }}</td>
             <td>
-              <a class="btn btn-warning botonEditar" href="{% url 'editarStatus' stat.id_status %}" role="button"><i class="fas fa-pen"></i></a>
-              <a class="btn btn-danger botonEliminar" href="{% url 'eliminarStatus' stat.id_status %}" role="button"><i class="fas fa-trash-alt"></i></a>
+              <a class="btn btn-warning botonEditar" href="{% url 'editaSubcat' sub.id_subcategoria %}" role="button"><i class="fas fa-pen"></i></a>
+              <a class="btn btn-danger botonEliminar" href="{% url 'eliSubcat' sub.id_subcategoria %}" role="button"><i class="fas fa-trash-alt"></i></a>
             </td>
           </tr>
           {% endfor %}
@@ -44,21 +44,21 @@
     </table>
   </div>
     <div class="float-md-start">
-      <button class="btn btn-primary btnAgg" id="botonAgregar" data-toggle="modal" data-target="#modalAddStat">
-        <i class="fas fa-plus"></i>Agregar Status
+      <button class="btn btn-primary btnAgg" id="botonAgregar" data-toggle="modal" data-target="#modalAddSubProd">
+        <i class="fas fa-plus"></i>Agregar SubCategoria Nueva
     </div>
   </div>
   <!-- Button trigger modal -->
 
 <!-- Modal -->
-<div class="modal fade" id="modalAddStat" tabindex="-1" role="dialog" aria-labelledby="modalAddStat" aria-hidden="true">
-  <form action="" method="POST" id="formularioSt" data-url="{% url 'statusProyectos' %}">
+<div class="modal fade" id="modalAddSubProd" tabindex="-1" role="dialog" aria-labelledby="modalAddCatProd" aria-hidden="true">
+  <form action="" method="POST" id="formSub" data-url="{% url 'subcatproductos' %}">
     {% csrf_token %}
   <div class="modal-dialog modal-dialog-centered" role="document">
 
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="modalAddStat">Nuevo Status</h5>
+        <h5 class="modal-title" id="modalAddCatProd">Nueva Categoria de Producto</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -69,7 +69,7 @@
           <div class="card-body">
             <div class="form-row">
               <div class="form-group col-md-12">
-                {{ form.nombre_status | as_crispy_field}} 
+                {{ formulario.nombre_subcategoria | as_crispy_field}} 
               </div>
             </div>
           </div>

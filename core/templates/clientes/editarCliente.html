@@ -8,11 +8,11 @@
 {% load crispy_forms_tags %}
 <script src="{% static 'js/clientes.js' %}"></script>
 
-  <form action="" method="POST" id="formCliMasivo" data-url="{% url 'agregarClientes' %}">
+  <form action="" method="POST">
         <div class="card card-primary">
             <div class="card-header">
                 <h3 class="card-title">
-                    <i class="fas fa-add"></i>Nuevo Cliente (Masivo)
+                    <i class="fas fa-add"></i>Editar Cliente
                 </h3>
             </div>
             <div class="card-body">
@@ -44,7 +44,7 @@
                             </div>
                             <div class="card-footer">
                             <button type="submit" class="btn btn-primary btn-flat">
-                                <i class="fas fa-save"></i> Guardar Cliente
+                                <i class="fas fa-save"></i> Actualizar Cliente
                             </button>
                             <a href="{% url 'listarClientes' %}" class="btn btn-danger btn-flat">
                                 <i class="fas fa-times"></i> Cancelar

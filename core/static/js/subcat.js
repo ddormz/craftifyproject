@@ -1,5 +1,5 @@
-function metodoPTable() {
-    var table = $(".tabla-status-tarea").DataTable({
+function subProdTable() {
+    var table = $(".tabla-subprod").DataTable({
       "responsive": true,
       "lengthChange": false,
       "autoWidth": false,
@@ -40,7 +40,7 @@ function metodoPTable() {
 
   // Agregar Registro Trabajador
 $(document).ready(function() {
-    $("#formularioStatus").on("submit", function(event) {
+    $("#formSub").on("submit", function(event) {
       event.preventDefault();
       var url = $(this).data("url"); // Obtén la URL del atributo data-url
       $.ajax({
@@ -75,5 +75,5 @@ $(document).ready(function() {
   });
 
 }   
-  document.addEventListener('DOMContentLoaded', metodoPTable);
+  document.addEventListener('DOMContentLoaded', subProdTable);
   

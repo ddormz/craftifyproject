@@ -164,30 +164,118 @@ def eliminarProyecto(request, id_proyecto):
     proyecto.delete()
     return redirect('verproyectos')
 
-def statusProyectos(request):
-    proyecto = Proyecto.objects.all()
-    contexto = {'proyectos':proyecto}
+def StatusProyectos(request):
+    status = StatusProyecto.objects.all()
+    
+    if request.method == 'POST':
+        form = StatusProyectoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'message': 'Registro exitoso.'})
+        else:
+            error_messages = form.errors.as_json()
+            return JsonResponse({'errors': form.errors.as_json()}, status=400)
+    
+    form = StatusProyectoForm()
+    
+    contexto = {'status': status, 'form': form}
     return render(request, 'proyectos/statusProyectos.html', contexto)
+
+def eliminarStatus(request, id_status):
+    status = StatusProyecto.objects.get(id_status=id_status)
+    status.delete()
+    return redirect('statusProyectos')
+
+def editarStatus(request, id_status):
+    status = StatusProyecto.objects.get(id_status=id_status)
+    data = {
+        'form': StatusProyectoForm(instance=status)
+    }
+    if request.method == 'POST':
+        formulario = StatusProyectoForm(data=request.POST, instance=status)
+        if formulario.is_valid():
+            formulario.save()
+            return redirect('statusProyectos')
+        else:
+            data['form'] = formulario
+    
+    return render(request, 'proyectos/editarStatus.html', data)
+
+
+def metodopagos(request):
+    metodos = MetodoPago.objects.all()
+    
+    if request.method == 'POST':
+        form = MetodoPagoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'message': 'Registro exitoso.'})
+        else:
+            error_messages = form.errors.as_json()
+            return JsonResponse({'errors': form.errors.as_json()}, status=400)
+    
+    form = MetodoPagoForm()
+    
+    contexto = {'metodos': metodos, 'form': form}
+    return render(request, 'cotizaciones/metodoPago.html', contexto)
+
+def eliminarMetodo(request, id_metodopago):
+    metodo = MetodoPago.objects.get(id_metodopago=id_metodopago)
+    metodo.delete()
+    return redirect('metodopago')
+
+def editarMetodo(request, id_metodopago):
+    metodo = MetodoPago.objects.get(id_metodopago=id_metodopago)
+    data = {
+        'form': MetodoPagoForm(instance=metodo)
+    }
+    if request.method == 'POST':
+        formulario = MetodoPagoForm(data=request.POST, instance=metodo)
+        if formulario.is_valid():
+            formulario.save()
+            return redirect('metodopago')
+        else:
+            data['form'] = formulario
+    
+    return render(request, 'cotizaciones/editarMetodo.html', data)
 
 
 def categoriaProyectos(request):
     categorias = CategoriaProyecto.objects.all()
-    contexto = {'categorias': categorias}
+    
+    if request.method == 'POST':
+        form = CategoriaProyectoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'message': 'Registro exitoso.'})
+        else:
+            error_messages = form.errors.as_json()
+            return JsonResponse({'errors': form.errors.as_json()}, status=400)
+    
+    form = CategoriaProyectoForm()
+    
+    contexto = {'categorias': categorias, 'form': form}
     return render(request, 'proyectos/categoriaProyectos.html', contexto)
 
-def agregarCategoriaProyecto(request):
+def eliminarCategoria(request, id_categoria):
+    categoria = CategoriaProyecto.objects.get(id_categoria=id_categoria)
+    categoria.delete()
+    return redirect('categoriaproyecto')
+
+def editarCategoria(request, id_categoria):
+    categoria = CategoriaProyecto.objects.get(id_categoria=id_categoria)
     data = {
-        'catForm': CategoriaProyectoForm()
+        'form': CategoriaProyectoForm(instance=categoria)
     }
     if request.method == 'POST':
-        formulario = CategoriaProyectoForm(data=request.POST)
+        formulario = CategoriaProyectoForm(data=request.POST, instance=categoria)
         if formulario.is_valid():
             formulario.save()
-            return redirect('agregarProyecto')
+            return redirect('categoriaproyecto')
         else:
-            data['catForm'] = formulario
+            data['form'] = formulario
     
-    return render(request, 'proyectos/categoriaProyectos.html', data)
+    return render(request, 'proyectos/editarcategoria.html', data)
 
 
 class ListarAvances(ListView):
@@ -500,9 +588,25 @@ class CotizacionesPDF(View):
         return HttpResponseRedirect(reverse_lazy('listarCotizaciones'))
 # MODULO CLIENTES
 def listarClientes(request):
-    cliente = Clientes.objects.all()
-    contexto = {'clientes':cliente}
+    clientes = Clientes.objects.all()
+
+    if request.method == 'POST':
+        form = ClientesForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'message': 'Registro exitoso.'})
+        else:
+            error_messages = form.errors.as_json()
+            return JsonResponse({'errors': form.errors.as_json()}, status=400)
+    
+    form = ClientesForm()
+    contexto = {
+        'form': form,
+        'clientes': clientes
+    }
     return render(request, 'clientes/listarCliente.html', contexto)
+
+
 def agregarClientes(request):
     data = {
         'addcli': ClientesForm()
@@ -511,11 +615,34 @@ def agregarClientes(request):
         formulario = ClientesForm(data=request.POST)
         if formulario.is_valid():
             formulario.save()
+            return JsonResponse({'message': 'Registro exitoso.'})
+        else:
+            error_messages = formulario.errors.as_json()
+            return JsonResponse({'errors': formulario.errors.as_json()}, status=400)
+
+    return render(request, 'clientes/agregarCliente.html', data)
+
+
+def eliminarClientes(request, rut_cliente):
+    cliente = Clientes.objects.get(rut_cliente=rut_cliente)
+    cliente.delete()
+    return redirect('listarClientes')
+
+def editarClientes(request, rut_cliente):
+    cliente = Clientes.objects.get(rut_cliente=rut_cliente)
+    data = {
+        'addcli': ClientesForm(instance=cliente)
+    }
+    if request.method == 'POST':
+        formulario = ClientesForm(data=request.POST, instance=cliente)
+        if formulario.is_valid():
+            formulario.save()
             return redirect('listarClientes')
         else:
             data['addcli'] = formulario
 
-    return render(request, 'clientes/agregarCliente.html', data)
+    return render(request, 'clientes/editarCliente.html', data)
+
 
 # MODULO PRODUCTOS
 
@@ -584,11 +711,6 @@ def editarProductos(request, id_producto):
     return render(request, 'productos/editarProductos.html', data)
 
 
-def listarCatySubcat(request):
-    categorias = CategoriaProductos.objects.all()
-    subcategorias = SubcategoriaProductos.objects.all()
-    contexto = {'categorias':categorias, 'subcategorias':subcategorias}
-    return render(request, 'productos/listadoCategoriasProd.html', contexto)
             
 def agregarCatySubcat (request):
     data = {
@@ -605,6 +727,163 @@ def agregarCatySubcat (request):
 
     
     return render(request, 'productos/agregarCatySubcat.html', data)
+
+
+def categoriaProd(request):
+    catprod = CategoriaProductos.objects.all()
+
+    if request.method == 'POST':
+        formulario = CatForm(request.POST)
+        if formulario.is_valid():
+            formulario.save()
+            return JsonResponse({'message': 'Registro exitoso.'})
+        else:
+            error_messages = formulario.errors.as_json()
+            return JsonResponse({'errors': formulario.errors.as_json()}, status=400)
+    
+    formulario = CatForm()
+    contexto = {'catprod': catprod, 'formulario': formulario}
+    return render(request, 'productos/categorias.html', contexto)
+
+def eliCat(request, id_categoria):
+    cat = CategoriaProductos.objects.get(id_categoria=id_categoria)
+    cat.delete()
+    return redirect('catproductos')
+
+def editarCat(request, id_categoria):
+    cat = CategoriaProductos.objects.get(id_categoria=id_categoria)
+    data = {
+        'editcat': CatForm(instance=cat)
+    }
+    if request.method == 'POST':
+        formulario = CatForm(data=request.POST, instance=cat)
+        if formulario.is_valid():
+            formulario.save()
+            return redirect('catproductos')
+        else:
+            data['editcat'] = formulario
+    return render(request, 'productos/editarCat.html', data)
+
+
+def subCat(request):
+    subcat = SubcategoriaProductos.objects.all()
+
+    if request.method == 'POST':
+        formulario = SubCatForm(request.POST)
+        if formulario.is_valid():
+            formulario.save()
+            return JsonResponse({'message': 'Registro exitoso.'})
+        else:
+            error_messages = formulario.errors.as_json()
+            return JsonResponse({'errors': formulario.errors.as_json()}, status=400)
+    
+    formulario = SubCatForm()
+    contexto = {'subcat': subcat, 'formulario': formulario}
+    return render(request, 'productos/subcategorias.html', contexto)
+
+def eliSubCat(request, id_subcategoria):
+    sub = SubcategoriaProductos.objects.get(id_subcategoria=id_subcategoria)
+    sub.delete()
+    return redirect('subcatproductos')
+
+def editarSubCat(request, id_subcategoria):
+    sub = SubcategoriaProductos.objects.get(id_subcategoria=id_subcategoria)
+    data = {
+        'editsubcat': SubCatForm(instance=sub)
+    }
+    if request.method == 'POST':
+        formulario = SubCatForm(data=request.POST, instance=sub)
+        if formulario.is_valid():
+            formulario.save()
+            return redirect('subcatproductos')
+        else:
+            data['editsubcat'] = formulario
+    return render(request, 'productos/editarSubCat.html', data)
+
+
+def marcaProd(request):
+    marcaprod = MarcaProductos.objects.all()
+
+    if request.method == 'POST':
+        formulario = MarcaForm(request.POST)
+        if formulario.is_valid():
+            formulario.save()
+            return JsonResponse({'message': 'Registro exitoso.'})
+        else:
+            error_messages = formulario.errors.as_json()
+            return JsonResponse({'errors': formulario.errors.as_json()}, status=400)
+    
+    formulario = MarcaForm()
+    contexto = {'marcaprod': marcaprod, 'formulario': formulario}
+    return render(request, 'productos/marcas.html', contexto)
+
+def eliMarca(request, id_marca):
+    mar = MarcaProductos.objects.get(id_marca=id_marca)
+    mar.delete()
+    return redirect('marcaproductos')
+
+def editarMarca(request, id_marca):
+    mar = MarcaProductos.objects.get(id_marca=id_marca)
+    data = {
+        'editmar': MarcaForm(instance=mar)
+    }
+    if request.method == 'POST':
+        formulario = MarcaForm(data=request.POST, instance=mar)
+        if formulario.is_valid():
+            formulario.save()
+            return redirect('marcaproductos')
+        else:
+            data['editmar'] = formulario
+    return render(request, 'productos/editarMarca.html', data)
+
+def catSubMar(request):
+    categorias = CategoriaProductos.objects.all()
+    subcategorias = SubcategoriaProductos.objects.all()
+    marcas = MarcaProductos.objects.all()
+    
+    contexto = {
+        'cat': categorias,
+        'subcat': subcategorias,
+        'mar': marcas
+    }
+    return render(request, 'productos/todas.html', contexto)
+
+
+def statusTarea(request):
+    status = StatusTarea.objects.all()
+
+    if request.method == 'POST':
+        formulario = StatusTareaForm(request.POST)
+        if formulario.is_valid():
+            formulario.save()
+            return JsonResponse({'message': 'Registro exitoso.'})
+        else:
+            error_messages = formulario.errors.as_json()
+            return JsonResponse({'errors': formulario.errors.as_json()}, status=400)
+    
+    formulario = StatusTareaForm()
+    contexto = {'status': status, 'formulario': formulario}
+
+    return render(request, 'equipos/statusTarea.html', contexto)
+
+def eliStatus(request, id_status_tarea):
+    status = StatusTarea.objects.get(id_status_tarea=id_status_tarea)
+    status.delete()
+    return redirect('statusTareas')
+
+def editarStatus(request, id_status_tarea):
+    status = StatusTarea.objects.get(id_status_tarea=id_status_tarea)
+    data = {
+        'editstatustarea': StatusTareaForm(instance=status)
+    }
+    if request.method == 'POST':
+        formulario = StatusTareaForm(data=request.POST, instance=status)
+        if formulario.is_valid():
+            formulario.save()
+            return redirect('statusTareas')
+        else:
+            data['editstatustarea'] = formulario
+    return render(request, 'equipos/editarStatus.html', data)
 
 
 # MODULO EQUIPOS

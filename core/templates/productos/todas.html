@@ -1,0 +1,55 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+{% if request.user.is_authenticated %}
+{% load static %}
+<script src="{% static 'js/todas.js' %}"></script>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      
+        </div>
+     <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Listado de Categorias, SubCategorias y Marcas</h3>
+            <div class="input-group mb-3">
+              <div class="input-group-append">
+          
+              </div>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body table-responsive p-0" id="tarjetaTablas">
+      
+          <table class="table table-bordered table-hover tabla-todas">
+                <thead>
+                <tr>
+                    <th scope="col">Categoria</th>
+                    <th scope="col">Subcategoria</th>
+                    <th scope="col">Marca</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for c in cat %}
+                {% for s in subcat %}
+                {% for m in mar %}
+                <tr>
+                    <td>{{ c.nombre_categoria }}</td>
+                    <td>{{ s.nombre_subcategoria }}</td>
+                    <td>{{ m.nombre_marca }}</td>
+                </tr>
+                {% endfor %}
+                {% endfor %}
+
+                {% endfor%}
+            </tbody>
+        </table>
+        </div>
+        <!-- /.card-body -->
+
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}
