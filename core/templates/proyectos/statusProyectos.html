@@ -31,11 +31,11 @@
         <tbody>
        {% for stat in status %}
           <tr>
-            <th scope="row">{{ stat.id_status }}</th>
+            <th scope="row">{{ stat.id_status_p }}</th>
             <td>{{ stat.nombre_status }}</td>
             <td>
-              <a class="btn btn-warning botonEditar" href="{% url 'editarStatus' stat.id_status %}" role="button"><i class="fas fa-pen"></i></a>
-              <a class="btn btn-danger botonEliminar" href="{% url 'eliminarStatus' stat.id_status %}" role="button"><i class="fas fa-trash-alt"></i></a>
+              <a class="btn btn-warning botonEditar" href="{% url 'editStatus' stat.id_status_p %}" role="button"><i class="fas fa-pen"></i></a>
+              <a class="btn btn-danger botonEliminar" href="{% url 'elimStatus' stat.id_status_p %}" role="button"><i class="fas fa-trash-alt"></i></a>
             </td>
           </tr>
           {% endfor %}

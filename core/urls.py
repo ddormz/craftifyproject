@@ -28,11 +28,11 @@ urlpatterns = [
     path('eliminarcategoria/<id_categoria>/', eliminarCategoria, name='eliminarCategoria'),
     path('editarCategoria/<id_categoria>/', editarCategoria, name='editarcategoria'),
     path('statusp', StatusProyectos, name='statusProyectos'),
-    path('eliminarStatus/<id_status>/', eliminarStatus, name='eliminarStatus'),
-    path('editaStatus/<id_status>/', editarStatus, name='editarStatus'),
     path('metodopago/', metodopagos, name='metodopago'),
     path('eliminarmetodo/<id_metodopago>/', eliminarMetodo, name='eliminarMetodo'),
     path('editarmetodo/<id_metodopago>/', editarMetodo, name='editarmetodo'),
+    path('ediStatus/<id_status_p>/', editStatus, name='editStatus'), 
+    path('elimStat/<id_status_p>/', elimStatus, name='elimStatus'),
 
     # MODULO DE AVANCES
     path('avances', ListarAvances.as_view(), name='avances'),

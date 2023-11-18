@@ -181,13 +181,13 @@ def StatusProyectos(request):
     contexto = {'status': status, 'form': form}
     return render(request, 'proyectos/statusProyectos.html', contexto)
 
-def eliminarStatus(request, id_status):
-    status = StatusProyecto.objects.get(id_status=id_status)
+def elimStatus(request, id_status_p):
+    status = StatusProyecto.objects.get(id_status_p=id_status_p)
     status.delete()
     return redirect('statusProyectos')
 
-def editarStatus(request, id_status):
-    status = StatusProyecto.objects.get(id_status=id_status)
+def editStatus(request, id_status_p):
+    status = StatusProyecto.objects.get(id_status_p=id_status_p)
     data = {
         'form': StatusProyectoForm(instance=status)
     }

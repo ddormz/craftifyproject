@@ -84,7 +84,7 @@ class CategoriaProyecto(models.Model):
         ordering = ['nombre_categoria']
 
 class StatusProyecto(models.Model):
-    id_status = models.AutoField(primary_key=True)
+    id_status_p = models.AutoField(primary_key=True)
     nombre_status = models.CharField(max_length=100)
     def __str__(self):
         return str(self.nombre_status)
