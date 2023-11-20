@@ -56,6 +56,9 @@
             </li>
             <li>
               <!-- PESTAÑA DE PROYECTOS -->
+
+
+              {% if request.user.has_view_proyectos_permission %}
             <li class="dropdown">
               <a href="#" class="nav-link dropdown-toggle  text-truncate" id="active" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="fas fa-project-diagram"></i>
@@ -71,9 +74,12 @@
                   <li><a class="dropdown-item" href="{% url 'categoriaproyecto' %}">Categorias</a></li>
                   <li><a class="dropdown-item" href="{% url 'statusProyectos' %}">Status</a></li>
               </ul>
-              
+              {% endif %}
+
+
           </li>
           <!-- FIN PESTAÑA PROYECTOS-->
+          {% if request.user.has_view_avances_permission %}
                         <!-- PESTAÑA DE AVANCES -->
                         <li class="dropdown">
                           <a href="#" class="nav-link dropdown-toggle  text-truncate" id="active" data-bs-toggle="dropdown" aria-expanded="false">
@@ -87,7 +93,10 @@
                           </ul>
                       </li>
                       <!-- FIN PESTAÑA DE AVANCES-->
+                      {% endif %}
 
+
+          {% if request.user.has_view_cotizaciones_permission %}
           <!-- PESTAÑA DE COTIZACIONES -->
           <li class="dropdown">
             <a href="#" class="nav-link dropdown-toggle  text-truncate" id="active" data-bs-toggle="dropdown" aria-expanded="false">
@@ -104,6 +113,9 @@
             </ul>
             <!--FIN PESTAÑA DE COTIZACIONES-->
                     <!-- PESTAÑA DE CLIENTES -->
+          {% endif %}
+
+        {% if request.user.has_view_clientes_permission %}
           <li class="dropdown">
             <a href="#" class="nav-link dropdown-toggle  text-truncate" id="active" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="fas fa-users"></i>
@@ -115,7 +127,9 @@
                 <li><a class="dropdown-item" href="{% url 'agregarClientes' %}">Agregar Clientes (Masivo)</a></li>
             </ul>
             <!--FIN PESTAÑA DE CLIENTES-->
+            {% endif %}
 
+            {% if request.user.has_view_productos_permission %}
             <!-- PESTAÑA DE PRODUCTOS -->
             <li class="dropdown">
               <a href="#" class="nav-link dropdown-toggle  text-truncate" id="active" data-bs-toggle="dropdown" aria-expanded="false">
@@ -134,11 +148,11 @@
 
               </ul>
               <!-- FIN PESTAÑA DE PRODUCTOS-->
+              {% endif %}
 
 
 
-
-            <!-- PESTAÑA DE EQUIPOS -->
+            {% if request.user.has_view_equipos_permission %}
             <li class="dropdown">
               <a href="#" class="nav-link dropdown-toggle  text-truncate" id="active" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="fas fa-people-group"></i>
@@ -148,10 +162,13 @@
                   <li><a class="dropdown-item" href="{% url 'listarEquipos'%}">Ver Equipos</a></li>
                   <li><a class="dropdown-item" href="{% url 'agregarEquipos' %}">Agregar Equipos</a></li>
                 </ul>
+                {% endif %}
 
           <!-- FIN PESTAÑA DE EQUIPOS-->
 
             <!-- PESTAÑA DE EQUIPOS -->
+
+            {% if request.user.has_view_tareas_permission %}
             <li class="dropdown">
               <a href="#" class="nav-link dropdown-toggle  text-truncate" id="active" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="fas fa-tasks"></i>
@@ -164,9 +181,11 @@
                 <li><a class="dropdown-item" href="{% url 'statusTareas' %}">Status</a></li>
               </ul>
           </li>
+          {% endif %}
           <!-- FIN PESTAÑA DE EQUIPOS-->
           <!-- PESTAÑA DE ADMINISTRACIÓN SOLO SUPERUSER -->
-            {% if user.is_superuser %}
+            
+          {% if request.user.is_superuser %}
             <li class="dropdown">
               <a href="#" class="nav-link dropdown-toggle  text-truncate" id="active" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="fas fa-user-shield"></i>

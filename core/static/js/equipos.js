@@ -80,9 +80,24 @@ $(function () {
         delay: 500,
         minLength: 1,
         select: function (event, ui) {
+           
             event.preventDefault();
-            equipo.add(ui.item);
-            $(this).val('');
+            var existeTrabajador = equipo.items.trabajadores.find(function (trabajador) {
+                return trabajador.rut === ui.item.rut;
+            });
+
+            if (existeTrabajador) {
+                toastr.warning('El Trabajador ya existe en la lista', {
+                    timeOut: 2000,
+                    closeButton: false,
+                    tapToDismiss: false,
+                    positionClass: "toast-top-center",
+                    preventDuplicates: true
+                })
+            } else {
+                equipo.add(ui.item);
+                $(this).val('');
+            }
             console.log(equipo.items.trabajadores);
         },
         
@@ -113,7 +128,13 @@ $(function () {
             e.preventDefault();
 
             if (equipo.items.trabajadores.length === 0) {
-                message_error('No hay trabajadores la lista');
+                toastr.warning('El equipo debe tener al menos un trabajador', {
+                    timeOut: 2000,
+                    closeButton: false,
+                    tapToDismiss: false,
+                    positionClass: "toast-top-center",
+                    preventDuplicates: true
+                })
                 return false;
             }
             equipo.items.nombre_equipo = $('input[name="nombre_equipo"]').val();

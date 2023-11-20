@@ -155,7 +155,10 @@ $(function () {
 
     // buscador de productos
 
-    $('input[name="search"]').autocomplete({
+
+
+
+     $('input[name="search"]').autocomplete({
         source: function (request, response) {
             $.ajax({
                 url: window.location.pathname,
@@ -177,11 +180,35 @@ $(function () {
         minLength: 1,
         select: function (event, ui) {
             event.preventDefault();
-            ui.item.cant = 1;
-            ui.item.subtotal = 0.00;
-            vents.add(ui.item);
+            var existingProduct = vents.items.products.find(function (product) {
+                return product.id_producto === ui.item.id_producto;
+            });
+    
+            if (existingProduct) {
+                // Si el producto ya existe, actualiza la cantidad
+                existingProduct.cant == 1;
+                toastr.warning('El producto ya existe en la lista', {
+                    timeOut: 2000,
+                    closeButton: false,
+                    tapToDismiss: false,
+                    positionClass: "toast-top-center",
+                    preventDuplicates: true
+                })
+            } else {
+                // Si el producto no existe, añádelo a la lista
+                ui.item.cant = 1;
+                ui.item.subtotal = 0.00;
+                vents.add(ui.item);
+            }
+    
             $(this).val('');
             console.log(vents.items.products);
+        },
+        response: function (event, ui) {
+            // Mapea el nombre y el precio de venta al campo 'label'
+            $.each(ui.content, function (index, item) {
+                item.label = item.label || item.nombre_producto + ' - $' + item.precio_venta
+            });
         }
     });
     
@@ -189,16 +216,18 @@ $(function () {
 
 
 
-// evento cantidad
 
+// evento cantidad
+// evento cantidad
     $('#tblProducts tbody').on('change', 'input[name="cant"]', function () {
         console.clear();
-        var cant = parseInt($(this).val());
+        var cant = parseInt($(this).val(), 10);
         var tr = tblProducts.cell($(this).closest('td, li')).index();
         vents.items.products[tr.row].cant = cant;
         vents.calculate_invoice();
-        $('td:eq(5)', tblProducts.row(tr.row).node()).html('$'+vents.items.products[tr.row].subtotal.toLocaleString('es-CL', { minimumFractionDigits: 0, maximumFractionDigits: 0,}));
+        $('td:eq(5)', tblProducts.row(tr.row).node()).html('$' + vents.items.products[tr.row].subtotal.toLocaleString('es-CL', { minimumFractionDigits: 0, maximumFractionDigits: 0 }));
     });
+
 
 
 
@@ -239,7 +268,13 @@ $(function () {
         e.preventDefault();
 
         if(vents.items.products.length === 0) {
-            alert('No hay productos en la lista');
+            toastr.warning('Debe agregar por lo menos un producto', {
+                timeOut: 2000,
+                closeButton: false,
+                tapToDismiss: false,
+                positionClass: "toast-top-center",
+                preventDuplicates: true
+            })
             return false;
         }
 
@@ -255,7 +290,11 @@ $(function () {
             
         })   
     });
+
+    
     vents.list();
+
+    
 });
 
 
@@ -268,4 +307,5 @@ document.addEventListener('DOMContentLoaded', function () {
         textarea.resize = 'none';
     }
 });
+
 

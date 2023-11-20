@@ -10,12 +10,24 @@ class CustomUserCreationForm(UserCreationForm):
     
     class Meta:
         model = User
-        fields = ['rut', 'first_name', 'last_name', 'email', 'password1', 'password2', 'is_staff']
+        fields = ['rut', 'first_name', 'last_name', 'email', 'password1', 'password2','groups']
+        widgets = {
+            'groups': forms.SelectMultiple(attrs={
+                'class': 'form-control select2',
+                'style': 'width: 100%',
+                'multiple': 'multiple',
+            })
+        }
     def __init__(self, *args, **kwargs):
         super(CustomUserCreationForm, self).__init__(*args, **kwargs)
-
+        self.fields['rut'].help_text = 'Ingrese el RUT sin puntos ni guion.'
+        self.fields['groups'].label = "Rol y Permisos"
+        self.fields['first_name'].help_text = 'Ingrese el Nombre solo con letras.'
+        self.fields['last_name'].help_text = 'Ingrese el Apellido solo con letras.'
+        self.fields['email'].help_text = 'Ingrese un correo electronico valido.'
+        self.fields['email'].label = "Correo Electronico"
         for fieldname in ['password1', 'password2']:
-            self.fields[fieldname].help_text = None
+            self.fields[fieldname].help_text = 'Debe contener al menos 8 caracteres y no puede contener información personal.'
 
 class editarTrabajadorForm(forms.ModelForm):
     class Meta:
@@ -29,13 +41,20 @@ class ProyectoForm(forms.ModelForm):
     class Meta:
         model = Proyecto
         fields = "__all__"
+        
 
 class AgregarProyectoForm(forms.ModelForm):
     class Meta:
         model = Proyecto
         fields = "__all__"
         widgets = {
-            'fecha': forms.DateInput(attrs={'type': 'date'}),
+            'fecha': forms.DateInput(
+                attrs={
+                    'type': 'date',
+                    'value': datetime.now().strftime('%Y-%m-%d')
+
+                }
+            ),
             'plazo_entrega': forms.DateInput(attrs={'type': 'date'}),
             "nombre_proyecto" : forms.TextInput(attrs={'placeholder': 'Ej. Mesita'})
         }

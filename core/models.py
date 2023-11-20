@@ -24,6 +24,23 @@ class User(AbstractUser):
         item['first_name'] = self.first_name
         item['last_name'] = self.last_name
         return item
+    
+    def has_view_clientes_permission(self):
+        return self.has_perm('core.view_clientes')
+    def has_view_proyectos_permission(self):
+        return self.has_perm('core.view_proyecto')
+    def has_view_cotizaciones_permission(self):
+        return self.has_perm('core.view_cotizaciones')
+    def has_view_avances_permission(self):
+        return self.has_perm('core.view_avances')
+    def has_view_tareas_permission(self):
+        return self.has_perm('core.view_tareas')
+    def has_view_equipos_permission(self):
+        return self.has_perm('core.view_equipos')
+    def has_view_productos_permission(self):
+        return self.has_perm('core.view_productos')
+
+
 
 class Clientes(models.Model):
     rut_cliente = models.IntegerField(primary_key=True)
@@ -206,7 +223,7 @@ class Productos(models.Model):
     categoria = models.ForeignKey('CategoriaProductos', on_delete=models.CASCADE, default=1)
     subcategoria = models.ForeignKey('SubcategoriaProductos', on_delete=models.CASCADE, default=1)
     marca = models.ForeignKey('MarcaProductos', on_delete=models.CASCADE, default=1)
-    precio_compra = models.FloatField(default=0, )
+    precio_compra = models.FloatField(default=0)
     precio_venta = models.FloatField(default=0)
     variante = models.CharField(max_length=100, null=True, blank=True)
     stock = models.IntegerField(default=0)
@@ -216,7 +233,7 @@ class Productos(models.Model):
     def toJSON(self):
         item = model_to_dict(self)
         item['categoria'] = self.categoria.toJSON()
-        item['precio_venta'] = format(self.precio_venta, '.2f')
+        item['precio_venta'] = format(self.precio_venta, '.0f')
         item['subcategoria'] = self.subcategoria.toJSON()
         item['marca'] = self.marca.toJSON()
         return item

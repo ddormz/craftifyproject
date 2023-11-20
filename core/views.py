@@ -19,7 +19,9 @@ from django.contrib.staticfiles import finders
 from datetime import datetime
 from django.db.models.functions import Coalesce
 from django.db.models import Sum
-
+from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.decorators import user_passes_test
+from django.contrib import messages
 # Create your views here.
 
 
@@ -404,7 +406,8 @@ class CotView(CreateView):
                 prods = Productos.objects.filter(nombre_producto__icontains=request.POST['term'])[0:10]
                 for i in prods:
                     item = i.toJSON()
-                    item['value'] = i.nombre_producto
+                    # Combina el nombre y el precio de venta en un solo campo 'label'
+                    item['label'] = f"{i.nombre_producto} - ${int(i.precio_venta) if i.precio_venta.is_integer() else i.precio_venta}"
                     data.append(item)
             elif action == 'add':
 
@@ -481,7 +484,7 @@ class CotUpdateView(UpdateView):
                 prods = Productos.objects.filter(nombre_producto__icontains=request.POST['term'])[0:10]
                 for i in prods:
                     item = i.toJSON()
-                    item['value'] = i.nombre_producto
+                    item['label'] = f"{i.nombre_producto} - ${int(i.precio_venta) if i.precio_venta.is_integer() else i.precio_venta}"
                     data.append(item)
             elif action == 'edit':
                 
@@ -587,6 +590,8 @@ class CotizacionesPDF(View):
             pass
         return HttpResponseRedirect(reverse_lazy('listarCotizaciones'))
 # MODULO CLIENTES
+
+
 def listarClientes(request):
     clientes = Clientes.objects.all()
 
@@ -598,13 +603,14 @@ def listarClientes(request):
         else:
             error_messages = form.errors.as_json()
             return JsonResponse({'errors': form.errors.as_json()}, status=400)
-    
+
     form = ClientesForm()
     contexto = {
         'form': form,
         'clientes': clientes
     }
     return render(request, 'clientes/listarCliente.html', contexto)
+
 
 
 def agregarClientes(request):

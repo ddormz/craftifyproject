@@ -2,10 +2,31 @@
 
 {% block content %}
 
+{% if not request.user.has_view_clientes_permission %}
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+  No tiene permisos para ver esta sección
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endif %}
 {% if request.user.is_authenticated %}
 {% load static %}
 {% load crispy_forms_tags%}
+{% if user.has_view_clientes_permission %}
+
+
 <script src="{% static 'js/clientes.js' %}"></script>
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  {% endfor %}
+{% endif %}
 <div class="container-fluid">
   <div class="row">
     <div class="col-md-12">
@@ -96,8 +117,9 @@
 <div id="notification-alert" class="alert" style="display: none;">
   <p class="alert-message"></p>
 </div>
-
+{% endif %}
 </div>
+
 
 {% endif %}
 

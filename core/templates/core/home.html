@@ -20,6 +20,8 @@
         <div class="col-sm-12">
           <div class="alert alert-success" role="alert">
             ¡Bienvenid@, {{ request.user }}!, nos encontramos aún en nuestra <strong>marcha blanca</strong>, por lo que si consigues un error, reportalo de inmediato.
+            <br>
+            Tu nivel de privilegios es: <strong>{{ request.user.groups.all.0 }}<strong>
           </div>
           <h1 class="m-0">Dashboard Craftify</h1>
         </div><!-- /.col -->
