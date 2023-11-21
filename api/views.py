@@ -42,7 +42,7 @@ class LoginView(APIView):
                 'is_superuser': user.is_superuser,
                 'is_staff': user.is_staff,
                 'groups': list(user.groups.values_list('name', flat=True)),
-                'permissions': list(user.user_permissions.values_list('codename', flat=True)),
+                'permisos': list(user.get_all_permissions()),
                 'is_active': user.is_active,
                 'date_joined': user.date_joined
             }
