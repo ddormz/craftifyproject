@@ -1,5 +1,19 @@
 # Craftify Project
 
+v1.7 - 22/11 - Proyecto al 100% Funcional 
+- Modulo de Equipos OK
+- Modulo de Productos OK
+- Modulo de Proyectos OK
+- Modulo Cotizaciones OK
+- Dashboard OK 
+- Modulo Clientes OK
+- Modulo Avances OK
+- Modulo Tareas OK
+- Roles de Usuario y Permisos OK
+- API OK
+
+  
+
 v1.6 - 09/11
 - Modulo de Equipos OK
 - Modulo de Productos 90% (falta modales categorias, subcategorias, marcas)
