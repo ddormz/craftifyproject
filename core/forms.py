@@ -18,9 +18,25 @@ class CustomUserCreationForm(UserCreationForm):
                 'multiple': 'multiple',
             })
         }
+
+        rut = forms.CharField(max_length=10, validators=[
+            RegexValidator(
+                regex='^[0-9kK]+$',
+                message='Este campo solo puede contener digitos.',
+                code='invalid_name'
+
+            )
+        ])
+        first_name = forms.CharField(max_length=100, validators=[
+            RegexValidator(
+                regex='^[a-zA-Z ]+$',
+                message='Este campo solo puede contener letras.',
+                code='invalid_name'
+            )
+        ])
     def __init__(self, *args, **kwargs):
         super(CustomUserCreationForm, self).__init__(*args, **kwargs)
-        self.fields['rut'].help_text = 'Ingrese el RUT sin puntos ni guion.'
+        self.fields['rut'].help_text = 'Ingrese el RUT sin puntos ni guion, si termina en K reemplace por 0.'
         self.fields['groups'].label = "Rol y Permisos"
         self.fields['first_name'].help_text = 'Ingrese el Nombre solo con letras.'
         self.fields['last_name'].help_text = 'Ingrese el Apellido solo con letras.'
@@ -108,7 +124,14 @@ class CotizacionesForm(forms.ModelForm):
 
 
 class ClientesForm(forms.ModelForm):
-    telefono = forms.IntegerField()
+    class Meta:
+        model = Clientes
+        fields = ['rut_cliente', 'nombre', 'apellido', 'direccion', 'telefono']
+        widgets = {
+            'rut_cliente': forms.TextInput(attrs={'placeholder': 'Ej. 12345678-9'}),
+        }
+
+        telefono = forms.IntegerField()
     nombre = forms.CharField(max_length=100, validators=[
         RegexValidator(
             regex='^[a-zA-Z ]+$',  # Modificado para permitir espacios
@@ -132,10 +155,6 @@ class ClientesForm(forms.ModelForm):
         )
     ])
     
-
-    class Meta:
-        model = Clientes
-        fields = ['rut_cliente', 'nombre', 'apellido', 'direccion', 'telefono']
 
 
 class ProductosForm(forms.ModelForm):

@@ -3,12 +3,20 @@ from django.db import models
 from django.forms import model_to_dict
 from django.utils.translation import gettext_lazy as _
 from datetime import datetime
+from django.core.validators import RegexValidator
 
 from .managers import CustomUserManager
 
 class User(AbstractUser):
     username = None
-    rut = models.CharField('rut', max_length=10, unique=True)
+    rut = models.CharField('rut', max_length=10, unique=True, validators=[
+        RegexValidator(
+            regex='^[0-9kK]+$',
+            message='Este campo solo puede contener digitos.',
+            code='invalid_name'
+        )
+    ])
+    email = models.EmailField(unique=True)
 
     USERNAME_FIELD = "rut"
     REQUIRED_FIELDS = []

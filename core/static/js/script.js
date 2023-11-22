@@ -511,7 +511,7 @@ $(document).ready(function() {
         });
       },
       error: function(data) {
-        toastr.error('Error al agregar trabajador ', 'Error', {
+        toastr.error('Error al agregar trabajador, verifica los campos.', 'Error', {
           timeOut: 2000,
           closeButton: false,
           tapToDismiss: false,
