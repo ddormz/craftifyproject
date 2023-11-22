@@ -44,7 +44,8 @@ class LoginView(APIView):
                 'groups': list(user.groups.values_list('name', flat=True)),
                 'permisos': list(user.get_all_permissions()),
                 'is_active': user.is_active,
-                'date_joined': user.date_joined
+                'date_joined': user.date_joined,
+                'email':  user.email
             }
 
             return Response({'message': 'Login successful', 'user_info': user_info})
@@ -129,7 +130,7 @@ def apitareas(request):
 @api_view(['POST'])
 def apiagregaravances(request):
     if request.method == 'POST':
-        serializer = AvancesSerializer(data=request.data)
+        serializer = AddAvancesSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
