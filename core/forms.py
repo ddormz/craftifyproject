@@ -84,6 +84,7 @@ class AgregarProyectoForm(forms.ModelForm):
             self.fields['plazo_entrega'].label = "Fecha de Entrega"
             self.fields['status'].label = "Status del Proyecto"
             self.fields['instalacion'].label = "¿Desea Instalación?"
+            self.fields['id_cotizacion'].label = "Seleccione Cotización"
       
 
 
@@ -167,6 +168,18 @@ class ProductosForm(forms.ModelForm):
                 'style': 'width: 100%'
             }),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['imagen'].widget.attrs.update({'accept': 'image/*'})
+
+    def clean_imagen(self):
+        imagen = self.cleaned_data.get('imagen')
+        if imagen:
+            # Asegúrate de que la imagen no sea demasiado grande, etc.
+            # Puedes agregar validaciones personalizadas aquí según tus requisitos.
+            pass
+        return imagen 
 
 class MarcaForm(forms.ModelForm):
     class Meta:
@@ -258,4 +271,9 @@ class MetodoPagoForm(forms.ModelForm):
 class StatusTareaForm(forms.ModelForm):
     class Meta:
         model = StatusTarea
+        fields = ['nombre_status']
+
+class StatusCotizacionForm(forms.ModelForm):
+    class Meta:
+        model = StatusCotizacion
         fields = ['nombre_status']

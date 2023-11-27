@@ -242,6 +242,45 @@ def editarMetodo(request, id_metodopago):
     return render(request, 'cotizaciones/editarMetodo.html', data)
 
 
+def statuscotizaciones(request):
+    status = StatusCotizacion.objects.all()
+    
+    if request.method == 'POST':
+        form = StatusCotizacionForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'message': 'Registro exitoso.'})
+        else:
+            error_messages = form.errors.as_json()
+            return JsonResponse({'errors': form.errors.as_json()}, status=400)
+    
+    form = StatusCotizacionForm()
+    
+    contexto = {'status': status, 'form': form}
+    return render(request, 'cotizaciones/statuscot.html', contexto)
+
+
+def eliminarstatuscotizaciones(request, id_estado):
+    status = StatusCotizacion.objects.get(id_estado=id_estado)
+    status.delete()
+    return redirect('statuscot')
+
+def editStatusCotizaciones(request, id_estado):
+    status = StatusCotizacion.objects.get(id_estado=id_estado)
+    data = {
+        'form': StatusCotizacionForm(instance=status)
+    }
+    if request.method == 'POST':
+        formulario = StatusCotizacionForm(data=request.POST, instance=status)
+        if formulario.is_valid():
+            formulario.save()
+            return redirect('statuscot')
+        else:
+            data['form'] = formulario
+    
+    return render(request, 'cotizaciones/editarStatus.html', data)
+
+
 def categoriaProyectos(request):
     categorias = CategoriaProyecto.objects.all()
     
@@ -424,6 +463,8 @@ class CotView(CreateView):
                 cotizacion.total = vents['total']
                 cotizacion.nombre_cotizacion = vents['nombre_cotizacion']
                 cotizacion.comentario = vents['comentario']
+                status_cot = vents['status']
+                cotizacion.status = StatusCotizacion.objects.get(id_estado=status_cot)
                 cotizacion.save()
                 # Detalle
                 for i in vents['products']:
@@ -487,7 +528,6 @@ class CotUpdateView(UpdateView):
                     item['label'] = f"{i.nombre_producto} - ${int(i.precio_venta) if i.precio_venta.is_integer() else i.precio_venta}"
                     data.append(item)
             elif action == 'edit':
-                
                 # Cotizaciones
                 vents = json.loads(request.POST['vents'])
                 cotizacion = self.get_object()
@@ -501,6 +541,8 @@ class CotUpdateView(UpdateView):
                 cotizacion.total = vents['total']
                 cotizacion.nombre_cotizacion = vents['nombre_cotizacion']
                 cotizacion.comentario = vents['comentario']
+                status_cot = vents['status']
+                cotizacion.status = StatusCotizacion.objects.get(id_estado=status_cot)
                 cotizacion.save()
                 cotizacion.detallecotizaciones_set.all().delete()
                 # Detalle
@@ -687,10 +729,10 @@ def agregarProductos(request):
         'addpro': ProductosForm()
     }
     if request.method == 'POST':
-        formulario = ProductosForm(data=request.POST)
+        formulario = ProductosForm(request.POST, request.FILES)
         if formulario.is_valid():
             formulario.save()
-            return redirect('agregarProductos')
+            data['addpro'] = ProductosForm()
         else:
             data['addpro'] = formulario
     
@@ -708,7 +750,7 @@ def editarProductos(request, id_producto):
         'editpro': ProductosForm(instance=pro)
     }
     if request.method == 'POST':
-        formulario = ProductosForm(data=request.POST, instance=pro)
+        formulario = ProductosForm(request.POST, request.FILES, instance=pro)
         if formulario.is_valid():
             formulario.save()
             return redirect('listarProductos')

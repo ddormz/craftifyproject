@@ -53,6 +53,7 @@ class ProductosSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+
 class TareasSerializer(serializers.ModelSerializer):
     status_tarea = serializers.CharField(source='status_tarea.nombre_status')
     equipo_id_equipo = serializers.CharField(source='equipo_id_equipo.nombre_equipo')

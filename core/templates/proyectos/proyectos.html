@@ -12,6 +12,9 @@
       <div class="card">
         <div class="card-header">
           <h3 class="card-title">Listado de Proyectos</h3>
+          <div class="float-md-end">
+            <a class="btn btn-warning" id="btnProyecto" href="{% url 'agregarProyecto' %}" role="button"><i class="fas fa-add"></i>Agregar Nuevo Proyecto</a>
+            </div>
             <div class="input-group mb-3">
               <div class="input-group-append">
               </div>
@@ -23,6 +26,7 @@
         <thead>
           <tr>
             <th scope="col">ID Proyecto</th>
+            <th scope="col">Cotizacion</th>
             <th scope="col">Cliente</th>
             <th scope="col">Categoria</th>
             <th scope="col">Nombre Proyecto</th>
@@ -39,6 +43,7 @@
        {% for proyecto in proyectos %}
           <tr>
             <th scope="row">{{ proyecto.id_proyecto }}</th>
+            <td scope="row">{{ proyecto.id_cotizacion }}</td>
             <td scope="row">{{ proyecto.cliente }}</td>  
             <td scope="row">{{ proyecto.categoria }}</td>
             <td scope="row">{{ proyecto.nombre_proyecto }}</td>

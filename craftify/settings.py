@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'api',
     'rest_framework',
     'corsheaders',
+    'schema_graph',
     ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"

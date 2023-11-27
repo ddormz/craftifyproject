@@ -30,6 +30,17 @@ function productosTable() {
     },
     columns: [
       {"data": "id_producto"},
+      {
+        "data": "imagen",
+        render: function (data, type, row) {
+            if (data) {
+              return '<img src="' + data + '" alt="Imagen" style="max-width: 100px; max-height: 100px; cursor: pointer;" data-toggle="modal" data-target="#imagenModal" />';
+            } else {
+                // Si no hay imagen, mostrar la imagen por defecto o en blanco
+                return '<img src="{{ url_for("static", filename="img/default.jpg") }}" alt="Sin imagen" style="max-width: 100px; max-height: 100px;" />';
+            }
+        }
+    },
       {"data": "nombre_producto"},
       {"data": "descripcion"},
       {"data": "categoria.nombre_categoria"},
@@ -79,7 +90,6 @@ function productosTable() {
       },
     ],
     initComplete: function (settings, json) {
-      
     }
   })
 }
@@ -87,10 +97,15 @@ function productosTable() {
 $(document).ready(function () {
   $('#formProd').on('submit', function (event) {
     event.preventDefault(); // Prevenir el envío automático del formulario
+
+    var formData = new FormData(this);
+
     $.ajax({
       type: 'POST',
       url: $(this).attr('action'),
-      data: $(this).serialize(),
+      data: formData,
+      processData: false,
+      contentType: false,
       success: function (response) {
         // Mostrar notificación de éxito
         $('#toast').text('Registro exitoso del producto').removeClass('alert-danger').addClass('alert-success').show();
@@ -106,7 +121,9 @@ $(document).ready(function () {
         $('#toast').text('Registro fallido').removeClass('alert-success').addClass('alert-danger').show();
         setTimeout(function () {
           $('#toast').hide();
-        }, 2000); // Ocultar la notificación después de 3 segundos
+        }, 2000);
+        console.log(xhr.status + ": " + xhr.responseText); // Mostrar detalles del error en la consola
+        // Ocultar la notificación después de 3 segundos
       }
     });
   });
@@ -116,10 +133,14 @@ $(document).ready(function () {
 $(document).ready(function () {
   $('#formEditProd').on('submit', function (event) {
     event.preventDefault(); // Prevenir el envío automático del formulario
+    var formData = new FormData(this);
+
     $.ajax({
       type: 'POST',
       url: $(this).attr('action'),
-      data: $(this).serialize(),
+      data: formData,
+      processData: false,
+      contentType: false,
       success: function (response) {
         // Mostrar notificación de éxito
         $('#toast').text('Actualizacion exitoso del producto').removeClass('alert-danger').addClass('alert-success').show();
@@ -318,7 +339,7 @@ function equiposTable() {
         render: function (data, type, row) {
           var buttons = '<a rel="remove" href="/eliminarEquipo/' + row.id_equipo + '/" class="btn btn-danger btn-xs btn-flat" id="botonEliminar"><i class="fas fa-trash-alt"></i></a>';
           buttons += '<a href="/editarEquipo/' + row.id_equipo + '/" class="btn btn-warning btn-xs btn-flat"><i class="fas fa-pen"></i></a> ';
-          buttons += '<a rel="details" class="btn btn-success btn-xs btn-flat"><i class="fas fa-search"></i></a> ';  
+          buttons += '<a rel="details" class="btn btn-success btn-xs btn-flat"><i class="fas fa-eye"></i></a> ';  
           buttons += '<a href="/listarTareas" class="btn btn-dark btn-xs btn-flat tareaID"><i class="fa-solid fa-list-check" style="color: white;"></i></a>';
           return buttons;
       }
@@ -567,6 +588,7 @@ function cotizacionesTable() {
       },
       {"data": "total"},
       {"data": "metodopago.nombre_metodo"},
+      {"data": "status.nombre_status"},
       {"data": "id_cotizacion"},
     ],
     columnDefs: [
@@ -585,7 +607,7 @@ function cotizacionesTable() {
         render: function (data, type, row) {
             var buttons = '<a rel="remove" href="/eliminarCotizaciones/' + row.id_cotizacion + '/" class="btn btn-danger btn-xs btn-flat" id="botonEliminar"><i class="fas fa-trash-alt"></i></a>';
             buttons += '<a href="/editarCotizaciones/' + row.id_cotizacion + '/" class="btn btn-warning btn-xs btn-flat"><i class="fas fa-pen"></i></a> ';
-            buttons += '<a rel="details" class="btn btn-success btn-xs btn-flat"><i class="fas fa-search"></i></a> ';  
+            buttons += '<a rel="details" class="btn btn-success btn-xs btn-flat"><i class="fas fa-eye"></i></a> ';  
             buttons += '<a href="/cotpdf/' + row.id_cotizacion + '/" class="btn btn-dark btn-xs btn-flat"><i class="fa-solid fa-file-pdf" style="color: white;"></i></a>';
             return buttons;
         }

@@ -81,6 +81,9 @@
                         <div class="col-lg-12">
                           {{ AggForm.status | as_crispy_field }}
                         </div>
+                        <div class="col-lg-12">
+                          {{ AggForm.id_cotizacion | as_crispy_field }}
+                        </div>
                       </div>
                         <button type="submit" class="btn btn-primary agregarProyecto">Agregar</button>
                         <a href="{% url 'verproyectos' %}" class="btn btn-danger btn-flat">Listar Proyectos</a>

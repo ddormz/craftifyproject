@@ -55,6 +55,19 @@
                         <div class="col-lg-6">
                           {{ editpro.variante | as_crispy_field }}
                         </div>
+                        <div class="col-lg-6">
+                          {{ editpro.imagen| as_crispy_field }}
+                        </div>
+                        <div class="col-lg-6">
+                          {% if editpro.instance.imagen %}
+                          <div>
+                            <div>
+                            <label for="{{ editpro.imagen.id_for_label }}">Imagen actual:</label>
+                            </div>
+                            <img src="{{ editpro.instance.imagen.url }}" alt="Imagen actual" style="max-width: 300px;"/>
+                          </div>
+                        {% endif %}
+                          </div>
                       </div>
                     </div>
                   </div>

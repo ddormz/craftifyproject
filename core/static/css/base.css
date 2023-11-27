@@ -262,3 +262,8 @@ div.dt-buttons {
   background-color: #32CDA1;
   border-color: #32CDA1;
 }
+
+
+.form-check-input {
+  border: var(--bs-border-width) solid #0c0e10;
+}

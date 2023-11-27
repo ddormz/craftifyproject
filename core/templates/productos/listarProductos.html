@@ -3,6 +3,10 @@
 {% block content %}
 
 {% if request.user.is_authenticated %}
+{% load static %}
+
+<script src="{% static 'lib/plugins/box/js/lightbox.js' %}"></script>
+<link rel="stylesheet" href="{% static 'lib/plugins/box/css/lightbox.css' %}">
 
 <div class="container-fluid">
   <div class="row">
@@ -10,6 +14,9 @@
       <div class="card">
         <div class="card-header">
       <h1 class="text-center">Listado de Productos  </h1>
+      <div class="float-md-end">
+        <a class="btn btn-warning" id="btnProyecto" href="{% url 'agregarProductos' %}" role="button"><i class="fas fa-add"></i>Agregar Producto</a>
+        </div>
       <div class="input-group mb-3">
         <div class="input-group-append">
         </div>
@@ -20,6 +27,7 @@
         <thead>
           <tr>
             <th scope="col">ID Producto</th>
+            <th scope="col">Foto</th>
             <th scope="col">Nombre Producto</th>
             <th scope="col">Descripcion</th>
             <th scope="col">Categoria</th>
@@ -36,10 +44,38 @@
         <tbody>
         </tbody>
       </table>
+      <div class="float-md-start">
+        <a class="btn btn-warning" id="btnProyecto" href="{% url 'agregarProductos' %}" role="button"><i class="fas fa-add"></i>Agregar Producto</a>
+        </div>
       </div>
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="imagenModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Zoom</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <img id="imagenGrande" src="" alt="Imagen en grande" style="width: 100%;">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  $('#imagenModal').on('show.bs.modal', function (event) {
+    var imagen = $(event.relatedTarget).attr('src');
+    $('#imagenGrande').attr('src', imagen);
+  });
+</script>
+
 {% endif %}
 
 {% endblock %}

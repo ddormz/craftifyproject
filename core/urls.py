@@ -47,6 +47,9 @@ urlpatterns = [
     path('eliminarCotizaciones/<id_cotizacion>/', eliminarCotizaciones, name='eliminarCotizaciones'),
     path('editarCotizaciones/<int:pk>/', CotUpdateView.as_view(), name='editarCotizaciones'),
     path('cotpdf/<int:pk>/', CotizacionesPDF.as_view(), name='cotpdf'),
+    path('statuscot', statuscotizaciones, name='statuscot'),
+    path('editstatuscot/<id_estado>/', editStatusCotizaciones, name='editstatuscot'),
+    path('elimstatuscot/<id_estado>/', eliminarstatuscotizaciones, name='elimstatuscot'),
 
     # MODULO DE CLIENTES
     path('listarClientes', listarClientes, name='listarClientes'),

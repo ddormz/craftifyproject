@@ -9,6 +9,7 @@ var vents = {
         comentario: '',
         fecha_cotizacion: '',
         metodo_pago: '',
+        status: '',
         subtotal: 0,
         iva: 0,
         total: 0,
@@ -266,36 +267,73 @@ $(function () {
 
     $('form').on('submit', function (e) {
         e.preventDefault();
-
-        if(vents.items.products.length === 0) {
+    
+        if (vents.items.products.length === 0) {
             toastr.warning('Debe agregar por lo menos un producto', {
                 timeOut: 2000,
                 closeButton: false,
                 tapToDismiss: false,
                 positionClass: "toast-top-center",
                 preventDuplicates: true
-            })
+            });
             return false;
         }
-
+    
         vents.items.fecha_cotizacion = $('input[name="fecha_cotizacion"]').val();
         vents.items.cli = $('select[name="cliente"]').val();
         vents.items.nombre_cotizacion = $('input[name="nombre_cotizacion"]').val();
         vents.items.metodo_pago = $('select[name="metodopago"]').val();
+        vents.items.status = $('select[name="status"]').val();
+        vents.items.comentario = $('textarea[name="comentario"]').val();
         var parameters = new FormData();
         parameters.append('action', $('input[name="action"]').val());
         parameters.append('vents', JSON.stringify(vents.items));
-        submit_with_ajax(window.location.pathname, 'Notificacion', '¿Estas seguro de realizar la siguiente accion?', parameters, function () {
-           location.href = '/listarCotizaciones';
-            
-        })   
+    
+        submit_with_ajax_cot(window.location.pathname, 'Notificacion', '¿Estas seguro de realizar la siguiente accion?', parameters,
+            function (confirm) {
+                // Lógica después de la confirmación
+            },
+            function (confirmed) {
+                if (confirmed) {
+                    // Si el usuario hizo clic en "Sí"
+                    if ($('select[name="status"] option:selected').text() === 'Aceptada') {
+                        // Si el status es 'Aceptada', muestra otra confirmación
+                        alerta_cotizacion('Notificacion', 'Detectamos que la cotización fue aceptada. ¿Desea agregar un proyecto?', function (confirm) {
+                        }, function (confirmed) {
+                            if (confirmed) {
+                                // Si el usuario hizo clic en "Sí"
+                                location.href = '/agregarProyecto'
+                            } else {
+                                // Si el usuario hizo clic en "No"
+                                location.href = '/listarCotizaciones'
+                            }
+                        });
+
+                    } else {
+                        // Si el status no es 'Aceptada', redirecciona al listado de cotizaciones
+                        location.href = '/listarCotizaciones'
+                        
+                    }
+                } else {
+                    // Si el usuario hizo clic en "No"
+                    // No es necesario realizar ninguna acción adicional aquí
+                }
+            },
+           /* function (idCotizacion) {
+                // Esta función se ejecutará después de que la cotización se guarde correctamente
+                console.log('ID de cotización:', idCotizacion);
+        
+                // Guardar la id_cotizacion en localStorage
+                localStorage.setItem('id_cotizacion', idCotizacion);
+            }
+            */
+        );
     });
-
-    
     vents.list();
-
-    
 });
+
+
+
 
 
 // evento para reducir el tamaño del textarea 
@@ -307,5 +345,3 @@ document.addEventListener('DOMContentLoaded', function () {
         textarea.resize = 'none';
     }
 });
-
-

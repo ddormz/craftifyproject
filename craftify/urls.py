@@ -16,10 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include 
+from schema_graph.views import Schema
 
 urlpatterns = [
     path('', include('core.urls')),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('api/', include('api.urls')),
+    path('schema/', Schema.as_view(), name='schema'),
+    
 ]

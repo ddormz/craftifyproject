@@ -74,6 +74,7 @@ class Clientes(models.Model):
 
 class Proyecto(models.Model):
     id_proyecto = models.AutoField(primary_key=True)
+    id_cotizacion = models.ForeignKey('Cotizaciones', on_delete=models.CASCADE, null=True, blank=True)
     cliente = models.ForeignKey('Clientes', on_delete=models.CASCADE, null=True, blank=True, default=0)
     categoria = models.ForeignKey('CategoriaProyecto', on_delete=models.CASCADE, default=1)
     nombre_proyecto = models.CharField(max_length=100)
@@ -88,6 +89,7 @@ class Proyecto(models.Model):
     def toJSON(self):
         item = model_to_dict(self)
         item['nombre_proyecto'] = self.nombre_proyecto
+        item['id_cotizacion'] = self.id_cotizacion.toJSON()
         return item
 
     class Meta:
@@ -235,6 +237,7 @@ class Productos(models.Model):
     precio_venta = models.FloatField(default=0)
     variante = models.CharField(max_length=100, null=True, blank=True)
     stock = models.IntegerField(default=0)
+    imagen = models.ImageField(upload_to='productos', null=True, blank=True)
     def __str__(self):
         return str(self.nombre_producto) + str(" - ") + str(self.variante)
     
@@ -244,6 +247,10 @@ class Productos(models.Model):
         item['precio_venta'] = format(self.precio_venta, '.0f')
         item['subcategoria'] = self.subcategoria.toJSON()
         item['marca'] = self.marca.toJSON()
+        if self.imagen:
+            item['imagen'] = self.imagen.url
+        else:
+            item['imagen'] = '/core/static/img/default.jpg'        
         return item
     
 
@@ -309,8 +316,10 @@ class Cotizaciones(models.Model):
     generado_por = models.ForeignKey('User', on_delete=models.CASCADE, null=True, blank=True)
     comentario = models.TextField(max_length=1000, null=True, blank=True)
     metodopago = models.ForeignKey('MetodoPago', on_delete=models.CASCADE)
+    status = models.ForeignKey('StatusCotizacion', on_delete=models.CASCADE)
+
     def __str__(self):
-        return str(self.id_cotizacion) + str(self.nombre_cotizacion)
+        return '#' + str(self.id_cotizacion) + ' - '+  str(self.nombre_cotizacion)
     
 
     def toJSON(self):
@@ -324,6 +333,7 @@ class Cotizaciones(models.Model):
         item['comentario'] = self.comentario
         item['metodopago'] = self.metodopago.toJSON()
         item['det'] = [i.toJSON() for i in self.detallecotizaciones_set.all()]
+        item['status'] = self.status.toJSON()
         return item
 
     class Meta:
@@ -364,4 +374,14 @@ class MetodoPago(models.Model):
     def toJSON(self):
         item = model_to_dict(self)
         nombre_metodo = self.nombre_metodo
+        return item
+    
+class StatusCotizacion(models.Model):
+    id_estado = models.AutoField(primary_key=True)
+    nombre_status = models.CharField(max_length=100)
+    def __str__(self):
+        return str(self.nombre_status)
+    
+    def toJSON(self):
+        item = model_to_dict(self)
         return item

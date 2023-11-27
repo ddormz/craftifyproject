@@ -9,7 +9,11 @@
     <div class="col-md-12">
       <div class="card">
         <div class="card-header">
+          
       <h1 class="text-center">Listado de Cotizaciones</h1>
+      <div class="float-md-end">
+        <a class="btn btn-warning" id="btnProyecto" href="{% url 'agregarCotizaciones' %}" role="button"><i class="fas fa-add"></i>Agregar Cotizacion</a>
+        </div>
         <div class="input-group mb-3">
           <div class="input-group-append">
           </div>
@@ -25,6 +29,7 @@
             <th scope="col">Cliente</th>
             <th scope="col">Total</th>
             <th scope="col">Metodo Pago</th>
+            <th scope="col">Estado</th>
             <th scope="col">Acciones</th>
           </tr>
         </thead>
@@ -34,6 +39,9 @@
           
         </tbody>
       </table>
+      <div class="float-md-start">
+        <a class="btn btn-warning" id="btnProyecto" href="{% url 'agregarCotizaciones' %}" role="button"><i class="fas fa-add"></i>Agregar Cotizacion</a>
+        </div>
       </div>
     </div>
   </div>
