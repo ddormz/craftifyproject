@@ -40,6 +40,9 @@ urlpatterns = [
     path('agregarAvances', agregarAvances, name='agregarAvances'),
     path('editarAvance/<avance_id>/', editarAvances, name='editarAvances'),
     path('eliminarAvance/<avance_id>/', eliminarAvances, name='eliminarAvance'),
+    path('avanceproyecto/<proyecto_id_proyecto>/', listarAvancesporIdProyecto.as_view(), name='avanceproyecto'),
+    path('elimavanceproyecto/<avance_id>/', eliminarAvancesPorProyecto, name='elimavanceproyecto'),
+    path('editavanceproyecto/<avance_id>/', editarAvancesPorProyecto, name='editavanceproyecto'),
 
     # MODULO DE COTIZACIONES
     path('listarCotizaciones', CotListView.as_view(), name='listarCotizaciones'),

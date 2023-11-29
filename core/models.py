@@ -192,7 +192,7 @@ class Tareas(models.Model):
     tarea = models.TextField(max_length=100)
     status_tarea = models.ForeignKey('StatusTarea', on_delete=models.CASCADE, default=1)
     def __str__(self):
-        return str('Equipo: ') +  str(self.equipo_id_equipo) + str(" - ") + str(self.tarea)
+        return str('Equipo: ') +  str(self.equipo_id_equipo) + str(" - ") + str(" Proyecto: ") + str(self.equipo_id_equipo.proyecto_id_proyecto.nombre_proyecto) + str(" - ") + str(' Tarea: ') + str(self.tarea)
     
     def toJSON(self):
         item = model_to_dict(self)

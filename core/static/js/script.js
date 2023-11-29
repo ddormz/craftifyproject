@@ -545,6 +545,7 @@ $(document).ready(function() {
 });
 // Tabla Cotizaciones
 function cotizacionesTable() {
+  let minDate, maxDate;
   var tblCot = $(".tabla-cotizaciones").DataTable({
     "responsive": true,
     "lengthChange": false,
@@ -614,10 +615,42 @@ function cotizacionesTable() {
     },
     ],
     initComplete: function (settings, json) {
-      
+      // Crear inputs de fecha
+      minDate = new DateTime('#min', {
+        format: 'MMMM Do YYYY'
+      });
+      maxDate = new DateTime('#max', {
+        format: 'MMMM Do YYYY'
+      });
+
+      // Refiltrar la tabla
+      document.querySelectorAll('#min, #max').forEach((el) => {
+        el.addEventListener('change', () => {
+          tblCot.draw();
+        });
+      });
+
+      // Extensión de búsqueda personalizada para el rango de fecha
+      $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+        let min = minDate.val();
+        let max = maxDate.val();
+        let date = new Date(data[1]); // Índice 1 es la columna de fecha
+
+        if (
+          (min === null && max === null) ||
+          (min === null && date <= max) ||
+          (min <= date && max === null) ||
+          (min <= date && date <= max)
+        ) {
+          return true;
+        }
+        return false;
+      });
     },
+  });
+
+   
     
-});
 
 // CONFIRMACION DE ELIMINAR EN COTIZACIONES 
  /* $(document).on('click', 'a[rel="remove"]', function (event) {

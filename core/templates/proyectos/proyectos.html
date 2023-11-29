@@ -54,9 +54,9 @@
             <td scope="row">{{ proyecto.status }}</td>
                     <td>{{ proyecto.tiempo_restante }} días</td>
             <td>          
-             <a class="btn btn-warning botonEditar" href="{% url 'editarProyecto' proyecto.id_proyecto %}" role="button"><i class="fas fa-pen"></i></button>
-             <a class="btn btn-danger botonEliminar" href="{% url 'eliminarProyecto' proyecto.id_proyecto %}" role="button"><i class="fas fa-trash-alt"></i></button>
-            <!-- <a class="btn btn-primary botonVer" href="{% url 'avances' %}" role="button"><i class="fas fa-eye"></i></button>  --> 
+             <a class="btn btn-warning btn-sm botonEditar" href="{% url 'editarProyecto' proyecto.id_proyecto %}" role="button"><i class="fas fa-pen"></i></button>
+             <a class="btn btn-danger btn-sm botonEliminar" href="{% url 'eliminarProyecto' proyecto.id_proyecto %}" role="button"><i class="fas fa-trash-alt"></i></button>
+              <a class="btn btn-primary btn-sm botonVer" href="{% url 'avanceproyecto' proyecto.id_proyecto %}" role="button"><i class="fas fa-eye"></i></button> 
             </td>
           </tr>
           {% endfor %}

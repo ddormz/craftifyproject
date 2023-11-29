@@ -1,6 +1,6 @@
 import json
 from django.http import FileResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.urls import reverse_lazy
@@ -384,6 +384,70 @@ def eliminarAvances(request, avance_id):
     avance = Avances.objects.get(avance_id=avance_id)
     avance.delete()
     return redirect('avances')
+
+
+class listarAvancesporIdProyecto(ListView):
+    model = Avances
+    template_name = 'avances/avanceId.html'
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            action = request.POST['action']
+            if action == 'listarAvanceId':
+                data = []
+                proyecto_id = request.POST.get('proyecto_id_proyecto')
+
+                # Utiliza select_related para obtener información relacionada
+                avances_queryset = Avances.objects.filter(tarea__equipo_id_equipo__proyecto_id_proyecto=proyecto_id).select_related(
+                    'tarea__equipo_id_equipo__proyecto_id_proyecto',
+                    'tarea__equipo_id_equipo',
+                    'tarea',
+                )
+
+                for avance in avances_queryset:
+                    data.append(avance.toJSON())
+                    
+            else:
+                data['error'] = 'Ha ocurrido un error'
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data, safe=False)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
+
+def eliminarAvancesPorProyecto(request, avance_id):
+    avance = get_object_or_404(Avances, avance_id=avance_id)
+
+    # Guarda el proyecto_id_proyecto antes de eliminar el avance
+    proyecto_id_proyecto = avance.tarea.equipo_id_equipo.proyecto_id_proyecto.id_proyecto
+
+    avance.delete()
+
+    # Redirige a la vista con el proyecto_id_proyecto
+    return redirect('avanceproyecto', proyecto_id_proyecto=proyecto_id_proyecto)
+
+def editarAvancesPorProyecto(request, avance_id):
+    avance = get_object_or_404(Avances, avance_id=avance_id)
+    data = {
+        'form': AvanceForm(instance=avance)
+    }
+    if request.method == 'POST':
+        formulario = AvanceForm(request.POST, request.FILES, instance=avance)
+        if formulario.is_valid():
+            formulario.save()
+            return redirect('avanceproyecto', proyecto_id_proyecto=avance.tarea.equipo_id_equipo.proyecto_id_proyecto.id_proyecto)
+        else:
+            data['form'] = formulario
+    
+    return render(request, 'avances/editarAvance.html', data)
 
 ## MODULO COTIZACIONES
 
