@@ -1,4 +1,4 @@
-# Craftify Project
+# Craftify Project // Status: Terminado 
 
 v1.8 - 07/12
 - Implementación de Reset Contraseña
