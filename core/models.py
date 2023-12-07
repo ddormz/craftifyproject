@@ -17,6 +17,7 @@ class User(AbstractUser):
         )
     ])
     email = models.EmailField(unique=True)
+    token = models.UUIDField(primary_key=False,  editable=False, null=True, blank=True)
 
     USERNAME_FIELD = "rut"
     REQUIRED_FIELDS = []
@@ -200,6 +201,13 @@ class Tareas(models.Model):
         item['trabajador'] = self.trabajador.toJSON()
         item['status_tarea'] = self.status_tarea.toJSON()
         return item
+    
+    @staticmethod
+    def trabajadores_por_equipo(equipo_id):
+        """
+        Obtener la lista de trabajadores asociados a un equipo específico.
+        """
+        return User.objects.filter(detalleequipo__id_equipo=equipo_id)
 
     class Meta:
         verbose_name = 'Tarea de Equipo'

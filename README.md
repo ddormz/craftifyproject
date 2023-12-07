@@ -1,5 +1,9 @@
 # Craftify Project
 
+v1.8 - 07/12
+- Implementación de Reset Contraseña
+GO READY!
+
 v1.7 - 22/11 - Proyecto al 100% Funcional 
 - Modulo de Equipos OK
 - Modulo de Productos OK

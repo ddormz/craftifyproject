@@ -227,6 +227,7 @@ class EquiposForm(forms.ModelForm):
         self.fields['proyecto_id_proyecto'].label = "Nombre Proyecto"
 
 
+# Formulario
 class TareasForm(forms.ModelForm):
     class Meta:
         model = Tareas
@@ -243,7 +244,9 @@ class TareasForm(forms.ModelForm):
         self.fields['equipo_id_equipo'].label = "Equipo"
         self.fields['trabajador'].label = "Trabajador"
         self.fields['tarea'].label = "Tarea"
-        
+
+
+
 
 class LoginForm(forms.ModelForm):
     class Meta:
@@ -277,3 +280,49 @@ class StatusCotizacionForm(forms.ModelForm):
     class Meta:
         model = StatusCotizacion
         fields = ['nombre_status']
+
+
+
+class ResetPasswordForm(forms.Form):
+    rut = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Ingrese su RUT'}), max_length=10, validators=[
+        RegexValidator(
+            regex='^[0-9kK]+$',
+            message='Este campo solo puede contener digitos.',
+            code='invalid_name'
+
+        )
+    ])
+
+    def clean_rut(self):
+        cleaned = super().clean()
+        if not User.objects.filter(rut=cleaned['rut']).exists():
+            raise forms.ValidationError('El RUT no existe')
+        return cleaned['rut']
+
+    def get_user(self):
+        rut = self.cleaned_data['rut']
+        return User.objects.get(rut=rut)
+
+
+class ChangePasswordForm(forms.Form):
+    password = forms.CharField(widget=forms.PasswordInput(attrs={
+        'placeholder': 'Ingrese un password',
+        'class': 'form-control',
+        'autocomplete': 'off'
+    }))
+
+    confirmPassword = forms.CharField(widget=forms.PasswordInput(attrs={
+        'placeholder': 'Repita el password',
+        'class': 'form-control',
+        'autocomplete': 'off'
+    }))
+
+    def clean(self):
+        cleaned = super().clean()
+        password = cleaned['password']
+        confirmPassword = cleaned['confirmPassword']
+        if password != confirmPassword:
+            # self._errors['error'] = self._errors.get('error', self.error_class())
+            # self._errors['error'].append('El usuario no existe')
+            raise forms.ValidationError('Las contraseñas deben ser iguales')
+        return cleaned

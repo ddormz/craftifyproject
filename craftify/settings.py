@@ -161,3 +161,10 @@ LOGOUT_REDIRECT_URL = 'login'
 #CUSTOM USER MODEL
 
 AUTH_USER_MODEL = "core.User"
+
+
+
+EMAIL_HOST = 'mail.gabinetcenter.cl'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'craftify@gabinetcenter.cl'
+EMAIL_HOST_PASSWORD = 'craftify123'

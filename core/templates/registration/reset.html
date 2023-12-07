@@ -1,0 +1,72 @@
+{% block content %}
+    
+{% load static %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="{% static 'lib/plugins/jquery-confirm/jquery-confirm.min.js' %}"></script>
+    <script src="{% static 'lib/plugins/sweetalert2/sweetalert2.all.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'lib/plugins/jquery-confirm/jquery-confirm.min.css' %}">
+
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src={% static 'js/functions.js' %}></script>
+</head>
+<body id="LoginBody">
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card" id="LoginCard">
+                        <div class="card-body">
+                            <img src="{% static 'img/logo.png' %}" alt="Logo" id="LogoLogin">
+                            <h2 class="text-center">Reseteo de Contraseña</h2>
+                            
+                            <form action="" method="POST">
+                                {% csrf_token %}
+                                {{ form | crispy }}
+                                <div class="form-group" id="BotonLoginDiv">
+                                <button type="submit" class="btn btn-primary" id="BotonLogin">Enviar</button>
+                                <a href="{% url 'login' %}" class="btn btn-link">Volver atrás</a>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="application/javascript">
+    $(function () {
+        $('form').on('submit', function (e) {
+            e.preventDefault();
+            var parameters = new FormData(this);
+            submitajax(window.location.pathname, 'Notificación', '¿Estas seguro de resetear tu contraseña?', parameters, function () {
+                Swal.fire({
+                    title: 'Notificación',
+                    text: 'Si tienes una cuenta activa, te hemos enviado un correo electronico para restablecer tu contraseña',
+                    icon: 'success',
+                    timer: 5000,
+                    onClose: () => {
+                        location.href = '/';
+                    }
+                }).then((result) => {
+
+                });
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
+{% endblock %}

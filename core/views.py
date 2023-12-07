@@ -1,4 +1,10 @@
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 import json
+import smtplib
+import ssl
+from typing import Any
+import uuid
 from django.http import FileResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
@@ -7,7 +13,7 @@ from django.urls import reverse_lazy
 from .forms import *
 from .models import *
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import CreateView, ListView, UpdateView, View, TemplateView
+from django.views.generic import CreateView, ListView, UpdateView, View, TemplateView, FormView
 from django.utils.decorators import method_decorator
 from django.http import HttpResponse
 import os
@@ -22,8 +28,102 @@ from django.db.models import Sum
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
+from django.template.loader import render_to_string
 # Create your views here.
 
+class ResetPasswordView(FormView):
+    form_class = ResetPasswordForm
+    template_name = 'registration/reset.html'
+    success_url = reverse_lazy(settings.LOGIN_REDIRECT_URL)
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def send_email_reset_pwd(self, user):
+        data = {}
+        try:
+            URL = settings.DOMAIN if not settings.DEBUG else self.request.META['HTTP_HOST']
+            user.token = uuid.uuid4()
+            user.save()
+
+            with smtplib.SMTP(settings.EMAIL_HOST, settings.EMAIL_PORT) as mailServer:
+                mailServer.ehlo()
+                mailServer.login(settings.EMAIL_HOST_USER, settings.EMAIL_HOST_PASSWORD)
+
+                email_to = user.email
+                mensaje = MIMEMultipart()
+                mensaje['From'] = settings.EMAIL_HOST_USER
+                mensaje['To'] = email_to
+                mensaje['Subject'] = 'Reseteo de contraseña'
+
+                content = render_to_string('registration/send_email.html', {
+                    'user': user,
+                    'link_resetpwd': 'http://{}/change/password/{}/'.format(URL, str(user.token)),
+                    'link_home': 'http://{}'.format(URL)
+                })
+                mensaje.attach(MIMEText(content, 'html'))
+
+                mailServer.sendmail(settings.EMAIL_HOST_USER, email_to, mensaje.as_string())
+
+                data['success'] = "Email enviado"
+        except Exception as e:
+            data['error'] = str(e)
+        return data
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            form = ResetPasswordForm(request.POST)
+            if form.is_valid():
+                user = form.get_user()
+                data = self.send_email_reset_pwd(user)
+            else:
+                data['error'] = form.errors
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data, safe=False)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Reseteo de Contraseña'
+        return context
+    
+class ChangePasswordView(FormView):
+    form_class = ChangePasswordForm
+    template_name = 'registration/changepwd.html'
+    success_url = reverse_lazy(settings.LOGIN_REDIRECT_URL)
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        token = self.kwargs['token']
+        if User.objects.filter(token=token).exists():
+            return super().get(request, *args, **kwargs)
+        return HttpResponseRedirect('/')
+
+    def post(self, request, *args, **kwargs):
+        data = {}
+        try:
+            form = ChangePasswordForm(request.POST)
+            if form.is_valid():
+                user = User.objects.get(token=self.kwargs['token'])
+                user.set_password(request.POST['password'])
+                user.token = uuid.uuid4()
+                user.save()
+            else:
+                data['error'] = form.errors
+        except Exception as e:
+            data['error'] = str(e)
+        return JsonResponse(data, safe=False)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Reseteo de Contraseña'
+        context['login_url'] = settings.LOGIN_URL
+        return context
 
 class HomeDashboard(TemplateView):
     template_name = 'core/home.html'
@@ -1187,6 +1287,7 @@ class TareasListView(ListView):
 
 
 
+# Vista
 def agregarTareas(request):
     if request.method == 'POST':
         form = TareasForm(request.POST)
@@ -1197,6 +1298,16 @@ def agregarTareas(request):
         form = TareasForm()
     return render(request, 'equipos/agregarTareas.html', {'form': form})
 
+
+
+
+
+
+
+def obtener_trabajadores_por_equipo(request, equipo_id_equipo):
+    trabajadores = Tareas.trabajadores_por_equipo(equipo_id_equipo)
+    data = [{'rut': trabajador.rut, 'text': str(trabajador)} for trabajador in trabajadores]
+    return JsonResponse(data, safe=False)
 
 def editarTareas(request, tarea_id):
     tarea = Tareas.objects.get(tarea_id=tarea_id)

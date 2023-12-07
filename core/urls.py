@@ -3,6 +3,7 @@ from django.urls import path
 
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
 
 from .views import * 
 
@@ -13,6 +14,10 @@ urlpatterns = [
     # MODULO LOGIN Y REGISTRO
     path('logout/', exit, name='exit'),
     #path('register/', register, name='register'),
+    path('reset/', ResetPasswordView.as_view(), name='reset'),
+    path('change/password/<str:token>/', ChangePasswordView.as_view(), name='change_password'),
+
+
 
     # MODULO DE TRABAJADORES (ADMINISTRACIÓN)
     path('listarTrabajadores/', listarTrabajadores, name='listarTrabajadores'),
@@ -104,6 +109,7 @@ urlpatterns = [
     path('agregarTareas', agregarTareas, name='agregarTareas'),
     path('eliminarTareas/<tarea_id>/', eliminarTareas, name='eliminarTareas'),
     path('editarTareas/<tarea_id>/', editarTareas, name='editarTareas'),
+
     
 
 ]

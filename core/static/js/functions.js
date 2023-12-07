@@ -174,3 +174,50 @@ function alerta_cotizacion(title, content, callback, confirmCallback) {
         }
     })
 }
+
+
+function submitajax(url, title, content, parameters, callback) {
+    $.confirm({
+        theme: 'material',
+        title: title,
+        icon: 'fa fa-info',
+        content: content,
+        columnClass: 'small',
+        typeAnimated: true,
+        cancelButtonClass: 'btn-primary',
+        draggable: true,
+        dragWindowBorder: false,
+        buttons: {
+            info: {
+                text: "Sí",
+                btnClass: 'btn-primary',
+                action: function () {
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        data: parameters,
+                        dataType: 'json',
+                        processData: false,
+                        contentType: false,
+                    }).done(function (data) {
+                        callback()
+                        message_error(data.error);
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        alert(textStatus + ': ' + errorThrown);
+                    }).always(function (data) {
+
+                    });
+                }
+            },
+            danger: {
+                text: "No",
+                btnClass: 'btn-red',
+                action: function () {
+                    if (confirmCallback) {
+                        confirmCallback(false);
+                    }
+                }
+            },
+        }
+    })
+}
