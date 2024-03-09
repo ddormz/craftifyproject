@@ -12,6 +12,7 @@ var vents = {
         status: '',
         subtotal: 0,
         iva: 0,
+        dcto: 0,
         total: 0,
         products: []
     },
@@ -24,13 +25,17 @@ var vents = {
             dict.subtotal = dict.cant * parseFloat(dict.precio_venta);
             subtotal+=dict.subtotal;
         });
-        this.items.subtotal = subtotal;
+        var dcto = $('input[name="descuento"]').val();
+        this.items.subtotal = subtotal 
+        this.items.dcto = this.items.subtotal * dcto / 100;
         this.items.iva = this.items.subtotal * iva / 100;
-        this.items.total = this.items.subtotal + this.items.iva;
+        this.items.total = this.items.subtotal + this.items.iva - this.items.dcto;
 
         $('input[name="subtotal"]').val(this.items.subtotal.toFixed(0));
         $('input[name="ivacalc"]').val(this.items.iva.toLocaleString('es-CL', { minimumFractionDigits: 0, maximumFractionDigits: 0,  }));
+        $('input[name="dcto"]').val(this.items.dcto.toLocaleString('es-CL', { minimumFractionDigits: 0, maximumFractionDigits: 0,  }));
         $('input[name="total"]').val(this.items.total.toFixed(0));
+        console.log(dcto, iva, subtotal, this.items.subtotal, this.items.iva, this.items.dcto, this.items.total);
     },
 
     // agregar productos a la lista
@@ -154,6 +159,11 @@ $(function () {
     })
     .val(19);
 
+    $("input[name='descuento']").on('change', function () {
+        vents.calculate_invoice();
+    })
+
+    
     // buscador de productos
 
 

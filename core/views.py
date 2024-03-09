@@ -29,6 +29,12 @@ from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
 from django.template.loader import render_to_string
+from .models import Tareas, DetalleEquipo
+from babel.numbers import format_currency
+from decimal import Decimal
+from django.utils.translation import activate
+
+
 # Create your views here.
 
 class ResetPasswordView(FormView):
@@ -625,6 +631,7 @@ class CotView(CreateView):
                 cotizacion.subtotal = vents['subtotal']
                 cotizacion.iva = vents['iva']
                 cotizacion.total = vents['total']
+                cotizacion.descuento = vents['dcto']
                 cotizacion.nombre_cotizacion = vents['nombre_cotizacion']
                 cotizacion.comentario = vents['comentario']
                 status_cot = vents['status']
@@ -700,6 +707,7 @@ class CotUpdateView(UpdateView):
                 cotizacion.cliente = Clientes.objects.get(rut_cliente=cliente_id)
                 metodo_pago = vents['metodo_pago']
                 cotizacion.metodopago = MetodoPago.objects.get(id_metodopago=metodo_pago)
+                cotizacion.descuento = vents['dcto']
                 cotizacion.subtotal = vents['subtotal']
                 cotizacion.iva = vents['iva']
                 cotizacion.total = vents['total']
@@ -768,11 +776,21 @@ class CotizacionesPDF(View):
     def get(self, request, *args, **kwargs):
         try:
             template = get_template('cotizaciones/cotizacionpdf.html')
+            activate('es_CL')
             context = {
                 'cotizaciones': Cotizaciones.objects.get(id_cotizacion=kwargs['pk']),
-                'comp': {'nombre': 'Gabinet Center', 'rut': '123456789', 'direccion': 'Virgen del Pilar 0389', 'ciudad': 'Santiago'},
+                'comp': {'nombre': 'Gabinet Center Spa', 'rut': '76.180.262-3', 'direccion': 'Virgen del Pilar 0389', 'ciudad': 'La Cisterna', 'telefono': '2 2716 2702 / +56 9 8538 2852', 'website': 'www.gabinetecenter.cl', 'email': 'contacto@gabinetcenter.cl'},
+                'mitad_total': format_currency(Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).total / 2, 'CLP', locale='es_CL'),
+                'total': format_currency(Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).total, 'CLP', locale='es_CL'),
+                'descuento': format_currency(Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).descuento, 'CLP', locale='es_CL'),
+                'subtotal': format_currency(Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).subtotal, 'CLP', locale='es_CL'),
+                'iva': format_currency(Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).iva, 'CLP', locale='es_CL'),
+                
+
             }
             html = template.render(context)
+
+
             
             nombre_archivo_cliente = 'Cotizacion' + ' ' + str(Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).cliente.nombre + ' ' 
             + Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).cliente.apellido + '-' + str(Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).nombre_cotizacion)
@@ -782,6 +800,7 @@ class CotizacionesPDF(View):
             destino_pdf = os.path.join(settings.MEDIA_ROOT, 'pdfcot', nombre_archivo_cliente)
 
             pisaStatus = pisa.CreatePDF(html, open(destino_pdf, "wb"))
+            print(pisaStatus.err)
             
             # Asegúrate de que el PDF se haya creado con éxito antes de devolver la respuesta
             if pisaStatus.err:
@@ -1254,23 +1273,35 @@ def EliminarEquipo(request, id_equipo):
 
 # Modulo Tareas
 
+@method_decorator(login_required, name='dispatch')
+@method_decorator(csrf_exempt, name='dispatch')
 class TareasListView(ListView):
     model = Tareas
     template_name = 'equipos/listarTareas.html'
     form = TareasForm
 
-    @method_decorator(csrf_exempt)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
+    def get_queryset(self):
+        equipo = DetalleEquipo.objects.filter(trabajador=self.request.user).first()
+
+        # Verifica si el usuario es superusuario
+        if self.request.user.is_superuser:
+            # Si es superusuario, muestra todas las tareas
+            queryset = Tareas.objects.all()
+        elif equipo:
+            # Si el usuario está asociado a un equipo, filtra las tareas basándote en el equipo del usuario
+            queryset = Tareas.objects.filter(equipo_id_equipo=equipo.id_equipo)
+        else:
+            # Si el usuario no está asociado a ningún equipo y no es superusuario, devuelve un conjunto vacío
+            queryset = Tareas.objects.none()
+
+        return queryset
 
     def post(self, request, *args, **kwargs):
         data = {}
         try:
             action = request.POST['action']
             if action == 'listarTareas':
-                data = []
-                for i in Tareas.objects.all():
-                    data.append(i.toJSON())
+                data = [t.toJSON() for t in self.get_queryset()]
             else:
                 data['error'] = 'Ha ocurrido un error'
         except Exception as e:

@@ -3,8 +3,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <style>
     .img-invoice {
-        width: 200px;
-        text-align: center;
+        width: 100%;
+        text-align: left;
         margin: 0 auto;
     }
 
@@ -12,7 +12,7 @@
         text-align: center;
         text-transform: uppercase;
         font-weight: bold;
-        font-size: 12px;
+        font-size: 14px;
     }
 
     #invoice thead tr th {
@@ -34,70 +34,238 @@
     .text-center{
         text-align: center;
     }
+
+    .titulogab {
+        text-align: center;
+        text-transform: uppercase;
+        font-weight: bold;
+        font-size: 21px;
+    }
+
+    .outer-table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid black;
+        margin-top: 20px;
+    }
+
+    .inner-table {
+        width: 100%;
+        border-collapse: separate;
+        border: none;
+    }
+
+    .inner-table td {
+        padding: 5px;
+        font-size: 13px;
+    }
+
+    .inner-table td:first-child {
+        width: 50%;
+        text-align: left;
+    }
+
+    .inner-table td:last-child {
+        width: 50%;
+        text-align: right;
+    }
 </style>
 <body>
-<img src="https://gabinetcenter.cl/wp-content/uploads/2022/09/logo_MUEBLES_GC_1.png" class="img-invoice">
-<p class="head">
-    {{ comp.nombre |upper }}
-    <br>
-    RUT: {{ comp.rut |upper }}
-    <br>
-    {{ comp.direccion |upper }}, {{ comp.ciudad |upper }}
+<table style="width: 100%;">
+    <tr>
+        <td style="width: 23.33%; text-align: left;">
+            <img src="https://gabinetcenter.cl/wp-content/uploads/2022/09/logo_MUEBLES_GC_1.png" class="img-invoice">
+                </td>
+        <td style="width: 47.33%; text-align: left;">
+            <p class="titulogab">
+                {{ comp.nombre |upper }}
+            </p>
+            <p class="head">
+                <br>
+                Dirección: {{ comp.direccion |upper }}, {{ comp.ciudad |upper }}
+                <br>
+                Teléfono: {{ comp.telefono }}
+                <br>
+                Email: {{ comp.email }}
+                <br>
+                Web: {{ comp.website }}
+                
+            </p>
+        </td>
+        <td style="width: 33.33%; text-align: right; border: 2px solid red; padding: 5px; text-align: center; font-weight: bold; font-size: 15px; color: red; text-transform: uppercase;">
+                <p> RUT: {{ comp.rut |upper }}</p>
+                <p> COTIZACION</p>
+                <p> N° {{ cotizaciones.id_cotizacion }}</p>
+                <p> S.I.I SANTIAGO SUR </p>
+        </td>
+    </tr>
+</table>
 
-</p>
-<p>
-    <b>COTIZACION:</b> {{ cotizaciones.id_cotizacion }}<br>
-    <b>FECHA DE COTIZACION:</b> {{ cotizaciones.fecha_cotizacion }}<br>
-    <b>CLIENTE:</b> {{ cotizaciones.cliente.nombre |upper}} {{ cotizaciones.cliente.apellido |upper}}<br>
-    <b>RUT:</b> {{ cotizaciones.cliente.rut_cliente }}<br>
-</p>
-<table id="invoice">
+<table class="outer-table">
+    <tr>
+        <td>
+            <table class="inner-table">
+                <tr>
+                    <!-- Lado Izquierdo -->
+                    <td>
+                        <b>CLIENTE:</b> {{ cotizaciones.cliente.nombre |upper}} {{ cotizaciones.cliente.apellido |upper}}
+                        <br>
+                        <b>DIRECCIÓN: </b> {{ cotizaciones.cliente.direccion |upper }}
+                        <br>
+                        <b>EMAIL: </b> {{ cotizaciones.cliente.email }}
+                        <br>
+                        <b>COMUNA: </b> {{ cotizaciones.cliente.comuna |upper }}
+                    </td>
+            
+                    <!-- Lado Derecho -->
+                    <td>
+                        <b>RUT:</b> {{ cotizaciones.cliente.rut_cliente |upper }}
+                        <br>
+                        <b>TELEFONO: </b> {{ cotizaciones.cliente.telefono |upper }}
+                        <br>
+                        <b>FECHA: </b> {{ cotizaciones.fecha_cotizacion }}
+                        <br>
+                        <b>METODO PAGO: </b> {{ cotizaciones.metodopago |upper }}
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<table class="header">
+    <tr>
+        <td style="text-align: center; font-weight: bold; font-size: 15px;  border: 2px solid black; padding-top: 5px">
+            <b>COTIZACIÓN</b>
+        </td>
+</table>
+
+<table class="titulos">
     <thead>
     <tr>
-        <th style="width: 40%;">PRODUCTO</th>
-        <th style="width: 20%;">CATEGORIA</th>
-        <th style="width: 10%;">CANTIDAD</th>
-        <th style="width: 15%;">PRECIO</th>
-        <th style="width: 15%;">TOTAL</th>
+        <th style="width: 7%; border: 2px solid black; padding-top: 5px; font-size: 12px;">
+            <b>ITEM</b>
+        </th>
+        <th style="width: 7%; border: 2px solid black; padding-top: 5px; font-size: 12px;">
+            <b>CANT</b>
+        </th >
+        <th  style="width: 46%; border: 2px solid black; padding-top: 5px; font-size: 12px;">
+            <b>PRODUCTO</b>
+        </th >
+        <th  style="width: 10%; border: 2px solid black; padding-top: 5px; font-size: 12px;">
+            <b>UNID</b>
+        </th >
+        <th  style="width: 15%; border: 2px solid black; padding-top: 5px; font-size: 12px;">
+            <b>PRECIO U</b>
+        </th >
+        <th  style="width: 15%; border: 2px solid black; padding-top: 5px; font-size: 12px;">
+            <b>TOTAL</b>
+        </th>
     </tr>
-    </thead>
-    <tbody>
+</thead>
+<tbody>
     {% for d in cotizaciones.detallecotizaciones_set.all %}
         <tr {% if forloop.first %}style="padding-top: 3px;" {% endif %}>
-            <td>{{ d.producto.nombre_producto }}</td>
-            <td>{{ d.producto.categoria.nombre_categoria }}</td>
-            <td class="text-center">{{ d.cantidad }}</td>
-            <td class="text-center">${{ d.precio }}</td>
-            <td style="text-align: right;">${{ d.subtotal }}</td>
+            <th style="width: 7%; border: 1px solid black; padding-top: 5px; font-size: 12px;">
+                {{ forloop.counter }}
+            </th>
+            <th style="width: 7%; border: 1px solid black; padding-top: 5px; font-size: 12px;">
+                {{ d.cantidad }}
+            </th>
+            <th style="width: 46%; border: 1px solid black; padding-top: 5px; font-size: 12px;">
+                {{ d.producto.nombre_producto }}
+            </th>
+            <th style="width: 10%; border: 1px solid black; padding-top: 5px; font-size: 12px;">
+                {{ d.producto.unidad_medida }}
+            </th>
+            <th style="width: 15%; border: 1px solid black; padding-top: 5px; font-size: 12px;">
+                {{ d.precio }}
+            </th>
+            <th style="width: 15%; border: 1px solid black; padding-top: 5px; font-size: 12px;">
+                {{ d.precio}}
+            </th>
         </tr>
     {% endfor %}
-    <tr style="border-top: 1px solid black; padding-top: 4px;">
-        <td colspan="4"><b>NETO</b></td>
-        <td style="text-align: right">{{ cotizaciones.subtotal }}</td>
-    </tr>
-    <tr style="padding-top: 0px;">
-        <td colspan="4"><b>IVA 19%</b></td>
-        <td style="text-align: right">{{ cotizaciones.iva }}</td>
-    </tr>
-    <tr style="padding-top: 0px;">
-        <td colspan="4"><b>TOTAL A PAGAR</b></td>
-        <td style="text-align: right">{{ cotizaciones.total }}</td>
-    </tr>
-    <tr style="padding-top: 0px;">
-        <td colspan="4"><b>MÉTODO DE PAGO</b></td>
-        <td style="text-align: right">{{ cotizaciones.metodopago }}</td>
-    </tr>
+    
+
+
     </tbody>
+</tbody>
 </table>
-<table style="margin-top: 250px;">
-    <thead>
+<table style="margin-top: 25px;">
     <tr>
-        <th>GRACIAS POR PREFERIRNOS</th>
+        <th style="width: 100%; border: 2px solid black; padding-top: 5px; font-size: 10px; text-align: left;">
+            COMENTARIO: {{ cotizaciones.comentario }}
+        </th>
     </tr>
+</table>
+<table>
     <tr>
-        <th></th>
+        <th style="width: 75%; border: 2px solid black; padding-top: 5px; font-size: 10px;">
+            <b>OBSERVACIONES:Para dar por aceptado la cotización se debe abonar
+                el 50% del valor del proyecto lo que valida la rectificación de medidas.</b>
+        </th>
+        <th style="width: 10%; border: 2px solid black; padding-top: 5px; font-size: 12px;">
+            <b>SUBTOTAL</b>
+        </th>
+        <th style="width: 15%; border: 2px solid black; padding-top: 5px; font-size: 12px;">
+            <b>{{ subtotal }}</b>
+        </th>
     </tr>
-    </thead>
+</table>
+<table>
+    <tr>
+        <th style="width: 75%; border: 2px solid black; padding-top: 5px; font-size: 10px;">
+        </th>
+        <th style="width: 10%; border: 2px solid black; padding-top: 5px; font-size: 12px;">
+            <b>DCTO</b>
+        </th>
+        <th style="width: 15%; border: 2px solid black; padding-top: 5px; font-size: 12px;">
+            <b>{{ descuento }}</b>
+        </th>
+    </tr>
+</table>
+<table>
+    <tr>
+        <th style="width: 75%; border: 2px solid black; padding-top: 5px; font-size: 10px;">
+            <b>Fecha de Instalación es de 30 días habiles desde la rectificación de medidas</b> <br>
+            <b>Duración de la Cotización: 5 Días </b>
+
+        </th>
+        <th style="width: 10%; border: 2px solid black; padding-top: 5px; font-size: 12px;">
+            <b>IVA</b>
+        </th>
+        <th style="width: 15%; border: 2px solid black; padding-top: 5px; font-size: 12px;">
+            <b>{{ iva }}</b>
+        </th>
+    </tr>
+</table>
+<table>
+    <tr>
+        <th style="width: 37.5%; border: 2px solid black; padding-top: 5px; font-size: 10px;">
+            <b>FORMAS DE PAGO:</b> <br>
+                AL DIA: (50%):<br>
+                 {{ mitad_total }}  <br>
+                CONTRA ENTREGA: (50%): <br>
+                 {{ mitad_total }}  <br>
+                TOTAL (100%): <br>
+                 {{ total }}  <br>
+        </th>
+        <th style="width: 37.5%; border: 2px solid black; padding-top: 5px; font-size: 10px;">
+            <b>TRANSFERENCIA</b> <br>
+                Nombre: Gabinet Center SPA <br>
+                RUT: 76180262-4 <br>
+                Banco: BCI <br>
+                Cta Cte: 27335569 <br>
+                Email: ventas@gabinetcenter.cl
+        </th>
+        <th style="width: 10%; border: 2px solid black; padding-top: 5px; font-size: 12px;">
+            <b>TOTAL</b>
+        </th>
+        <th style="width: 15%; border: 2px solid black; padding-top: 5px; font-size: 12px;">
+            <b>{{ total }}</b>
+        </th>
+    </tr>
 </table>
 </body>
 </html>
