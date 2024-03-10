@@ -1283,6 +1283,7 @@ class TareasListView(ListView):
     form = TareasForm
 
     def get_queryset(self):
+        # Obtén el equipo del usuario actual
         equipo = DetalleEquipo.objects.filter(trabajador=self.request.user).first()
 
         # Verifica si el usuario es superusuario
@@ -1291,7 +1292,7 @@ class TareasListView(ListView):
             queryset = Tareas.objects.all()
         elif equipo:
             # Si el usuario está asociado a un equipo, filtra las tareas basándote en el equipo del usuario
-            queryset = Tareas.objects.filter(equipo_id_equipo=equipo.id_equipo)
+            queryset = Tareas.objects.filter(equipo_id_equipo=equipo.id_equipo, trabajador=self.request.user)
         else:
             # Si el usuario no está asociado a ningún equipo y no es superusuario, devuelve un conjunto vacío
             queryset = Tareas.objects.none()
