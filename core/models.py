@@ -57,6 +57,7 @@ class Clientes(models.Model):
     apellido = models.CharField(max_length=45)
     direccion = models.CharField(max_length=45)
     telefono = models.CharField(max_length=11)
+    correo = models.EmailField()
     def __str__(self):
         return str(self.nombre) + str(" ") + str(self.apellido)
     
@@ -66,6 +67,8 @@ class Clientes(models.Model):
         item['apellido'] = self.apellido
         item['rut_cliente'] = self.rut_cliente
         item['direccion'] = self.direccion
+        item['telefono'] = self.telefono
+        item['correo'] = self.correo
         return item
     
     class Meta:

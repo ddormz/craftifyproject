@@ -112,7 +112,7 @@
                         <br>
                         <b>DIRECCIÓN: </b> {{ cotizaciones.cliente.direccion |upper }}
                         <br>
-                        <b>EMAIL: </b> {{ cotizaciones.cliente.email }}
+                        <b>EMAIL: </b> {{ cotizaciones.cliente.correo }}
                         <br>
                         <b>COMUNA: </b> {{ cotizaciones.cliente.comuna |upper }}
                     </td>
@@ -179,10 +179,10 @@
                 {{ d.producto.unidad_medida }}
             </th>
             <th style="width: 15%; border: 1px solid black; padding-top: 5px; font-size: 12px;">
-                {{ d.precio }}
+                {{ precioProductoFormateado }}
             </th>
             <th style="width: 15%; border: 1px solid black; padding-top: 5px; font-size: 12px;">
-                {{ d.precio}}
+                {{ precioProductoxcantidad }}
             </th>
         </tr>
     {% endfor %}

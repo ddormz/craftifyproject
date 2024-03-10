@@ -52,6 +52,7 @@
             <th scope="col">Apellido</th>
             <th scope="col">Dirección</th>
             <th scope="col">Teléfono</th>
+            <th scope="col">Correo</th>
             <th scope="col">Acciones</th>
           </tr>
         </thead>
@@ -63,6 +64,7 @@
             <td>{{ cli.apellido }}</td>
             <td>{{ cli.direccion }}</td>
             <td>{{ cli.telefono }}</td>
+            <td>{{ cli.correo }}</td>
             <td>
               <a class="btn btn-warning botonEditar" href="{% url 'editarClientes' cli.rut_cliente %}" role="button"><i class="fas fa-pen"></i></a>
               <a class="btn btn-danger botonEliminar" href="{% url 'eliminarClientes' cli.rut_cliente %}" role="button"><i class="fas fa-trash-alt"></i></a>

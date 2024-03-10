@@ -785,6 +785,8 @@ class CotizacionesPDF(View):
                 'descuento': format_currency(Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).descuento, 'CLP', locale='es_CL'),
                 'subtotal': format_currency(Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).subtotal, 'CLP', locale='es_CL'),
                 'iva': format_currency(Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).iva, 'CLP', locale='es_CL'),
+                'precioProductoFormateado': format_currency(DetalleCotizaciones.objects.get(id_cotizacion=kwargs['pk']).precio, 'CLP', locale='es_CL'),
+                'precioProductoxcantidad': format_currency(DetalleCotizaciones.objects.get(id_cotizacion=kwargs['pk']).precio * DetalleCotizaciones.objects.get(id_cotizacion=kwargs['pk']).cantidad, 'CLP', locale='es_CL'),
                 
 
             }

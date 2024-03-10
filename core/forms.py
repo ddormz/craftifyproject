@@ -127,7 +127,7 @@ class CotizacionesForm(forms.ModelForm):
 class ClientesForm(forms.ModelForm):
     class Meta:
         model = Clientes
-        fields = ['rut_cliente', 'nombre', 'apellido', 'direccion', 'telefono']
+        fields = ['rut_cliente', 'nombre', 'apellido', 'direccion', 'telefono', 'correo']
         widgets = {
             'rut_cliente': forms.TextInput(attrs={'placeholder': 'Ej. 12345678-9'}),
         }
