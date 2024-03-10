@@ -297,6 +297,20 @@ function tareasTable() {
     },
   });
 }
+
+$(document).ready(function() {
+  var tablaTareas = $('.tabla-tareas').DataTable();
+
+  // Manejar el envío del formulario de filtro
+  $('#filtroForm').submit(function(e) {
+    e.preventDefault();
+    var fechaInicio = $('#fechaInicio').val();
+    var fechaFin = $('#fechaFin').val();
+
+    // Aplicar el filtro de fecha de creación
+    tablaTareas.column(5).search(fechaInicio + ' to ' + fechaFin).draw();
+  });
+});
 function equiposTable() {
   var tblEquipo = $(".tabla-equipos").DataTable({
     "responsive": true,
@@ -463,7 +477,21 @@ function proyectosTable() {
           }
           }
         }
-    ]
+    ],
+    
+
+  });
+
+  // Filtrar por Fecha Proyectos
+  $(document).ready(function() {
+    var tablaProyectos = $('.tabla-proyectos').DataTable();
+
+    $('#fechaInicio, #fechaFin').change(function() {
+      var fechaInicio = $('#fechaInicio').val();
+      var fechaFin = $('#fechaFin').val();
+
+      tablaProyectos.columns(6).search(fechaInicio + ' to ' + fechaFin).draw();
+    });
   });
 
   // Mover los botones a la esquina superior derecha

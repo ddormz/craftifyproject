@@ -1,0 +1,38 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+{% if request.user.is_authenticated %}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Permissions</title>
+</head>
+<body>
+    <h1>Edit Permissions for {{ user.username }}</h1>
+    <form action="{% url 'save_permissions' user.id %}" method="post">
+        {% csrf_token %}
+        <h2>User Permissions:</h2>
+        {% for permission in permissions %}
+            <input type="checkbox" name="permissions" value="{{ permission.id }}"
+                {% if permission in user.user_permissions.all %} checked {% endif %}>
+            <label>{{ permission.name }}</label><br>
+        {% endfor %}
+        <button type="submit">Save Permissions</button>
+    </form>
+</body>
+</html>
+
+
+
+
+{% endif %}
+
+
+
+{% endblock %}
