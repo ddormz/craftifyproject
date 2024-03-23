@@ -4,6 +4,7 @@ from django.forms import model_to_dict
 from django.utils.translation import gettext_lazy as _
 from datetime import datetime
 from django.core.validators import RegexValidator
+from django.conf import settings
 
 from .managers import CustomUserManager
 
@@ -58,6 +59,7 @@ class Clientes(models.Model):
     direccion = models.CharField(max_length=45)
     telefono = models.CharField(max_length=11)
     correo = models.EmailField()
+    comuna = models.CharField(max_length=45, null=True, blank=True)
     def __str__(self):
         return str(self.nombre) + str(" ") + str(self.apellido)
     
@@ -325,10 +327,12 @@ class Cotizaciones(models.Model):
     total = models.DecimalField(default=0, max_digits=60, decimal_places=0)
     descuento = models.DecimalField(default=0, max_digits=60, decimal_places=0)
     cliente = models.ForeignKey('Clientes', on_delete=models.CASCADE)
-    generado_por = models.ForeignKey('User', on_delete=models.CASCADE, null=True, blank=True)
+    generado_por = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     comentario = models.TextField(max_length=1000, null=True, blank=True)
     metodopago = models.ForeignKey('MetodoPago', on_delete=models.CASCADE)
     status = models.ForeignKey('StatusCotizacion', on_delete=models.CASCADE)
+    abono = models.CharField(max_length=100, null=True, blank=True, default="N/A")
+    formapago = models.ForeignKey('FormaPago', on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return '#' + str(self.id_cotizacion) + ' - '+  str(self.nombre_cotizacion)
@@ -347,6 +351,9 @@ class Cotizaciones(models.Model):
         item['metodopago'] = self.metodopago.toJSON()
         item['det'] = [i.toJSON() for i in self.detallecotizaciones_set.all()]
         item['status'] = self.status.toJSON()
+        item['generado_por'] = self.generado_por.toJSON()
+        item['abono'] = self.abono
+        item['formapago'] = self.formapago.toJSON()
         return item
 
     class Meta:
@@ -398,3 +405,15 @@ class StatusCotizacion(models.Model):
     def toJSON(self):
         item = model_to_dict(self)
         return item
+    
+
+class FormaPago(models.Model):
+    id_formapago = models.AutoField(primary_key=True)
+    nombre_formapago = models.CharField(max_length=100)
+    def __str__(self):
+        return str(self.nombre_formapago)
+    
+    def toJSON(self):
+        item = model_to_dict(self)
+        return item
+    

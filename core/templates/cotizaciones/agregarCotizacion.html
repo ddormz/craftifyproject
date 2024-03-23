@@ -39,6 +39,9 @@
                                 <h4 class="card-title"><i class="fas fa-boxes"></i> Detalle de Productos</h4>
                             </div>
                             <div class="card-body">
+                                <div class="alert alert-danger" role="alert">
+                                    <i class="fas fa-info-circle"></i> Recuerda que si el cliente no existe, debes crearlo primero.
+                                  </div>
                                 <div class="form-group">
                                     <label>Buscador de Productos:</label>
                                     <div class="input-group">
@@ -110,6 +113,9 @@
                                     {{ form.metodopago | as_crispy_field}}
                                 </div>
                                 <div class="form-group">
+                                    {{ form.formapago | as_crispy_field}}
+                                </div>
+                                <div class="form-group">
                                     {{ form.status | as_crispy_field}}
                                 </div>
                                 <div class="form-group">
@@ -131,6 +137,9 @@
                             </div>
                                 <div class="form-group">
                                     {{ form.total |  as_crispy_field  }}
+                                </div>
+                                <div class="form-group">
+                                    {{ form.abono|  as_crispy_field  }}
                                 </div>
                                 <div class="form-group">
                                     {{ form.comentario|  as_crispy_field  }}

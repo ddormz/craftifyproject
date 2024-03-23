@@ -38,6 +38,9 @@ urlpatterns = [
     path('editarmetodo/<id_metodopago>/', editarMetodo, name='editarmetodo'),
     path('ediStatus/<id_status_p>/', editStatus, name='editStatus'), 
     path('elimStat/<id_status_p>/', elimStatus, name='elimStatus'),
+    path('formapago/', formapagos, name='formapago'),
+    path('eliminarFormaPago/<id_formapago>/', eliminarFormaPago, name='eliminarFormaPago'),
+    path('editarFormaPago/<id_formapago>/', editarFormaPago, name='editarFormaPago'),
 
     # MODULO DE AVANCES
     path('avances', ListarAvances.as_view(), name='avances'),

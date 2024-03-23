@@ -1,4 +1,22 @@
-# Craftify Project // Status: Terminado 
+# Craftify Project // Status: EN PROCESO DE MEJORA
+
+v2.0 - 24-03-24 (pendiente)
+- Filtros de Fecha en los modulos importantes
+- Filtros de Cotizaciones aceptadas en Dashboard
+- Campo comentario en Proyecto
+- Crud en plantilla forma pago
+- Revisión de detalles.
+
+v1.9 23/03
+- Campos Forma de Pago agregado a Cotizacion (falta crud en plantilla)
+- Campo Comuna a Clientes
+- Campo Abono a Cotizacion
+- Alerta en Cotización
+- Vendedor agregado a COT PDF según usuario que la realizo
+- Formato de PDF terminado
+- Funcionalidad de enlace de Stock, si creas un proyecto, se descuenta el stock de los productos cotizados.
+
+
 
 v1.8 - 07/12
 - Implementación de Reset Contraseña

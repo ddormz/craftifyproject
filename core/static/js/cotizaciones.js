@@ -9,11 +9,14 @@ var vents = {
         comentario: '',
         fecha_cotizacion: '',
         metodo_pago: '',
+        forma_pago: '',
+        abono: '',
         status: '',
         subtotal: 0,
         iva: 0,
         dcto: 0,
         total: 0,
+        generado_por: '',
         products: []
     },
 
@@ -288,13 +291,15 @@ $(function () {
             });
             return false;
         }
-    
+
         vents.items.fecha_cotizacion = $('input[name="fecha_cotizacion"]').val();
         vents.items.cli = $('select[name="cliente"]').val();
         vents.items.nombre_cotizacion = $('input[name="nombre_cotizacion"]').val();
         vents.items.metodo_pago = $('select[name="metodopago"]').val();
         vents.items.status = $('select[name="status"]').val();
         vents.items.comentario = $('textarea[name="comentario"]').val();
+        vents.items.forma_pago = $('select[name="formapago"]').val();
+        vents.items.abono = $('input[name="abono"]').val();
         var parameters = new FormData();
         parameters.append('action', $('input[name="action"]').val());
         parameters.append('vents', JSON.stringify(vents.items));

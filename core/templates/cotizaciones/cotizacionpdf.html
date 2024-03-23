@@ -115,6 +115,8 @@
                         <b>EMAIL: </b> {{ cotizaciones.cliente.correo }}
                         <br>
                         <b>COMUNA: </b> {{ cotizaciones.cliente.comuna |upper }}
+                        <br>
+                        <b>VENDEDOR: </b> {{ cotizaciones.generado_por |upper }}
                     </td>
             
                     <!-- Lado Derecho -->
@@ -126,6 +128,10 @@
                         <b>FECHA: </b> {{ cotizaciones.fecha_cotizacion }}
                         <br>
                         <b>METODO PAGO: </b> {{ cotizaciones.metodopago |upper }}
+                        <br>
+                        <b>FORMA DE PAGO: </b> {{ cotizaciones.formapago |upper }}
+                        <br>
+                        <b>ABONO: </b> {{ cotizaciones.abono |upper }}
                     </td>
                 </tr>
             </table>
@@ -195,7 +201,7 @@
 <table style="margin-top: 25px;">
     <tr>
         <th style="width: 100%; border: 2px solid black; padding-top: 5px; font-size: 10px; text-align: left;">
-            COMENTARIO: {{ cotizaciones.comentario }}
+            <b>COMENTARIO: {{ cotizaciones.comentario }}</b>
         </th>
     </tr>
 </table>
@@ -254,7 +260,7 @@
         <th style="width: 37.5%; border: 2px solid black; padding-top: 5px; font-size: 10px;">
             <b>TRANSFERENCIA</b> <br>
                 Nombre: Gabinet Center SPA <br>
-                RUT: 76180262-4 <br>
+                RUT: 76180262-3 <br>
                 Banco: BCI <br>
                 Cta Cte: 27335569 <br>
                 Email: ventas@gabinetcenter.cl

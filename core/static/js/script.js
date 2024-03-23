@@ -617,7 +617,16 @@ function cotizacionesTable() {
       },
       {"data": "total"},
       {"data": "metodopago.nombre_metodo"},
+      {"data": "formapago.nombre_formapago"},
       {"data": "status.nombre_status"},
+      {
+        "data": "generado_por",  // Esta debe ser la propiedad que contiene el nombre completo
+        "render": function(data, type, row) {
+            // Aquí puedes formatear el nombre completo utilizando los datos disponibles
+            return row.generado_por.first_name + ' ' + row.generado_por.last_name;
+        }
+    },
+      {"data": "abono"}, 
       {"data": "id_cotizacion"},
     ],
     columnDefs: [

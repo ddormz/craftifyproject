@@ -1,0 +1,99 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+{% if request.user.is_authenticated %}
+{% load static %}
+{% load crispy_forms_tags%}
+<script src="{% static 'js/formapago.js' %}"></script>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+      <div class="card-header">
+      <h3 class="text-center">Listado de Formas de Pago</h3>
+      <div class="input-group mb-3">
+        <div class="input-group-append">
+        </div>
+  </div>
+  <!-- /.card-header -->
+  <div class="card-body table-responsive p-0" id="tarjetaTablas">
+
+    <table class="table table-bordered table-hover tabla-mp">
+        <thead>
+          <tr>
+            <th scope="col">ID Forma de Pago</th>
+            <th scope="col">Nombre Forma de Pago</th>
+            <th scope="col">Acciones</th>
+            
+          </tr>
+        </thead>
+        <tbody>
+       {% for fp in formas_pago %}
+          <tr>
+            <th scope="row">{{ fp.id_formapago }}</th>
+            <td>{{ fp.nombre_formapago }}</td>
+            <td>
+              <a class="btn btn-warning botonEditar" href="{% url 'editarFormaPago' fp.id_formapago %}" role="button"><i class="fas fa-pen"></i></a>
+              <a class="btn btn-danger botonEliminar" href="{% url 'eliminarFormaPago' fp.id_formapago %}" role="button"><i class="fas fa-trash-alt"></i></a>
+            </td>
+          </tr>
+          {% endfor %}
+
+        </tbody>
+    </table>
+  </div>
+    <div class="float-md-start">
+      <button class="btn btn-primary btnAgg" id="botonAgregar" data-toggle="modal" data-target="#modalAddFP">
+        <i class="fas fa-plus"></i>Agregar Forma de Pago Nuevo
+    </div>
+  </div>
+  <!-- Button trigger modal -->
+
+<!-- Modal -->
+<div class="modal fade" id="modalAddFP" tabindex="-1" role="dialog" aria-labelledby="modalAddFP" aria-hidden="true">
+  <form action="" method="POST" id="formularioFp" data-url="{% url 'formapago' %}">
+    {% csrf_token %}
+  <div class="modal-dialog modal-dialog-centered" role="document">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalAddFP">Nuevo Status</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+          <input name="action" type="hidden" value="add">
+          <div class="card-body">
+            <div class="form-row">
+              <div class="form-group col-md-12">
+                {{ form.nombre_formapago | as_crispy_field}} 
+              </div>
+            </div>
+          </div>
+        </div>
+       
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="submit"  class="btn btn-primary">Guardar</button>
+      </div>
+    </div>
+  </div>
+  </form>
+
+</div>
+
+
+</div>
+<div id="notification-alert" class="alert" style="display: none;">
+  <p class="alert-message"></p>
+</div>
+
+</div>
+
+{% endif %}
+
+{% endblock %}

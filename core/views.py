@@ -33,6 +33,7 @@ from .models import Tareas, DetalleEquipo
 from babel.numbers import format_currency
 from decimal import Decimal
 from django.utils.translation import activate
+from django.db import transaction
 
 
 # Create your views here.
@@ -245,8 +246,21 @@ def agregarProyecto(request):
     if request.method == 'POST':
         formulario = AgregarProyectoForm(data=request.POST)
         if formulario.is_valid():
-            formulario.save()
-            return redirect('verproyectos')
+            with transaction.atomic():
+                proyecto = formulario.save()  # Guarda el proyecto
+                cotizacion = proyecto.id_cotizacion  # Obtiene la cotización asociada al proyecto
+                detalles_cotizacion = cotizacion.detallecotizaciones_set.all()  # Obtiene los detalles de la cotización
+                for detalle in detalles_cotizacion:
+                    producto = detalle.producto  # Obtiene el producto del detalle
+                    cantidad = detalle.cantidad  # Obtiene la cantidad utilizada
+                    if producto.stock >= cantidad:
+                        producto.stock -= cantidad  # Resta la cantidad utilizada al stock del producto
+                        producto.save()  # Guarda el producto actualizado
+                    else:
+                        # Si el stock no es suficiente, muestra un mensaje de error o maneja la situación según tu lógica
+                        # Por ejemplo: return HttpResponseBadRequest('Stock insuficiente para el producto {}'.format(producto.nombre_producto))
+                        pass
+                return redirect('verproyectos')
         else:
             data['AggForm'] = formulario
     
@@ -346,6 +360,46 @@ def editarMetodo(request, id_metodopago):
             data['form'] = formulario
     
     return render(request, 'cotizaciones/editarMetodo.html', data)
+
+
+def formapagos(request):
+    formas_pago = FormaPago.objects.all()
+    
+    if request.method == 'POST':
+        form = FormaPagoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'message': 'Registro exitoso.'})
+        else:
+            error_messages = form.errors.as_json()
+            return JsonResponse({'errors': form.errors.as_json()}, status=400)
+    
+    form = FormaPagoForm()
+    
+    contexto = {'formas_pago': formas_pago, 'form': form}
+    return render(request, 'cotizaciones/formaPago.html', contexto)
+
+def eliminarFormaPago(request, id_formapago):
+    forma_pago = FormaPago.objects.get(id_formapago=id_formapago)
+    forma_pago.delete()
+    return redirect('formapago')
+
+def editarFormaPago(request, id_formapago):
+    forma_pago = FormaPago.objects.get(id_formapago=id_formapago)
+    data = {
+        'form': FormaPagoForm(instance=forma_pago)
+    }
+    if request.method == 'POST':
+        formulario = FormaPagoForm(data=request.POST, instance=forma_pago)
+        if formulario.is_valid():
+            formulario.save()
+            return redirect('formapago')
+        else:
+            data['form'] = formulario
+    
+    return render(request, 'cotizaciones/editarFormaPago.html', data)
+
+
 
 
 def statuscotizaciones(request):
@@ -616,7 +670,7 @@ class CotView(CreateView):
                 for i in prods:
                     item = i.toJSON()
                     # Combina el nombre y el precio de venta en un solo campo 'label'
-                    item['label'] = f"{i.nombre_producto} - ${int(i.precio_venta) if i.precio_venta.is_integer() else i.precio_venta}"
+                    item['label'] = f"STOCK DISPONIBLE:{i.stock} / {i.nombre_producto} - ${int(i.precio_venta) if i.precio_venta.is_integer() else i.precio_venta} "
                     data.append(item)
             elif action == 'add':
 
@@ -636,6 +690,11 @@ class CotView(CreateView):
                 cotizacion.comentario = vents['comentario']
                 status_cot = vents['status']
                 cotizacion.status = StatusCotizacion.objects.get(id_estado=status_cot)
+                user_id = self.request.user.id
+                cotizacion.generado_por = User.objects.get(id=user_id)
+                formapago = vents['forma_pago']
+                cotizacion.formapago = FormaPago.objects.get(id_formapago=formapago)
+                cotizacion.abono = vents['abono']
                 cotizacion.save()
                 # Detalle
                 for i in vents['products']:
@@ -715,6 +774,9 @@ class CotUpdateView(UpdateView):
                 cotizacion.comentario = vents['comentario']
                 status_cot = vents['status']
                 cotizacion.status = StatusCotizacion.objects.get(id_estado=status_cot)
+                formapago = vents['forma_pago']
+                cotizacion.formapago = FormaPago.objects.get(id_formapago=formapago)
+                cotizacion.abono = vents['abono']
                 cotizacion.save()
                 cotizacion.detallecotizaciones_set.all().delete()
                 # Detalle

@@ -124,15 +124,72 @@ class CotizacionesForm(forms.ModelForm):
         self.fields['nombre_cotizacion'].label = "Nombre de Cotización"
 
 
+COMUNAS_METROPOLITANA = [
+    ('Cerrillos', 'Cerrillos'),
+    ('Cerro Navia', 'Cerro Navia'),
+    ('Conchalí', 'Conchalí'),
+    ('El Bosque', 'El Bosque'),
+    ('Estación Central', 'Estación Central'),
+    ('Huechuraba', 'Huechuraba'),
+    ('Independencia', 'Independencia'),
+    ('La Cisterna', 'La Cisterna'),
+    ('La Florida', 'La Florida'),
+    ('La Granja', 'La Granja'),
+    ('La Pintana', 'La Pintana'),
+    ('La Reina', 'La Reina'),
+    ('Las Condes', 'Las Condes'),
+    ('Lo Barnechea', 'Lo Barnechea'),
+    ('Lo Espejo', 'Lo Espejo'),
+    ('Lo Prado', 'Lo Prado'),
+    ('Macul', 'Macul'),
+    ('Maipú', 'Maipú'),
+    ('Ñuñoa', 'Ñuñoa'),
+    ('Pedro Aguirre Cerda', 'Pedro Aguirre Cerda'),
+    ('Peñalolén', 'Peñalolén'),
+    ('Providencia', 'Providencia'),
+    ('Pudahuel', 'Pudahuel'),
+    ('Quilicura', 'Quilicura'),
+    ('Quinta Normal', 'Quinta Normal'),
+    ('Recoleta', 'Recoleta'),
+    ('Renca', 'Renca'),
+    ('San Joaquín', 'San Joaquín'),
+    ('San Miguel', 'San Miguel'),
+    ('San Ramón', 'San Ramón'),
+    ('Vitacura', 'Vitacura'),
+    ('Puente Alto', 'Puente Alto'),
+    ('Pirque', 'Pirque'),
+    ('San José de Maipo', 'San José de Maipo'),
+    ('Colina', 'Colina'),
+    ('Lampa', 'Lampa'),
+    ('Til Til', 'Til Til'),
+    ('San Bernardo', 'San Bernardo'),
+    ('Buin', 'Buin'),
+    ('Calera de Tango', 'Calera de Tango'),
+    ('Paine', 'Paine'),
+    ('Melipilla', 'Melipilla'),
+    ('Alhué', 'Alhué'),
+    ('Curacaví', 'Curacaví'),
+    ('María Pinto', 'María Pinto'),
+    ('San Pedro', 'San Pedro'),
+    ('Talagante', 'Talagante'),
+    ('El Monte', 'El Monte'),
+    ('Isla de Maipo', 'Isla de Maipo'),
+    ('Padre Hurtado', 'Padre Hurtado'),
+    ('Peñaflor', 'Peñaflor')
+]
+
+
 class ClientesForm(forms.ModelForm):
+    comuna = forms.ChoiceField(choices=COMUNAS_METROPOLITANA)
+
     class Meta:
         model = Clientes
-        fields = ['rut_cliente', 'nombre', 'apellido', 'direccion', 'telefono', 'correo']
+        fields = ['rut_cliente', 'nombre', 'apellido', 'direccion', 'telefono', 'correo', 'comuna']
         widgets = {
             'rut_cliente': forms.TextInput(attrs={'placeholder': 'Ej. 12345678-9'}),
         }
 
-        telefono = forms.IntegerField()
+    telefono = forms.IntegerField()
     nombre = forms.CharField(max_length=100, validators=[
         RegexValidator(
             regex='^[a-zA-Z ]+$',  # Modificado para permitir espacios
@@ -150,9 +207,8 @@ class ClientesForm(forms.ModelForm):
     rut_cliente = forms.CharField(max_length=10, validators=[
         RegexValidator(
             regex='^[0-9kK]+$',
-            message='Este campo solo puede contener digitos.',
+            message='Este campo solo puede contener dígitos.',
             code='invalid_name'
-
         )
     ])
     
@@ -269,6 +325,11 @@ class MetodoPagoForm(forms.ModelForm):
     class Meta:
         model = MetodoPago
         fields = ['nombre_metodo']
+
+class FormaPagoForm(forms.ModelForm):
+    class Meta:
+        model = FormaPago
+        fields = ['nombre_formapago']
 
 
 class StatusTareaForm(forms.ModelForm):
