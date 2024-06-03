@@ -88,6 +88,7 @@ class Proyecto(models.Model):
     fecha = models.DateField(default=datetime.now)
     plazo_entrega = models.DateField()
     status = models.ForeignKey('StatusProyecto', on_delete=models.CASCADE, default=1)
+    comentario = models.CharField(max_length=100, null=True, blank=True)
   
     def __str__(self):
         return str(self.nombre_proyecto) + str(" - ") + str(self.cliente)

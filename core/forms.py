@@ -72,8 +72,9 @@ class AgregarProyectoForm(forms.ModelForm):
                 }
             ),
             'plazo_entrega': forms.DateInput(attrs={'type': 'date'}),
-            "nombre_proyecto" : forms.TextInput(attrs={'placeholder': 'Ej. Mesita'})
+            "nombre_proyecto" : forms.TextInput(attrs={'placeholder': 'Ej. Mesita'}),
         }
+        
 
     def __init__(self, *args, **kwargs):
             super(AgregarProyectoForm, self).__init__(*args, **kwargs)
@@ -85,6 +86,7 @@ class AgregarProyectoForm(forms.ModelForm):
             self.fields['status'].label = "Status del Proyecto"
             self.fields['instalacion'].label = "¿Desea Instalación?"
             self.fields['id_cotizacion'].label = "Seleccione Cotización"
+            self.fields['comentario'].label = "Comentarios"
       
 
 

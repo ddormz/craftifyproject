@@ -94,6 +94,8 @@ function productosTable() {
   })
 }
 
+
+
 $(document).ready(function () {
   $('#formProd').on('submit', function (event) {
     event.preventDefault(); // Prevenir el envío automático del formulario
@@ -184,6 +186,14 @@ $(document).ready(function () {
       }
     });
   });
+});
+
+$(function () {
+  $('.select2').select2({
+      theme: "bootstrap4",
+      language: 'es'
+  });
+
 });
 
 
@@ -468,7 +478,7 @@ function proyectosTable() {
         },
       },
       {
-        "targets": [-6],
+        "targets": [5],
         "render": function (data, type, row) {
           if (data == "True") {
             return '<div class="badge rounded-pill bg-success">Si</div>';
@@ -482,17 +492,77 @@ function proyectosTable() {
 
   });
 
-  // Filtrar por Fecha Proyectos
+  
   $(document).ready(function() {
     var tablaProyectos = $('.tabla-proyectos').DataTable();
-
-    $('#fechaInicio, #fechaFin').change(function() {
-      var fechaInicio = $('#fechaInicio').val();
-      var fechaFin = $('#fechaFin').val();
-
-      tablaProyectos.columns(6).search(fechaInicio + ' to ' + fechaFin).draw();
+  
+    // Función para extraer el año de una fecha en formato "26 de Junio de 2024"
+    function extraerAnio(fecha) {
+      return new Date(fecha.replace(/de /g, "").replace(/ /g, "-")).getFullYear();
+    }
+  
+    // Obtener los años únicos de la columna de fechas
+    var años = new Set();
+    tablaProyectos.column(6).data().each(function(value, index) {
+      años.add(extraerAnio(value));
+    });
+  
+    // Convertir el Set a un array y ordenarlo
+    años = Array.from(años).sort();
+  
+    // Añadir los años como opciones al select
+    var anioFiltro = $('#anioFiltro');
+    años.forEach(function(anio) {
+      anioFiltro.append(new Option(anio, anio));
+    });
+  
+    // Obtener los clientes únicos de la columna de clientes
+    var clientes = new Set();
+    tablaProyectos.column(2).data().each(function(value, index) {
+      clientes.add(value);
+    });
+  
+    // Convertir el Set a un array y ordenarlo
+    clientes = Array.from(clientes).sort();
+  
+    // Añadir los clientes como opciones al select
+    var clienteFiltro = $('#ClienteFiltro');
+    clientes.forEach(function(cliente) {
+      clienteFiltro.append(new Option(cliente, cliente));
+    });
+  
+    // Filtro personalizado para DataTables
+    $.fn.dataTable.ext.search.push(
+      function(settings, data, dataIndex) {
+        var anioSeleccionado = $('#anioFiltro').val();
+        var clienteSeleccionado = $('#ClienteFiltro').val();
+        var fechaTabla = data[6]; // La columna que contiene las fechas
+        var clienteTabla = data[2]; // La columna que contiene los clientes
+  
+        // Filtrar por año
+        if (anioSeleccionado !== "") {
+          var anioTabla = extraerAnio(fechaTabla);
+          if (anioSeleccionado != anioTabla) {
+            return false;
+          }
+        }
+  
+        // Filtrar por cliente
+        if (clienteSeleccionado !== "" && clienteSeleccionado != clienteTabla) {
+          return false;
+        }
+  
+        return true;
+      }
+    );
+  
+    // Redibujar la tabla cuando se selecciona un año o cliente
+    $('#anioFiltro, #ClienteFiltro').change(function() {
+      tablaProyectos.draw();
     });
   });
+  
+  
 
   // Mover los botones a la esquina superior derecha
   var buttonsContainer = table.buttons().container();
@@ -602,7 +672,26 @@ function cotizacionesTable() {
     },
     columns: [
       {"data": "id_cotizacion"},
-      {"data": "fecha_cotizacion"},
+    {"data": "fecha_cotizacion",
+        "render": function(data, type, row) {
+            if (type === 'display' || type === 'filter') {
+                // Convertir la fecha al formato dd-mm-yyyy
+                var date = new Date(data);
+                var day = date.getDate();
+                var month = date.getMonth() + 1;
+                var year = date.getFullYear();
+                // Asegurarse de que el día y el mes tengan dos dígitos
+                if (day < 10) {
+                    day = '0' + day;
+                }
+                if (month < 10) {
+                    month = '0' + month;
+                }
+                return day + '-' + month + '-' + year;
+            }
+            return data;
+        }
+    },
       {"data": "nombre_cotizacion"},
       {
         "data": "cliente.nombre",

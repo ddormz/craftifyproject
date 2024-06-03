@@ -142,13 +142,20 @@ class HomeDashboard(TemplateView):
         try:
             data = []
             year = datetime.now().year
+            
+            # Filtrar cotizaciones con el status "Aceptado" y el año actual
+            cotizaciones = Cotizaciones.objects.filter(status__nombre_status="Aceptado", fecha_cotizacion__year=year)
+            
+            # Contar cotizaciones por mes
             for m in range(1, 13):
-                cotizaciones = Cotizaciones.objects.filter(fecha_cotizacion__year=year, fecha_cotizacion__month=m).count()
-                data.append(cotizaciones)
-        except:
-            pass    
+                count = cotizaciones.filter(fecha_cotizacion__month=m).count()
+                data.append(count)
+        except Exception as e:
+            # Es recomendable registrar el error para propósitos de depuración
+            print(f"Error al obtener datos del gráfico: {e}")
+            
         return data
-    
+        
     def get_graph_data_proyectos(self):
         try:
             data = []

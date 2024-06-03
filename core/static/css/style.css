@@ -5,6 +5,11 @@
 	margin-bottom: 80px;
 }
 
+.active {
+    background-color: #007bff !important;
+    color: #fff !important;
+}
+
 .form-signin {
 	max-width: 380px;
 	padding: 15px 35px 45px;

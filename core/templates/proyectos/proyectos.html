@@ -15,13 +15,28 @@
           <div class="float-md-end">
             <a class="btn btn-warning" id="btnProyecto" href="{% url 'agregarProyecto' %}" role="button"><i class="fas fa-add"></i>Agregar Nuevo Proyecto</a>
             </div>
-            <div class="form-group text-center col-4">
-            <div class="input-group mb-3">
-              <input type="date" class="form-control" id="fechaInicio" name="fechaInicio">
-              <span class="input-group-text">a</span>
-              <input type="date" class="form-control" id="fechaFin" name="fechaFin">
-              <div class="input-group-append">
+            <div class="form-group text-center col-4"><div class="input-group mb-3">
+              <span>Filtro por Año</span>
+              <div class="input-group mb-3">
+         
+                <select class="form-control" id="anioFiltro">
+                  <option value="">Todos los años</option>
+                </select>
+                <div class="input-group-append">
+                </div>
               </div>
+              <span>Filtro por Cliente</span>
+              <div class="input-group mb-3">
+         
+                <select class="form-control" id="ClienteFiltro">
+                  <option value="">Todos los Clientes</option>
+                </select>
+                <div class="input-group-append">
+                </div>
+              </div>
+              
+              
+              
               </div>
               <br>
         </div>
@@ -39,6 +54,7 @@
             <th scope="col">Instalación</th>
             <th scope="col">Fecha Creacion</th>
             <th scope="col">Plazo Entrega</th>
+            <th scope="col">Comentarios</th>
             <th scope="col">Status</th>
             <th class="tiempo-restante-header">Tiempo</th>
             <th scope="col">Acciones</th>
@@ -56,6 +72,7 @@
             <td scope="row">{{ proyecto.instalacion }}</td>
             <td scope="row">{{ proyecto.fecha }}</td>
             <td scope="row">{{ proyecto.plazo_entrega }}</td>
+            <td scope="row">{{ proyecto.comentario }}</td>
 
             <td scope="row">{{ proyecto.status }}</td>
                     <td>{{ proyecto.tiempo_restante }} días</td>
