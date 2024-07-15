@@ -15,6 +15,13 @@
         font-size: 14px;
     }
 
+    .head2 {
+        text-align: center;
+        text-transform: uppercase;
+        font-weight: bold;
+        font-size: 10px;
+    }
+
     #invoice thead tr th {
         text-align: left;
         border-bottom: 1px solid black;
@@ -74,14 +81,14 @@
 <table style="width: 100%;">
     <tr>
         <td style="width: 23.33%; text-align: left;">
-            <img src="https://gabinetcenter.cl/wp-content/uploads/2022/09/logo_MUEBLES_GC_1.png" class="img-invoice">
+            <img src="https://pollosdely.cl/logogc.jpg" class="img-invoice">
                 </td>
         <td style="width: 47.33%; text-align: left;">
             <p class="titulogab">
                 {{ comp.nombre |upper }}
+                <p class="head2">FABRICACION DE MUEBLES, REMODELACIONES Y VENTA DE ELECTRODOMESTICOS</p>
             </p>
             <p class="head">
-                <br>
                 Dirección: {{ comp.direccion |upper }}, {{ comp.ciudad |upper }}
                 <br>
                 Teléfono: {{ comp.telefono }}
@@ -131,7 +138,7 @@
                         <br>
                         <b>FORMA DE PAGO: </b> {{ cotizaciones.formapago |upper }}
                         <br>
-                        <b>ABONO: </b> {{ cotizaciones.abono |upper }}
+                        
                     </td>
                 </tr>
             </table>
@@ -200,7 +207,7 @@
 </table>
 <table style="margin-top: 25px;">
     <tr>
-        <th style="width: 100%; border: 2px solid black; padding-top: 5px; font-size: 10px; text-align: left;">
+        <th style="width: 100%; border: 2px solid black; padding-top: 5px; padding-left: 2px; font-size: 10px; text-align: left;">
             <b>COMENTARIO: {{ cotizaciones.comentario }}</b>
         </th>
     </tr>
@@ -233,10 +240,19 @@
 </table>
 <table>
     <tr>
-        <th style="width: 75%; border: 2px solid black; padding-top: 5px; font-size: 10px;">
-            <b>Fecha de Instalación es de 30 días habiles desde la rectificación de medidas</b> <br>
-            <b>Duración de la Cotización: 5 Días </b>
-
+        <th style="width: 75%; border: 2px solid black; padding-top: 5px; font-size: 14px;">
+        </th>
+        <th style="width: 10%; border: 2px solid black; padding-top: 5px; font-size: 12px;">
+            <b>ABONO</b>
+        </th>
+        <th style="width: 15%; border: 2px solid black; padding-top: 5px; font-size: 12px;">
+            <b>{{ cotizaciones.abono }}</b>
+        </th>
+    </tr>
+</table>
+<table>
+    <tr>
+        <th style="width: 75%; border: 2px solid black; padding-top: 5px; font-size: 14px;">
         </th>
         <th style="width: 10%; border: 2px solid black; padding-top: 5px; font-size: 12px;">
             <b>IVA</b>

@@ -848,7 +848,7 @@ class CotizacionesPDF(View):
             activate('es_CL')
             context = {
                 'cotizaciones': Cotizaciones.objects.get(id_cotizacion=kwargs['pk']),
-                'comp': {'nombre': 'Gabinet Center Spa', 'rut': '76.180.262-3', 'direccion': 'Virgen del Pilar 0389', 'ciudad': 'La Cisterna', 'telefono': '2 2716 2702 / +56 9 8538 2852', 'website': 'www.gabinetecenter.cl', 'email': 'contacto@gabinetcenter.cl'},
+                'comp': {'nombre': 'Gabinet Center Spa', 'rut': '76.180.262-3', 'direccion': 'Virgen del Pilar 0857', 'ciudad': 'La Cisterna', 'telefono': '+56 9 8538 2852', 'website': 'www.gabinetcenter.cl', 'email': 'ventas@gabinetcenter.cl'},
                 'mitad_total': format_currency(Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).total / 2, 'CLP', locale='es_CL'),
                 'total': format_currency(Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).total, 'CLP', locale='es_CL'),
                 'descuento': format_currency(Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).descuento, 'CLP', locale='es_CL'),
