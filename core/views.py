@@ -722,6 +722,8 @@ class CotView(CreateView):
                 cliente.apellido = request.POST['apellido']
                 cliente.direccion = request.POST['direccion']
                 cliente.telefono = request.POST['telefono']
+                cliente.correo = request.POST['correo']
+                cliente.comuna = request.POST['comuna']
                 cliente.save()
                 data.append(cliente.toJSON())
             else:
