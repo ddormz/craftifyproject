@@ -64,7 +64,7 @@ var vents = {
             columns: [
                 {"data": "id_producto"},
                 {"data": "nombre_producto"},
-                {"data": "categoria.nombre_categoria"},
+                {"data": "unidad_medida.nombre_unidad"},
                 {"data": "precio_venta"},
                 {"data": "cant"},
                 {"data": "subtotal"},
