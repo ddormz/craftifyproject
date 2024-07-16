@@ -677,7 +677,7 @@ class CotView(CreateView):
                 for i in prods:
                     item = i.toJSON()
                     # Combina el nombre y el precio de venta en un solo campo 'label'
-                    item['label'] = f"${int(i.precio_venta) if i.precio_venta.is_integer() else i.precio_venta} - {i.nombre_producto} ({i.unidad_medida}) - Stock: {i.stock} / Variante: {i.variante}"
+                    item['label'] = f"STOCK DISPONIBLE:{i.stock} / {i.nombre_producto} - ${int(i.precio_venta) if i.precio_venta.is_integer() else i.precio_venta} "
                     data.append(item)
             elif action == 'add':
 
@@ -722,8 +722,6 @@ class CotView(CreateView):
                 cliente.apellido = request.POST['apellido']
                 cliente.direccion = request.POST['direccion']
                 cliente.telefono = request.POST['telefono']
-                cliente.correo = request.POST['correo']
-                cliente.comuna = request.POST['comuna']
                 cliente.save()
                 data.append(cliente.toJSON())
             else:
@@ -764,7 +762,7 @@ class CotUpdateView(UpdateView):
                 prods = Productos.objects.filter(nombre_producto__icontains=request.POST['term'])[0:10]
                 for i in prods:
                     item = i.toJSON()
-                    item['label'] = f"${int(i.precio_venta) if i.precio_venta.is_integer() else i.precio_venta} - {i.nombre_producto} ({i.unidad_medida}) - Stock: {i.stock} / Variante: {i.variante}"
+                    item['label'] = f"{i.nombre_producto} - ${int(i.precio_venta) if i.precio_venta.is_integer() else i.precio_venta}"
                     data.append(item)
             elif action == 'edit':
                 # Cotizaciones
