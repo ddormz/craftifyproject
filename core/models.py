@@ -252,6 +252,7 @@ class Productos(models.Model):
     variante = models.CharField(max_length=100, null=True, blank=True)
     stock = models.IntegerField(default=0)
     imagen = models.ImageField(upload_to='productos', null=True, blank=True)
+    unidad_medida = models.ForeignKey('UnidadMedidas', on_delete=models.CASCADE, default=1)
     def __str__(self):
         return str(self.nombre_producto) + str(" - ") + str(self.variante)
     
@@ -261,6 +262,7 @@ class Productos(models.Model):
         item['precio_venta'] = format(self.precio_venta, '.0f')
         item['subcategoria'] = self.subcategoria.toJSON()
         item['marca'] = self.marca.toJSON()
+        item['unidad_medida'] = self.unidad_medida.toJSON()
         if self.imagen:
             item['imagen'] = self.imagen.url
         else:
@@ -272,6 +274,16 @@ class Productos(models.Model):
         verbose_name = 'Producto'
         verbose_name_plural = 'Productos'
         ordering = ['id_producto']
+
+class UnidadMedidas(models.Model):
+    id_unidad = models.AutoField(primary_key=True)
+    nombre_unidad = models.CharField(max_length=10)
+    def __str__(self):
+        return str(self.nombre_unidad)
+    
+    def toJSON(self):
+        item = model_to_dict(self)
+        return item
 
 class CategoriaProductos(models.Model):
     id_categoria = models.AutoField(primary_key=True)
