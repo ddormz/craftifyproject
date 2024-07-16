@@ -722,6 +722,8 @@ class CotView(CreateView):
                 cliente.apellido = request.POST['apellido']
                 cliente.direccion = request.POST['direccion']
                 cliente.telefono = request.POST['telefono']
+                cliente.comuna = request.POST['comuna']
+                cliente.correo = request.POST['correo']
                 cliente.save()
                 data.append(cliente.toJSON())
             else:
@@ -841,50 +843,67 @@ def eliminarCotizaciones(request, id_cotizacion):
 
 # GENERA PDF COTIZACION 
 
+from django.shortcuts import get_object_or_404
+from django.template.loader import get_template
+from django.utils.translation import activate
+from xhtml2pdf import pisa
+from django.conf import settings
+from django.http import HttpResponse, FileResponse, HttpResponseRedirect
+from django.urls import reverse_lazy
+import os
+from .models import Cotizaciones, DetalleCotizaciones
+from babel.numbers import format_currency
+
 class CotizacionesPDF(View):
     def get(self, request, *args, **kwargs):
         try:
             template = get_template('cotizaciones/cotizacionpdf.html')
             activate('es_CL')
-            context = {
-                'cotizaciones': Cotizaciones.objects.get(id_cotizacion=kwargs['pk']),
-                'comp': {'nombre': 'Gabinet Center Spa', 'rut': '76.180.262-3', 'direccion': 'Virgen del Pilar 0389', 'ciudad': 'La Cisterna', 'telefono': '2 2716 2702 / +56 9 8538 2852', 'website': 'www.gabinetecenter.cl', 'email': 'contacto@gabinetcenter.cl'},
-                'mitad_total': format_currency(Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).total / 2, 'CLP', locale='es_CL'),
-                'total': format_currency(Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).total, 'CLP', locale='es_CL'),
-                'descuento': format_currency(Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).descuento, 'CLP', locale='es_CL'),
-                'subtotal': format_currency(Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).subtotal, 'CLP', locale='es_CL'),
-                'iva': format_currency(Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).iva, 'CLP', locale='es_CL'),
-                'precioProductoFormateado': format_currency(DetalleCotizaciones.objects.get(id_cotizacion=kwargs['pk']).precio, 'CLP', locale='es_CL'),
-                'precioProductoxcantidad': format_currency(DetalleCotizaciones.objects.get(id_cotizacion=kwargs['pk']).precio * DetalleCotizaciones.objects.get(id_cotizacion=kwargs['pk']).cantidad, 'CLP', locale='es_CL'),
-                
+            cotizacion = get_object_or_404(Cotizaciones, id_cotizacion=kwargs['pk'])
+            detalles = DetalleCotizaciones.objects.filter(id_cotizacion=kwargs['pk'])
 
+            # Formateo de precios
+            for detalle in detalles:
+                detalle.precio_formateado = format_currency(detalle.precio, 'CLP', locale='es_CL')
+                detalle.total_formateado = format_currency(detalle.precio * detalle.cantidad, 'CLP', locale='es_CL')
+
+            context = {
+                'cotizaciones': cotizacion,
+                'detalles': detalles,
+                'comp': {
+                    'nombre': 'Gabinet Center Spa',
+                    'rut': '76.180.262-3',
+                    'direccion': 'Virgen del Pilar 0857',
+                    'ciudad': 'La Cisterna',
+                    'telefono': '+56 9 8538 2852',
+                    'website': 'www.gabinetcenter.cl',
+                    'email': 'ventas@gabinetcenter.cl'
+                },
+                'mitad_total': format_currency(cotizacion.total / 2, 'CLP', locale='es_CL'),
+                'total': format_currency(cotizacion.total, 'CLP', locale='es_CL'),
+                'descuento': format_currency(cotizacion.descuento, 'CLP', locale='es_CL'),
+                'subtotal': format_currency(cotizacion.subtotal, 'CLP', locale='es_CL'),
+                'iva': format_currency(cotizacion.iva, 'CLP', locale='es_CL')
             }
             html = template.render(context)
 
-
-            
-            nombre_archivo_cliente = 'Cotizacion' + ' ' + str(Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).cliente.nombre + ' ' 
-            + Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).cliente.apellido + '-' + str(Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).nombre_cotizacion)
-            + '-' + str(Cotizaciones.objects.get(id_cotizacion=kwargs['pk']).fecha_cotizacion)) + '.pdf'
-            
-            # Ruta de destino en la carpeta de medios
+            nombre_archivo_cliente = f'Cotizacion {cotizacion.cliente.nombre} {cotizacion.cliente.apellido}-{cotizacion.nombre_cotizacion}-{cotizacion.fecha_cotizacion}.pdf'
             destino_pdf = os.path.join(settings.MEDIA_ROOT, 'pdfcot', nombre_archivo_cliente)
 
             pisaStatus = pisa.CreatePDF(html, open(destino_pdf, "wb"))
             print(pisaStatus.err)
-            
-            # Asegúrate de que el PDF se haya creado con éxito antes de devolver la respuesta
+
             if pisaStatus.err:
                 return HttpResponse("Error al generar el PDF", content_type='text/plain')
-            
-            # Construye la URL de descarga para el PDF en la carpeta de medios
+
             response = FileResponse(open(destino_pdf, 'rb'))
             response['Content-Disposition'] = f'attachment; filename="{nombre_archivo_cliente}"'
-
             return response
-        except:
-            pass
-        return HttpResponseRedirect(reverse_lazy('listarCotizaciones'))
+        except Exception as e:
+            print(e)
+            return HttpResponseRedirect(reverse_lazy('listarCotizaciones'))
+
+
 # MODULO CLIENTES
 
 

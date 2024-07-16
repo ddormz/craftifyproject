@@ -2,7 +2,7 @@
 <html>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <style>
-    .img-invoice {
+ .img-invoice {
         width: 100%;
         text-align: left;
         margin: 0 auto;
@@ -13,6 +13,12 @@
         text-transform: uppercase;
         font-weight: bold;
         font-size: 14px;
+    }
+    .giro{
+        text-align: center;
+        text-transform: uppercase;
+        font-weight: bold;
+        font-size: 12px;
     }
 
     #invoice thead tr th {
@@ -74,11 +80,13 @@
 <table style="width: 100%;">
     <tr>
         <td style="width: 23.33%; text-align: left;">
-            <img src="https://gabinetcenter.cl/wp-content/uploads/2022/09/logo_MUEBLES_GC_1.png" class="img-invoice">
-                </td>
+            <img src="https://pollosdely.cl/logogc.jpg" class="img-invoice">
+        </td>
         <td style="width: 47.33%; text-align: left;">
             <p class="titulogab">
                 {{ comp.nombre |upper }}
+            <p class="giro">
+                FABRICACION DE MUEBLES, REMODELACIONES Y VENTA DE ELECTRODOMESTICOS
             </p>
             <p class="head">
                 <br>
@@ -89,14 +97,13 @@
                 Email: {{ comp.email }}
                 <br>
                 Web: {{ comp.website }}
-                
             </p>
         </td>
         <td style="width: 33.33%; text-align: right; border: 2px solid red; padding: 5px; text-align: center; font-weight: bold; font-size: 15px; color: red; text-transform: uppercase;">
-                <p> RUT: {{ comp.rut |upper }}</p>
-                <p> COTIZACION</p>
-                <p> N° {{ cotizaciones.id_cotizacion }}</p>
-                <p> S.I.I SANTIAGO SUR </p>
+            <p> RUT: {{ comp.rut |upper }}</p>
+            <p> COTIZACION</p>
+            <p> N° {{ cotizaciones.id_cotizacion }}</p>
+            <p> S.I.I SANTIAGO SUR </p>
         </td>
     </tr>
 </table>
@@ -131,7 +138,7 @@
                         <br>
                         <b>FORMA DE PAGO: </b> {{ cotizaciones.formapago |upper }}
                         <br>
-                        <b>ABONO: </b> {{ cotizaciones.abono |upper }}
+                 
                     </td>
                 </tr>
             </table>
@@ -144,63 +151,61 @@
         <td style="text-align: center; font-weight: bold; font-size: 15px;  border: 2px solid black; padding-top: 5px">
             <b>COTIZACIÓN</b>
         </td>
+    </tr>
 </table>
 
 <table class="titulos">
     <thead>
-    <tr>
-        <th style="width: 7%; border: 2px solid black; padding-top: 5px; font-size: 12px;">
-            <b>ITEM</b>
-        </th>
-        <th style="width: 7%; border: 2px solid black; padding-top: 5px; font-size: 12px;">
-            <b>CANT</b>
-        </th >
-        <th  style="width: 46%; border: 2px solid black; padding-top: 5px; font-size: 12px;">
-            <b>PRODUCTO</b>
-        </th >
-        <th  style="width: 10%; border: 2px solid black; padding-top: 5px; font-size: 12px;">
-            <b>UNID</b>
-        </th >
-        <th  style="width: 15%; border: 2px solid black; padding-top: 5px; font-size: 12px;">
-            <b>PRECIO U</b>
-        </th >
-        <th  style="width: 15%; border: 2px solid black; padding-top: 5px; font-size: 12px;">
-            <b>TOTAL</b>
-        </th>
-    </tr>
-</thead>
-<tbody>
-    {% for d in cotizaciones.detallecotizaciones_set.all %}
-        <tr {% if forloop.first %}style="padding-top: 3px;" {% endif %}>
-            <th style="width: 7%; border: 1px solid black; padding-top: 5px; font-size: 12px;">
-                {{ forloop.counter }}
+        <tr>
+            <th style="width: 7%; border: 2px solid black; padding-top: 5px; font-size: 12px;">
+                <b>ITEM</b>
             </th>
-            <th style="width: 7%; border: 1px solid black; padding-top: 5px; font-size: 12px;">
-                {{ d.cantidad }}
+            <th style="width: 7%; border: 2px solid black; padding-top: 5px; font-size: 12px;">
+                <b>CANT</b>
             </th>
-            <th style="width: 46%; border: 1px solid black; padding-top: 5px; font-size: 12px;">
-                {{ d.producto.nombre_producto }}
+            <th style="width: 46%; border: 2px solid black; padding-top: 5px; font-size: 12px;">
+                <b>PRODUCTO</b>
             </th>
-            <th style="width: 10%; border: 1px solid black; padding-top: 5px; font-size: 12px;">
-                {{ d.producto.unidad_medida }}
+            <th style="width: 10%; border: 2px solid black; padding-top: 5px; font-size: 12px;">
+                <b>UNID</b>
             </th>
-            <th style="width: 15%; border: 1px solid black; padding-top: 5px; font-size: 12px;">
-                {{ precioProductoFormateado }}
+            <th style="width: 15%; border: 2px solid black; padding-top: 5px; font-size: 12px;">
+                <b>PRECIO U</b>
             </th>
-            <th style="width: 15%; border: 1px solid black; padding-top: 5px; font-size: 12px;">
-                {{ precioProductoxcantidad }}
+            <th style="width: 15%; border: 2px solid black; padding-top: 5px; font-size: 12px;">
+                <b>TOTAL</b>
             </th>
         </tr>
-    {% endfor %}
-    
-
-
+    </thead>
+    <tbody>
+        {% for d in detalles %}
+            <tr {% if forloop.first %}style="padding-top: 3px;" {% endif %}>
+                <th style="width: 7%; border: 1px solid black; padding-top: 5px; font-size: 12px;">
+                    {{ forloop.counter }}
+                </th>
+                <th style="width: 7%; border: 1px solid black; padding-top: 5px; font-size: 12px;">
+                    {{ d.cantidad }}
+                </th>
+                <th style="width: 46%; border: 1px solid black; padding-top: 5px; font-size: 12px;">
+                    {{ d.producto.nombre_producto }}
+                </th>
+                <th style="width: 10%; border: 1px solid black; padding-top: 5px; font-size: 12px;">
+                    {{ d.producto.unidad_medida }}
+                </th>
+                <th style="width: 15%; border: 1px solid black; padding-top: 5px; font-size: 12px;">
+                    {{ d.precio_formateado }}
+                </th>
+                <th style="width: 15%; border: 1px solid black; padding-top: 5px; font-size: 12px;">
+                    {{ d.total_formateado }}
+                </th>
+            </tr>
+        {% endfor %}
     </tbody>
-</tbody>
 </table>
+
 <table style="margin-top: 25px;">
     <tr>
-        <th style="width: 100%; border: 2px solid black; padding-top: 5px; font-size: 10px; text-align: left;">
+        <th style="width: 100%; border: 2px solid black; padding-top: 5px; padding-left: 2px; font-size: 10px; text-align: left;">
             <b>COMENTARIO: {{ cotizaciones.comentario }}</b>
         </th>
     </tr>
@@ -234,9 +239,6 @@
 <table>
     <tr>
         <th style="width: 75%; border: 2px solid black; padding-top: 5px; font-size: 10px;">
-            <b>Fecha de Instalación es de 30 días habiles desde la rectificación de medidas</b> <br>
-            <b>Duración de la Cotización: 5 Días </b>
-
         </th>
         <th style="width: 10%; border: 2px solid black; padding-top: 5px; font-size: 12px;">
             <b>IVA</b>
@@ -270,6 +272,19 @@
         </th>
         <th style="width: 15%; border: 2px solid black; padding-top: 5px; font-size: 12px;">
             <b>{{ total }}</b>
+        </th>
+    </tr>
+</table>
+<br>
+<table>
+    <tr>
+        <th style="width: 75%; border: 2px solid black; padding-top: 5px; font-size: 10px;">
+        </th>
+        <th style="width: 10%; border: 2px solid black; padding-top: 5px; font-size: 12px;">
+            <b>ABONO</b>
+        </th>
+        <th style="width: 15%; border: 2px solid black; padding-top: 5px; font-size: 12px;">
+            <b>{{ cotizaciones.abono |upper }}</b>
         </th>
     </tr>
 </table>
