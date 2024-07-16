@@ -677,7 +677,8 @@ class CotView(CreateView):
                 for i in prods:
                     item = i.toJSON()
                     # Combina el nombre y el precio de venta en un solo campo 'label'
-                    item['label'] = f"STOCK DISPONIBLE:{i.stock} / {i.nombre_producto} - ${int(i.precio_venta) if i.precio_venta.is_integer() else i.precio_venta} "
+                    item['label'] = f"${int(i.precio_venta) if i.precio_venta.is_integer() else i.precio_venta} - {i.nombre_producto} - (Stock Disponible: {i.stock}) / Variante: {i.variante}"
+
                     data.append(item)
             elif action == 'add':
 
@@ -764,7 +765,7 @@ class CotUpdateView(UpdateView):
                 prods = Productos.objects.filter(nombre_producto__icontains=request.POST['term'])[0:10]
                 for i in prods:
                     item = i.toJSON()
-                    item['label'] = f"{i.nombre_producto} - ${int(i.precio_venta) if i.precio_venta.is_integer() else i.precio_venta}"
+                    item['label'] = f"${int(i.precio_venta) if i.precio_venta.is_integer() else i.precio_venta} - {i.nombre_producto} - (Stock Disponible: {i.stock}) / Variante: {i.variante}"
                     data.append(item)
             elif action == 'edit':
                 # Cotizaciones
