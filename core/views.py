@@ -677,7 +677,7 @@ class CotView(CreateView):
                 for i in prods:
                     item = i.toJSON()
                     # Combina el nombre y el precio de venta en un solo campo 'label'
-                    item['label'] = f"STOCK DISPONIBLE:{i.stock} / {i.nombre_producto} - ${int(i.precio_venta) if i.precio_venta.is_integer() else i.precio_venta} "
+                    item['label'] = f"${int(i.precio_venta) if i.precio_venta.is_integer() else i.precio_venta} - {i.nombre_producto} ({i.unidad_medida}) - Stock: {i.stock} / Variante: {i.variante}"
                     data.append(item)
             elif action == 'add':
 

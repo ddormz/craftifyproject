@@ -42,6 +42,7 @@ function productosTable() {
         }
     },
       {"data": "nombre_producto"},
+      {"data": "unidad_medida.nombre_unidad"},
       {"data": "descripcion"},
       {"data": "categoria.nombre_categoria"},
       {"data": "subcategoria.nombre_subcategoria"},
